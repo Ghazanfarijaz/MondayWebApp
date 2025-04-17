@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Assuming you're using React Router
-
+import image1 from "../../assets/peopleimage1.png";
+import image2 from "../../assets/peopleimage2.png";
 const ItemDetails = ({ item }) => {
   // For demonstration purposes, I'm creating a sample item
   // In a real application, you would pass this as a prop or fetch it from an API
@@ -10,7 +11,7 @@ const ItemDetails = ({ item }) => {
     priority: "High",
     date: "24 July, 2024",
     board: "XYZ Board",
-    people: ["/path/to/person1image.png", "/path/to/person2image.png"],
+    people: [image1, image2],
     timeTracking: "8 Hours",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Curabitur ac velit nec purus volutpat feugiat. This task involves coordinating with the design and development teams to ensure deliverables are aligned with project goals.",

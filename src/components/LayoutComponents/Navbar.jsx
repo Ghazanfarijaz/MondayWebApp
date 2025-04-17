@@ -5,7 +5,7 @@ import Avatar from "../../assets/Avatar.png"; // Adjust the path as necessary
 
 const Navbar = () => {
   return (
-    <div className="flex items-center justify-between p-4 bg-white border-b">
+    <div className="flex items-center justify-between p-4 bg-white border-b px-[40px]">
       <div className="relative w-full max-w-md">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <Search className="w-4 h-4 text-gray-500" />

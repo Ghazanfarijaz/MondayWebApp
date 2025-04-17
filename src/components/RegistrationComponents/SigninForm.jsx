@@ -1,18 +1,21 @@
-"use client";
 import React from "react";
-import Logo from "../../assets/Logo.png"; // Adjust the path as necessary
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Logo from "../../assets/Logo.png";
 
 const SigninForm = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
+    // Handle form submission logic here if needed
+
+    // Navigate to /mainpage
+    navigate("/mainpage");
   };
 
   return (
     <main className="font-medium w-[352px]">
-      {/* <div className="w-12 h-12 flex items-center justify-center  rounded-xl"> */}
       <img src={Logo} alt="Logo" className="object-contain w-[48px] h-[48px]" />
-      {/* </div> */}
 
       <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign In</h1>
 

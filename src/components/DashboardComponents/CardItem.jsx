@@ -1,8 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CardItem = ({ item }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/mainpage/item-details", { state: { item } });
+  };
   return (
-    <div className="bg-white p-4 rounded-lg shadow mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+    <div
+      onClick={handleClick}
+      className="bg-white p-4 rounded-lg shadow mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+    >
       <h3 className="font-medium mb-2">{item.title}</h3>
 
       <div className="flex justify-between items-center mb-2">

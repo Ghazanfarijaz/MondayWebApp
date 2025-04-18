@@ -21,7 +21,11 @@ const Navbar = () => {
           <Bell className="w-6 h-6" />
           <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
         </button>
-        <img className="w-8 h-8 rounded-full" src={Avatar} alt="User" />
+        <img
+          className="w-8 h-8 rounded-full cursor-pointer"
+          src={Avatar}
+          alt="User"
+        />
       </div>
     </div>
   );

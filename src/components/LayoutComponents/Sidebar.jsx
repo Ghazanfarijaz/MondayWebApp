@@ -25,7 +25,7 @@ const Sidebar = () => {
         <img
           src={Logo}
           alt="Logo"
-          className="object-contain w-[48px] h-[48px]"
+          className="object-contain w-[48px] h-[48px] cursor-pointer"
         />
       </div>
 

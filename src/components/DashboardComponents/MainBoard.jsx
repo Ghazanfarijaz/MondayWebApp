@@ -86,18 +86,75 @@ const Board = () => {
           board: "XYZ Board",
           people: { image1, image2 },
         },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
+        {
+          title: "Placeholder for text",
+          status: "Active",
+          priority: "High",
+          date: "24 July, 2024",
+          board: "XYZ Board",
+          people: { image1, image2 },
+        },
       ],
     },
   ];
 
   return (
-    <div className="flex-1 p-[40px] overflow-auto bg-gray-200 h-auto">
-      <div className="flex justify-between items-center mb-6">
+    <div className=" p-[40px] overflow-hidden bg-gray-200 flex flex-col h-full">
+      <div className="flex justify-between items-center mb-6 border-b">
         <h1 className="text-2xl font-bold">Board 1</h1>
+
         <div className="flex space-x-2">
           <button
             className={`px-3 py-1 rounded ${
-              viewMode === "card" ? "bg-gray-200" : "bg-white"
+              viewMode === "card" ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
             onClick={() => setViewMode("card")}
           >
@@ -105,7 +162,7 @@ const Board = () => {
           </button>
           <button
             className={`px-3 py-1 rounded ${
-              viewMode === "list" ? "bg-gray-200" : "bg-white"
+              viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
             onClick={() => setViewMode("list")}
           >
@@ -113,7 +170,7 @@ const Board = () => {
           </button>
           <button
             className={`px-3 py-1 rounded ${
-              viewMode === "table" ? "bg-gray-200" : "bg-white"
+              viewMode === "table" ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
             onClick={() => setViewMode("table")}
           >
@@ -122,9 +179,9 @@ const Board = () => {
         </div>
       </div>
 
-      <div className="space-y-6 w-full px-[24]">
+      <div className="space-y-6 w-full px-[24] flex-1 overflow-y-auto ">
         {groups.map((group) => (
-          <BoardGroup key={group.id} group={group} />
+          <BoardGroup key={group.id} group={group} viewMode={viewMode} />
         ))}
       </div>
     </div>

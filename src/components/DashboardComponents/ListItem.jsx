@@ -11,31 +11,36 @@ const ListItem = ({ item }) => {
   return (
     <div
       onClick={handleClick}
-      className="flex items-center p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+      className="flex flex-col md:flex-row items-start md:items-center p-3 md:p-4 my-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer shadow-sm"
     >
-      <div className="flex-1 ">
+      {/* Title - full width on mobile, normal width on larger screens */}
+      <div className="w-full md:w-auto md:pr-4 lg:pr-6 xl:pr-20 mb-2 md:mb-0">
         <span className="text-gray-700 font-normal">
           {item.title || "Placeholder for text"}
         </span>
       </div>
 
-      <div className="w-20 px-2">
+      {/* Status */}
+      <div className="flex flex-wrap gap-2 md:gap-0 w-full md:w-auto md:px-2 lg:px-6 xl:px-20 mb-2 md:mb-0">
         <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600 font-medium">
           {item.status || "Active"}
         </span>
       </div>
 
-      <div className="w-16 px-2">
+      {/* Priority */}
+      <div className="flex flex-wrap gap-2 md:gap-0 w-full md:w-auto md:px-2 lg:px-6 xl:px-20 mb-2 md:mb-0">
         <span className="px-3 py-1 text-xs rounded-md bg-red-500 text-white font-medium">
           {item.priority || "High"}
         </span>
       </div>
 
-      <div className="w-32 px-2 text-sm text-gray-600">
+      {/* Date */}
+      <div className="w-full md:w-auto md:px-2 lg:px-6 xl:px-20 text-sm text-gray-600 mb-2 md:mb-0">
         {item.date || "24 July, 2024"}
       </div>
 
-      <div className="w-20 px-2">
+      {/* People */}
+      <div className="w-full md:w-auto md:px-2 lg:px-6 xl:px-20 mb-2 md:mb-0">
         <div className="flex">
           <img
             className="w-6 h-6 rounded-full border-2 border-white -mr-2"
@@ -50,7 +55,8 @@ const ListItem = ({ item }) => {
         </div>
       </div>
 
-      <div className="w-28 px-2 text-sm text-gray-700 font-medium">
+      {/* Board */}
+      <div className="w-full md:w-auto md:px-2 lg:px-6 xl:px-20 text-sm text-gray-700 font-medium">
         {item.board || "XYZ Board"}
       </div>
     </div>

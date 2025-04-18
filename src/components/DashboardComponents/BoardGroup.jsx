@@ -13,16 +13,6 @@ const BoardGroup = ({ group, viewMode }) => {
 
       {viewMode === "list" ? (
         <div className="w-full">
-          {/* Header for list view */}
-          <div className="flex items-center py-2 border-b border-gray-300 font-medium text-gray-600">
-            <div className="flex-1 px-2">Title</div>
-            <div className="w-16 px-2">Status</div>
-            <div className="w-16 px-2">Priority</div>
-            <div className="w-24 px-2">Date</div>
-            <div className="w-16 px-2">People</div>
-            <div className="w-24 px-2">Board</div>
-          </div>
-
           {/* List items */}
           {group.items.map((item, index) => (
             <ListItem key={index} item={item} />

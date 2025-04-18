@@ -20,7 +20,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 h-screen bg-white p-4 border-r hidden md:block">
+    <div className="w-[268px] h-screen bg-white p-4 border-r hidden md:block">
       <div className="flex items-center mb-8">
         <img
           src={Logo}

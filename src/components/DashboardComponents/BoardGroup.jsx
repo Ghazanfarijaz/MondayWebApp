@@ -12,7 +12,7 @@ const BoardGroup = ({ group, viewMode }) => {
       </div>
 
       {viewMode === "list" ? (
-        <div className="w-full">
+        <div className="w-full border border-gray-200 rounded-md overflow-hidden">
           {/* List items */}
           {group.items.map((item, index) => (
             <ListItem key={index} item={item} />

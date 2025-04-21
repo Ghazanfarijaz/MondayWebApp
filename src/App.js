@@ -7,6 +7,7 @@ import MainPage from "./pages/MainPage";
 import SignIn from "./pages/SignIn";
 import Board from "./components/DashboardComponents/MainBoard";
 import BoradDetails from "./components/DashboardComponents/BoradDetails";
+import ProfileSettings from "./components/DashboardComponents/ProfileSettings";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/mainpage" element={<MainPage />}>
               <Route index element={<Board />} />
               <Route path="item-details" element={<BoradDetails />} />
+              <Route path="profile" element={<ProfileSettings />} />
             </Route>
           </Routes>
         </div>

@@ -51,8 +51,8 @@ const ProfileSettings = () => {
             </div>
 
             {/* For mobile: flex-col (stacked vertically), For desktop: flex-row (original layout) */}
-            <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0">
-              <button className="flex items-center justify-center gap-2 bg-black text-white px-3 py-1.5 text-sm rounded-lg">
+            <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-4">
+              <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1.5 text-sm rounded-lg">
                 <Upload size={14} />
                 <span>Upload new picture</span>
               </button>
@@ -125,7 +125,7 @@ const ProfileSettings = () => {
         <div>
           <button
             onClick={handleSave}
-            className="bg-black text-white px-4 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
           >
             Save
           </button>

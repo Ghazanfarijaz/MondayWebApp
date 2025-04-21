@@ -12,7 +12,7 @@ const BoardGroup = ({ group, viewMode }) => {
       </div>
 
       {viewMode === "list" ? (
-        <div className="w-full border border-gray-200 rounded-md overflow-hidden">
+        <div className="w-full">
           {/* List items */}
           {group.items.map((item, index) => (
             <ListItem key={index} item={item} />
@@ -20,34 +20,44 @@ const BoardGroup = ({ group, viewMode }) => {
         </div>
       ) : viewMode === "table" ? (
         <>
-          <div className="w-full border border-gray-200 rounded-md overflow-hidden ">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                    Item Name <span className="ml-1">↕</span>
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                    Status <span className="ml-1">↕</span>
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                    Priority <span className="ml-1">↕</span>
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                    Date <span className="ml-1">↕</span>
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                    People <span className="ml-1">↕</span>
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                    Board <span className="ml-1">↕</span>
-                  </th>
-                </tr>
-              </thead>
+          <div className="w-full border border-gray-200 rounded-md overflow-hidden">
+            {/* Desktop Table with Headers (hidden on mobile) */}
+            <div className="hidden md:block">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                      Item Name <span className="ml-1">↕</span>
+                    </th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                      Status <span className="ml-1">↕</span>
+                    </th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                      Priority <span className="ml-1">↕</span>
+                    </th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                      Date <span className="ml-1">↕</span>
+                    </th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                      People <span className="ml-1">↕</span>
+                    </th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                      Board <span className="ml-1">↕</span>
+                    </th>
+                  </tr>
+                </thead>
+                {group.items.map((item, index) => (
+                  <TableView key={index} item={item} />
+                ))}
+              </table>
+            </div>
+
+            {/* Mobile Card View (no headers) */}
+            <div className="md:hidden p-2 space-y-2">
               {group.items.map((item, index) => (
                 <TableView key={index} item={item} />
               ))}
-            </table>
+            </div>
           </div>
         </>
       ) : (

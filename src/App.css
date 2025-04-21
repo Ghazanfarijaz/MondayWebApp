@@ -1,3 +1,9 @@
 .App {
   text-align: center;
 }
+
+/* Ensure menu dropdown positions correctly */
+.mantine-Menu-dropdown {
+  position: absolute !important;
+  inset: unset !important;
+}

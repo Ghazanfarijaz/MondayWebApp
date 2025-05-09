@@ -149,7 +149,7 @@ const Board = () => {
   return (
     <div className=" p-[40px] overflow-hidden bg-gray-200 flex flex-col h-full">
       <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-2xl font-bold">Board 1</h1>
+        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
 
         <div className="flex space-x-2">
           <button

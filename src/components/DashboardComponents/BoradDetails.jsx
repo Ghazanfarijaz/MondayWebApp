@@ -25,7 +25,7 @@ const ItemDetails = ({ item }) => {
     <div className="flex-1 p-[40px] overflow-auto bg-gray-100 h-auto">
       {/* Breadcrumb navigation */}
       <div className="text-sm text-gray-500 mb-4">
-        <Link to="/board/1" className="hover:underline">
+        <Link to="/mainpage" className="hover:underline">
           Board 1
         </Link>{" "}
         / Item Details

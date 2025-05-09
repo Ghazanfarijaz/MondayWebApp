@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Search, Bell, User, LogOut, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -9,6 +10,7 @@ const Navbar = () => {
   const notificationsRef = useRef(null);
   const userMenuRef = useRef(null);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,9 +29,19 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    setShowUserMenu(false);
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      setShowUserMenu(false);
+      const result = await logout();
+      if (result.success) {
+        navigate("/login");
+      } else {
+        console.error("Logout failed:", result.error);
+        alert("Failed to logout. Please try again.");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
@@ -47,7 +59,7 @@ const Navbar = () => {
       </div>
 
       {/* Icons and Avatar - adjusted spacing */}
-      <div className=" flex items-center space-x-3 sm:space-x-4  ">
+      <div className="flex items-center space-x-3 sm:space-x-4">
         {/* Notifications */}
         <div className="relative" ref={notificationsRef}>
           <button

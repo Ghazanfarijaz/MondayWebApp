@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
-import { authAPI } from "../../api/auth"; // Import your auth API
+import { useAuth } from "../../contexts/AuthContext";
 
 const SigninForm = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,16 +18,15 @@ const SigninForm = () => {
     if (isFormValid()) {
       setIsLoading(true);
       try {
-        // Call the login API
-        const response = await authAPI.login(email, password);
+        // Use the login function from context
+        const result = await login(email, password);
 
-        // Store tokens/user data (you might want to use more secure storage)
-        localStorage.setItem("accessToken", response.accessToken);
-        localStorage.setItem("refreshToken", response.refreshToken);
-        localStorage.setItem("userData", JSON.stringify(response.user));
-
-        // Redirect to main page on success
-        navigate("/mainpage");
+        if (result.success) {
+          // Redirect to main page on success
+          navigate("/mainpage");
+        } else {
+          setError(result.error || "Login failed. Please try again.");
+        }
       } catch (err) {
         setError(err.message || "Login failed. Please try again.");
       } finally {

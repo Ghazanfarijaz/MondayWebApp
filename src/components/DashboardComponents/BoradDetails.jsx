@@ -1,25 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Assuming you're using React Router
-import image1 from "../../assets/peopleimage1.png";
-import image2 from "../../assets/peopleimage2.png";
-const ItemDetails = ({ item }) => {
-  // For demonstration purposes, I'm creating a sample item
-  // In a real application, you would pass this as a prop or fetch it from an API
-  const sampleItem = {
-    title: "Placeholder for text",
-    status: "Active",
-    priority: "High",
-    date: "24 July, 2024",
-    board: "XYZ Board",
-    people: [image1, image2],
-    timeTracking: "8 Hours",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Curabitur ac velit nec purus volutpat feugiat. This task involves coordinating with the design and development teams to ensure deliverables are aligned with project goals.",
-    lastUpdated: "14 April, 2024 - By John",
+import { Link } from "react-router-dom";
+import { useBoard } from "../../contexts/BoardContext";
+import { useParams } from "react-router-dom";
+
+const ItemDetails = () => {
+  const { groupData, loading, error } = useBoard();
+  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
+  const { id } = useParams();
+
+  console.log("userPhotothumb :", usersPhotoThumb);
+
+  // Find the specific item by matching the ID
+  const item = groupData?.find((item) => item.id === id);
+
+  // Handle loading and error states
+  if (loading) return <div className="p-[40px]">Loading...</div>;
+  if (error) return <div className="p-[40px]">Error: {error}</div>;
+  if (!item) return <div className="p-[40px]">Item not found</div>;
+
+  // Helper function to get column values
+  const getColumnValue = (title) => {
+    return item.column_values?.find((col) => col.column?.title === title)?.text;
   };
 
-  // Use the passed item or fall back to sample
-  const displayItem = item || sampleItem;
+  // Extract specific fields
+  const status = item.column_values?.find(
+    (col) => col.column?.title === "Status"
+  );
+  const people = item.column_values?.find(
+    (col) => col.column?.title === "People"
+  );
+  const date = getColumnValue("Date");
+  const description = getColumnValue("Long text");
+  const numbers = getColumnValue("Numbers");
+  const dropdown = getColumnValue("Dropdown");
+  const boardRelation = getColumnValue("eAudit Development");
+  const timeline = getColumnValue("Timeline");
+  const checkbox = item.column_values?.find(
+    (col) => col.column?.title === "Check"
+  );
 
   return (
     <div className="flex-1 p-[40px] overflow-auto bg-gray-100 h-auto">
@@ -32,69 +51,139 @@ const ItemDetails = ({ item }) => {
       </div>
 
       {/* Item title */}
-      <h1 className="text-3xl font-bold mb-8">Item Details</h1>
-
-      {/* Item details card */}
+      <h1 className="text-3xl font-bold mb-8">{item.name}</h1>
       <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-medium mb-6">{displayItem.title}</h2>
-
-        {/* Item properties */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Status</span>
-            <span className="bg-green-100 text-green-600 px-2 py-1 rounded inline-block w-fit">
-              {displayItem.status}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Priority</span>
-            <span className="bg-red-500 text-white px-2 py-1 rounded inline-block w-fit">
-              {displayItem.priority}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Date</span>
-            <span>{displayItem.date}</span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">People</span>
-            <div className="flex">
-              {displayItem.people &&
-                displayItem.people.map((person, index) => (
+        {item.column_values.map((columnValue, i) => {
+          return columnValue.type === "status" ? (
+            <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+              <span className="text-gray-500">{columnValue.column.title}</span>
+              <span
+                className="px-3 py-1 text-sm rounded-[4px] text-white w-fit"
+                style={{ backgroundColor: columnValue.label_style?.color }}
+              >
+                {columnValue.text}
+              </span>
+            </div>
+          ) : columnValue.type === "people" ? (
+            <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+              <span className="text-gray-500">{columnValue.column.title}</span>
+              <div className="flex">
+                {columnValue.persons_and_teams?.map((person, index) => (
                   <img
-                    key={index}
-                    src={person}
-                    alt={`Person ${index + 1}`}
-                    className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
+                    className="w-6 h-6 rounded-full -mr-1"
+                    src={
+                      usersPhotoThumb.users.data.find(
+                        (user) => user.id === person.id
+                      )?.photo_thumb
+                    }
+                    alt="Person 1"
                   />
                 ))}
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-[150px_1fr] items-start mb-4">
+              <span className="text-gray-500">{columnValue.column.title}</span>
+              <p className="text-gray-700 whitespace-pre-line">
+                {columnValue.type === "checkbox"
+                  ? columnValue.text
+                    ? "Yes"
+                    : "No"
+                  : columnValue.text || "N/A"}{" "}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Item details card */}
+      {/* <div className="bg-white p-6 rounded-lg shadow-sm">
+       
+        {status && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">{status.column.title}</span>
+            <span
+              className="px-3 py-1 text-sm rounded-[4px] text-white w-fit"
+              style={{ backgroundColor: status.label_style?.color }}
+            >
+              {status.text}
+            </span>
+          </div>
+        )}
+
+     
+        {people && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">{people.column.title}</span>
+            <div className="flex">
+              {people.persons_and_teams?.map((person, index) => (
+                <div
+                  key={index}
+                  className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium -ml-2 first:ml-0"
+                >
+                  {person.kind === "person" ? "P" : "T"}
+                </div>
+              ))}
             </div>
           </div>
+        )}
 
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Board</span>
-            <span>{displayItem.board}</span>
+      
+        {date && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">Date</span>
+            <span>{date}</span>
           </div>
+        )}
 
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Time Tracking</span>
-            <span>{displayItem.timeTracking}</span>
+     
+        {numbers && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">Numbers</span>
+            <span>{numbers}</span>
           </div>
+        )}
 
-          <div className="grid grid-cols-[100px_1fr] items-start">
+      
+        {dropdown && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">Dropdown</span>
+            <span>{dropdown}</span>
+          </div>
+        )}
+
+       
+        {boardRelation && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">eAudit Development</span>
+            <span>{boardRelation}</span>
+          </div>
+        )}
+
+       
+        {timeline && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">Timeline</span>
+            <span>{timeline}</span>
+          </div>
+        )}
+
+        
+        {checkbox && (
+          <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+            <span className="text-gray-500">{checkbox.column.title}</span>
+            <span>{checkbox.text ? "Yes" : "No"}</span>
+          </div>
+        )}
+
+   
+        {description && (
+          <div className="grid grid-cols-[150px_1fr] items-start mb-4">
             <span className="text-gray-500">Description</span>
-            <p className="text-gray-700">{displayItem.description}</p>
+            <p className="text-gray-700 whitespace-pre-line">{description}</p>
           </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Last Updated</span>
-            <span className="text-gray-700">{displayItem.lastUpdated}</span>
-          </div>
-        </div>
-      </div>
+        )}
+      </div> */}
     </div>
   );
 };

@@ -74,7 +74,7 @@ export const authAPI = {
   checkAuth: async () => {
     try {
       // Try to access a protected endpoint
-      const response = await api.get(`/api/credentials/check-auth`);
+      const response = await api.get(`/api/auth/check-auth`);
       return {
         isAuthenticated: true,
         user: response.data.user,

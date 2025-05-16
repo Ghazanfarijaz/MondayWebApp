@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import { AuthProvider } from "./contexts/AuthContext";
+import { BoardProvider } from "./contexts/BoardContext";
 import SessionManager from "./components/SessionManager";
 
 // Import your page components here
@@ -15,21 +16,23 @@ function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <AuthProvider>
-        <Router>
-          <SessionManager />
-          <div>
-            <Routes>
-              <Route path="/login" element={<SignIn />} />
+        <BoardProvider>
+          <Router>
+            <SessionManager />
+            <div>
+              <Routes>
+                <Route path="/login" element={<SignIn />} />
 
-              <Route path="/" element={<MainPage />} />
-              <Route path="/mainpage" element={<MainPage />}>
-                <Route index element={<Board />} />
-                <Route path="item-details" element={<BoradDetails />} />
-                <Route path="profile" element={<ProfileSettings />} />
-              </Route>
-            </Routes>
-          </div>
-        </Router>
+                <Route path="/mainpage" element={<MainPage />} />
+                <Route path="/mainpage" element={<MainPage />}>
+                  <Route index element={<Board />} />
+                  <Route path="item-details/:id" element={<BoradDetails />} />
+                  <Route path="profile" element={<ProfileSettings />} />
+                </Route>
+              </Routes>
+            </div>
+          </Router>
+        </BoardProvider>
       </AuthProvider>
     </MantineProvider>
   );

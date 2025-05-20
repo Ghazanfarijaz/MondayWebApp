@@ -119,7 +119,7 @@ const Navbar = () => {
               <button
                 onClick={() => {
                   setShowUserMenu(false);
-                  navigate("/password-reset");
+                  navigate("password-reset");
                 }}
                 className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"
               >

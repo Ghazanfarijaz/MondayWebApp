@@ -65,6 +65,7 @@ export const BoardProvider = ({ children }) => {
     loading,
     error,
     refreshBoardItems,
+    refreshUsersPhotoThumb,
   };
 
   return (

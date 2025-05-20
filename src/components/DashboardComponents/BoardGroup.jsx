@@ -22,7 +22,7 @@ const BoardGroup = ({ groupData, viewMode }) => {
         <>
           <div className="w-full border border-gray-200 rounded-md overflow-hidden">
             {/* Desktop Table with Headers (hidden on mobile) */}
-            {/* <div className="hidden md:block">
+            <div className="hidden md:block">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
@@ -42,22 +42,22 @@ const BoardGroup = ({ groupData, viewMode }) => {
                       People <span className="ml-1">↕</span>
                     </th>
                     <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
-                      Board <span className="ml-1">↕</span>
+                      Numbers <span className="ml-1">↕</span>
                     </th>
                   </tr>
                 </thead>
-                {groupData.items.map((item, index) => (
-                  <TableView key={index} item={item} />
+                {groupData?.map((item) => (
+                  <TableView key={item.id} item={item} />
                 ))}
               </table>
-            </div> */}
+            </div>
 
             {/* Mobile Card View (no headers) */}
-            {/* <div className="md:hidden p-2 space-y-2">
-              {groupData.items.map((item, index) => (
-                <TableView key={index} item={item} />
+            <div className="md:hidden p-2 space-y-2">
+              {groupData?.map((item) => (
+                <TableView key={item.id} item={item} />
               ))}
-            </div> */}
+            </div>
           </div>
         </>
       ) : (

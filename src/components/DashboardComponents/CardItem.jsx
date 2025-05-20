@@ -11,6 +11,22 @@ const CardItem = ({ item }) => {
     navigate(`/mainpage/item-details/${id}`);
   };
 
+  if (usersLoading) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (usersError) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <p className="text-red-500">Error in user photothumb: {usersError}</p>
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={() => handleClick(item.id)}

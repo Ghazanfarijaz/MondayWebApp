@@ -66,6 +66,9 @@ export const boardsAPI = {
    * Fetch all items by automatically handling pagination
    * @returns {Promise<Array>} - Combined array of all items
    */
+
+  // Example usage in a component
+
   getAllItems: async () => {
     try {
       let allItems = [];

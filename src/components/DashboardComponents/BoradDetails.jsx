@@ -1,99 +1,106 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Assuming you're using React Router
-import image1 from "../../assets/peopleimage1.png";
-import image2 from "../../assets/peopleimage2.png";
-const ItemDetails = ({ item }) => {
-  // For demonstration purposes, I'm creating a sample item
-  // In a real application, you would pass this as a prop or fetch it from an API
-  const sampleItem = {
-    title: "Placeholder for text",
-    status: "Active",
-    priority: "High",
-    date: "24 July, 2024",
-    board: "XYZ Board",
-    people: [image1, image2],
-    timeTracking: "8 Hours",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Curabitur ac velit nec purus volutpat feugiat. This task involves coordinating with the design and development teams to ensure deliverables are aligned with project goals.",
-    lastUpdated: "14 April, 2024 - By John",
-  };
+import { Link } from "react-router-dom";
+import { useBoard } from "../../contexts/BoardContext";
+import { useParams } from "react-router-dom";
 
-  // Use the passed item or fall back to sample
-  const displayItem = item || sampleItem;
+const ItemDetails = () => {
+  const { groupData, loading, error } = useBoard();
+  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
+  const { id } = useParams();
+
+  console.log("userPhotothumb :", usersPhotoThumb);
+
+  // Find the specific item by matching the ID
+  const item = groupData?.find((item) => item.id === id);
+
+  if (!item) return <div className="p-[40px]">Item not found</div>;
+
+  if (loading) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (usersLoading) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (usersError) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <p className="text-red-500">Error in user photothumb: {usersError}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-[40px] overflow-auto bg-gray-100 h-auto">
       {/* Breadcrumb navigation */}
       <div className="text-sm text-gray-500 mb-4">
-        <Link to="/board/1" className="hover:underline">
+        <Link to="/mainpage" className="hover:underline">
           Board 1
         </Link>{" "}
         / Item Details
       </div>
 
       {/* Item title */}
-      <h1 className="text-3xl font-bold mb-8">Item Details</h1>
-
-      {/* Item details card */}
+      <h1 className="text-3xl font-bold mb-8">{item.name}</h1>
       <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-xl font-medium mb-6">{displayItem.title}</h2>
-
-        {/* Item properties */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Status</span>
-            <span className="bg-green-100 text-green-600 px-2 py-1 rounded inline-block w-fit">
-              {displayItem.status}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Priority</span>
-            <span className="bg-red-500 text-white px-2 py-1 rounded inline-block w-fit">
-              {displayItem.priority}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Date</span>
-            <span>{displayItem.date}</span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">People</span>
-            <div className="flex">
-              {displayItem.people &&
-                displayItem.people.map((person, index) => (
+        {item.column_values.map((columnValue, i) => {
+          return columnValue.type === "status" ? (
+            <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+              <span className="text-gray-500">{columnValue.column.title}</span>
+              <span
+                className="px-3 py-1 text-sm rounded-[4px] text-white w-fit"
+                style={{ backgroundColor: columnValue.label_style?.color }}
+              >
+                {columnValue.text}
+              </span>
+            </div>
+          ) : columnValue.type === "people" ? (
+            <div className="grid grid-cols-[150px_1fr] items-center mb-4">
+              <span className="text-gray-500">{columnValue.column.title}</span>
+              <div className="flex">
+                {columnValue.persons_and_teams?.map((person, index) => (
                   <img
-                    key={index}
-                    src={person}
-                    alt={`Person ${index + 1}`}
-                    className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
+                    className="w-6 h-6 rounded-full -mr-1"
+                    src={
+                      usersPhotoThumb.users.data.find(
+                        (user) => user.id === person.id
+                      )?.photo_thumb
+                    }
+                    alt="Person 1"
                   />
                 ))}
+              </div>
             </div>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Board</span>
-            <span>{displayItem.board}</span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Time Tracking</span>
-            <span>{displayItem.timeTracking}</span>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-start">
-            <span className="text-gray-500">Description</span>
-            <p className="text-gray-700">{displayItem.description}</p>
-          </div>
-
-          <div className="grid grid-cols-[100px_1fr] items-center">
-            <span className="text-gray-500">Last Updated</span>
-            <span className="text-gray-700">{displayItem.lastUpdated}</span>
-          </div>
-        </div>
+          ) : (
+            <div className="grid grid-cols-[150px_1fr] items-start mb-4">
+              <span className="text-gray-500">{columnValue.column.title}</span>
+              <p className="text-gray-700 whitespace-pre-line">
+                {columnValue.type === "checkbox"
+                  ? columnValue.text
+                    ? "Yes"
+                    : "No"
+                  : columnValue.text || "N/A"}{" "}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

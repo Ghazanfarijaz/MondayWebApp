@@ -1,12 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useBoard } from "../../contexts/BoardContext";
+import PropTypes from "prop-types";
 
 const TableView = ({ item }) => {
   const navigate = useNavigate();
+  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
 
-  const handleRowClick = (item) => {
-    navigate("/mainpage/item-details", { state: { item } });
+  const handleRowClick = (id) => {
+    navigate(`/mainpage/item-details/${id}`);
   };
+
+  if (usersLoading) return <div>Loading user data...</div>;
+  if (usersError) return <div>Error loading user data</div>;
+  if (!item || !item.column_values) return <div>No item data available</div>;
+
+  // Safely get column values or default to empty array
+  const columnValues = Array.isArray(item.column_values)
+    ? item.column_values
+    : [];
 
   return (
     <>
@@ -14,87 +26,130 @@ const TableView = ({ item }) => {
       <tbody className="hidden md:table-row-group">
         <tr
           className="border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
-          onClick={() => handleRowClick(item)}
+          onClick={() => handleRowClick(item.id)}
         >
-          <td className="py-3 px-4 text-gray-700">
-            {item.title || "Placeholder for text"}
+          <td className="py-3 px-4 text-gray-700 font-medium truncate max-w-xs">
+            {item.name || "Untitled Item"}
           </td>
-          <td className="py-3 px-4">
-            <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600 font-medium">
-              {item.status || "Active"}
-            </span>
-          </td>
-          <td className="py-3 px-4">
-            <span className="px-3 py-1 text-xs rounded-md bg-red-500 text-white font-medium">
-              {item.priority || "High"}
-            </span>
-          </td>
-          <td className="py-3 px-4 text-gray-600 text-sm">
-            {item.date || "24 July, 2024"}
-          </td>
-          <td className="py-3 px-4">
-            <div className="flex">
-              <img
-                className="w-6 h-6 rounded-full border-2 border-white -mr-2"
-                src={item.people?.image1 || "/api/placeholder/24/24"}
-                alt="Person 1"
-              />
-              <img
-                className="w-6 h-6 rounded-full border-2 border-white"
-                src={item.people?.image2 || "/api/placeholder/24/24"}
-                alt="Person 2"
-              />
-            </div>
-          </td>
-          <td className="py-3 px-4 text-gray-700">
-            {item.board || "ABC Company"}
-          </td>
+          {/* Dynamically render first 5 column values */}
+          {columnValues.slice(0, 5).map((columnValue) => (
+            <td key={columnValue.id} className="py-3 px-4">
+              {columnValue.type === "status" ? (
+                <span
+                  className="px-3 py-1 text-xs rounded-full font-medium text-white"
+                  style={{
+                    backgroundColor:
+                      columnValue.label_style?.color || "#64748b",
+                    opacity: columnValue.label_style?.color ? 1 : 0.8,
+                  }}
+                >
+                  {columnValue.text || "N/A"}
+                </span>
+              ) : columnValue.type === "people" ? (
+                <div className="flex">
+                  {columnValue.persons_and_teams?.map((person) => (
+                    <img
+                      key={person.id}
+                      className="w-6 h-6 rounded-full border-2 border-white -mr-2"
+                      src={
+                        usersPhotoThumb?.users?.data?.find(
+                          (user) => user.id === person.id
+                        )?.photo_thumb || "/api/placeholder/24/24"
+                      }
+                      alt={`Person ${person.id}`}
+                      onError={(e) => {
+                        e.target.src = "/api/placeholder/24/24";
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <span className="text-gray-700 truncate max-w-xs block">
+                  {columnValue.type === "checkbox"
+                    ? columnValue.text
+                      ? "Yes"
+                      : "No"
+                    : columnValue.text || "N/A"}
+                </span>
+              )}
+            </td>
+          ))}
         </tr>
       </tbody>
 
       {/* Mobile/Tab Card View */}
       <div
         className="md:hidden bg-white rounded-lg shadow-sm p-4 mb-3 border border-gray-100 hover:bg-gray-50 cursor-pointer"
-        onClick={() => handleRowClick(item)}
+        onClick={() => handleRowClick(item.id)}
       >
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medium text-gray-800 truncate">
-            {item.title || "Placeholder for text"}
-          </h3>
-          <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600 font-medium ml-2">
-            {item.status || "Active"}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center">
-            <span className="px-2 py-1 text-xs rounded-md bg-red-500 text-white font-medium">
-              {item.priority || "High"}
+        {columnValues.slice(0, 4).map((columnValue) => (
+          <div
+            key={columnValue.id}
+            className="flex justify-between items-center mb-2"
+          >
+            <span className="text-sm text-gray-600">
+              {columnValue.column?.title || "Field"}
             </span>
-            <span className="ml-3 text-gray-600 text-sm">
-              {item.date || "24 July, 2024"}
-            </span>
+            {columnValue.type === "status" ? (
+              <span
+                className="px-2 py-1 text-xs rounded-full font-medium text-white"
+                style={{
+                  backgroundColor: columnValue.label_style?.color || "#64748b",
+                  opacity: columnValue.label_style?.color ? 1 : 0.8,
+                }}
+              >
+                {columnValue.text || "N/A"}
+              </span>
+            ) : columnValue.type === "people" ? (
+              <div className="flex">
+                {columnValue.persons_and_teams?.map((person) => (
+                  <img
+                    key={person.id}
+                    className="w-6 h-6 rounded-full border-2 border-white -mr-2"
+                    src={
+                      usersPhotoThumb?.users?.data?.find(
+                        (user) => user.id === person.id
+                      )?.photo_thumb || "/api/placeholder/24/24"
+                    }
+                    alt={`Person ${person.id}`}
+                    onError={(e) => {
+                      e.target.src = "/api/placeholder/24/24";
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <span className="text-sm">
+                {columnValue.type === "checkbox"
+                  ? columnValue.text
+                    ? "Yes"
+                    : "No"
+                  : columnValue.text || "N/A"}
+              </span>
+            )}
           </div>
-          <div className="flex">
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white -mr-2"
-              src={item.people?.image1 || "/api/placeholder/24/24"}
-              alt="Person 1"
-            />
-            <img
-              className="w-6 h-6 rounded-full border-2 border-white"
-              src={item.people?.image2 || "/api/placeholder/24/24"}
-              alt="Person 2"
-            />
-          </div>
-        </div>
-
-        <div className="text-sm text-gray-700 mt-2">
-          {item.board || "ABC Company"}
-        </div>
+        ))}
       </div>
     </>
   );
+};
+
+TableView.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    column_values: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        text: PropTypes.string,
+        label_style: PropTypes.object,
+        persons_and_teams: PropTypes.array,
+        column: PropTypes.shape({
+          title: PropTypes.string,
+        }),
+      })
+    ),
+  }),
 };
 
 export default TableView;

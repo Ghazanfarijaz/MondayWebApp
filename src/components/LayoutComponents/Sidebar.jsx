@@ -1,8 +1,10 @@
 // Sidebar.js
 import React, { useState } from "react";
 import Logo from "../../assets/Logo.png"; // Adjust the path as necessary
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [boards, setBoards] = useState([
     { id: 1, name: "Board 1", active: true },
     { id: 2, name: "Board 2", active: false },
@@ -17,6 +19,7 @@ const Sidebar = () => {
       active: board.id === id,
     }));
     setBoards(updatedBoards);
+    navigate("/mainpage");
   };
 
   return (

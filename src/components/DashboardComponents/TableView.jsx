@@ -37,10 +37,19 @@ const TableView = ({ item }) => {
               {columnValue.type === "status" ? (
                 <span
                   className="px-3 py-1 text-xs rounded-full font-medium text-white"
+                  // style={{
+                  //   backgroundColor:
+                  //     columnValue.label_style?.color || "#64748b",
+                  //   opacity: columnValue.label_style?.color ? 1 : 0.8,
+                  // }}
                   style={{
-                    backgroundColor:
-                      columnValue.label_style?.color || "#64748b",
-                    opacity: columnValue.label_style?.color ? 1 : 0.8,
+                    backgroundColor: `${
+                      columnValue.label_style?.color || "#e5e7eb"
+                    }20`,
+                    color: columnValue.label_style?.color || "#374151",
+                    border: `1px solid ${
+                      columnValue.label_style?.color || "#e5e7eb"
+                    }`,
                   }}
                 >
                   {columnValue.text || "N/A"}

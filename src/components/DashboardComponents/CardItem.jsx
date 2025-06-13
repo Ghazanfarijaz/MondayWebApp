@@ -43,7 +43,16 @@ const CardItem = ({ item }) => {
             </span>
             <span
               className="px-2 py-1 text-xs rounded-[4px] text-white"
-              style={{ backgroundColor: columnValue.label_style.color }}
+              // style={{ backgroundColor: columnValue.label_style.color }}
+              style={{
+                backgroundColor: `${
+                  columnValue.label_style?.color || "#e5e7eb"
+                }20`,
+                color: columnValue.label_style?.color || "#374151",
+                border: `1px solid ${
+                  columnValue.label_style?.color || "#e5e7eb"
+                }`,
+              }}
             >
               {columnValue.text}
             </span>

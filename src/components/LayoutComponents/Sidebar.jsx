@@ -41,7 +41,7 @@ const Sidebar = () => {
             key={board.id}
             className={`p-2 rounded-md cursor-pointer ${
               board.active
-                ? "bg-blue-100 text-blue-600"
+                ? "bg-gray-100 dark:bg-light-black blue:bg-light-blue text-black dark:text-white blue:text-white"
                 : "hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-black dark:text-white blue:text-white"
             }`}
             onClick={() => handleBoardClick(board.id)}

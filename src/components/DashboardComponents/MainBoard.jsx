@@ -3,9 +3,6 @@ import BoardGroup from "./BoardGroup";
 import { boardsAPI } from "../../api/board";
 import Loader from "../UIComponents/Loader";
 import { LayoutGrid, List, Table } from "lucide-react";
-import card from "../../assets/card.png";
-import list from "../../assets/list.png";
-import table from "../../assets/table.png";
 
 const Board = () => {
   const [viewMode, setViewMode] = useState("card");
@@ -104,45 +101,17 @@ const Board = () => {
   }
 
   return (
-    <div className="p-[40px] bg-gray-200 flex flex-col h-full">
-      {/* <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-        <div className="flex space-x-2">
-          <button
-            className={`px-3 py-1 rounded ${
-              viewMode === "card" ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setViewMode("card")}
-          >
-            Card View
-          </button>
-          <button
-            className={`px-3 py-1 rounded ${
-              viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setViewMode("list")}
-          >
-            List View
-          </button>
-          <button
-            className={`px-3 py-1 rounded ${
-              viewMode === "table" ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setViewMode("table")}
-          >
-            Table View
-          </button>
-        </div>
-      </div> */}
-
-      <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-        <div className="flex space-x-3 md:space-x-3 bg-white p-2 rounded-full px-4 py-2">
+    <div className="p-[40px] bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-sm md:text-2xl font-bold text-black dark:text-white blue:text-white">
+          Board 1
+        </h1>
+        <div className="flex space-x-3 md:space-x-3 bg-white dark:bg-[#2C2C2C] blue:bg-dark-blue p-2 rounded-full px-4 py-2">
           <button
             className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
               viewMode === "card"
-                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
-                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+                ? "bg-[#F4F4F4] text-black dark:bg-black dark:text-white blue:bg-light-blue text-bold rounded-full px-4 py-2"
+                : "bg-white dark:bg-transparent blue:bg-transparent text-black dark:text-white blue:text-white rounded-full px-4 py-2"
             }`}
             onClick={() => setViewMode("card")}
           >
@@ -152,8 +121,8 @@ const Board = () => {
           <button
             className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
               viewMode === "list"
-                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
-                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+                ? "bg-[#F4F4F4] text-black dark:bg-black dark:text-white blue:bg-light-blue text-bold rounded-full px-4 py-2"
+                : "bg-white dark:bg-transparent blue:bg-transparent text-black dark:text-white blue:text-white rounded-full px-4 py-2"
             }`}
             onClick={() => setViewMode("list")}
           >
@@ -163,8 +132,8 @@ const Board = () => {
           <button
             className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
               viewMode === "table"
-                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
-                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+                ? "bg-[#F4F4F4] text-black dark:bg-black dark:text-white blue:bg-light-blue text-bold rounded-full px-4 py-2"
+                : "bg-white dark:bg-transparent blue:bg-transparent text-black dark:text-white blue:text-white rounded-full px-4 py-2"
             }`}
             onClick={() => setViewMode("table")}
           >
@@ -174,48 +143,9 @@ const Board = () => {
         </div>
       </div>
 
-      {/* <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-        <div className="flex space-x-1 md:space-x-2">
-          <div
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
-              viewMode === "card"
-                ? "bg-gray-300 text-black text-bold"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => setViewMode("card")}
-          >
-            <img src={card} alt="Card View" className="w-4 h-4" />
-            <span className="hidden md:inline">Card View</span>
-          </div>
-          <div
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
-              viewMode === "list"
-                ? "bg-gray-300 text-black text-bold"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => setViewMode("list")}
-          >
-            <img src={list} alt="List View" className="w-4 h-4" />
-            <span className="hidden md:inline">List View</span>
-          </div>
-          <div
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
-              viewMode === "table"
-                ? "bg-gray-300 text-black text-bold"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => setViewMode("table")}
-          >
-            <img src={table} alt="Table View" className="w-4 h-4" />
-            <span className="hidden md:inline">Table View</span>
-          </div>
-        </div>
-      </div> */}
-
       <div
         ref={containerRef}
-        className="space-y-6 w-full px-[24px] flex-1 overflow-y-auto"
+        className="space-y-6 w-full flex-1 overflow-y-auto"
       >
         <BoardGroup groupData={groupData} viewMode={viewMode} />
         {loading && (

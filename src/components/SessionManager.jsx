@@ -8,7 +8,7 @@ import { authAPI } from "../api/auth";
  * - Intercepts 401 responses and attempts token refresh
  * - Handles session expiration
  */
-const SessionManager = () => {
+const SessionManager = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -47,7 +47,7 @@ const SessionManager = () => {
   }, [isAuthenticated, logout, navigate]);
 
   // This component doesn't render anything
-  return null;
+  return children;
 };
 
 export default SessionManager;

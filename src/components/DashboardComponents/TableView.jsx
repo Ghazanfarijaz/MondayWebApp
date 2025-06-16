@@ -25,10 +25,10 @@ const TableView = ({ item }) => {
       {/* Desktop Table View */}
       <tbody className="hidden md:table-row-group">
         <tr
-          className="border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+          className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
           onClick={() => handleRowClick(item.id)}
         >
-          <td className="py-3 px-4 text-gray-700 font-medium truncate max-w-xs">
+          <td className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium truncate max-w-xs">
             {item.name || "Untitled Item"}
           </td>
           {/* Dynamically render first 5 column values */}
@@ -36,12 +36,7 @@ const TableView = ({ item }) => {
             <td key={columnValue.id} className="py-3 px-4">
               {columnValue.type === "status" ? (
                 <span
-                  className="px-3 py-1 text-xs rounded-full font-medium text-white"
-                  // style={{
-                  //   backgroundColor:
-                  //     columnValue.label_style?.color || "#64748b",
-                  //   opacity: columnValue.label_style?.color ? 1 : 0.8,
-                  // }}
+                  className="px-3 py-1 text-xs rounded-full font-medium"
                   style={{
                     backgroundColor: `${
                       columnValue.label_style?.color || "#e5e7eb"
@@ -73,7 +68,7 @@ const TableView = ({ item }) => {
                   ))}
                 </div>
               ) : (
-                <span className="text-gray-700 truncate max-w-xs block">
+                <span className="text-gray-700 dark:text-white blue:text-white truncate max-w-xs block">
                   {columnValue.type === "checkbox"
                     ? columnValue.text
                       ? "Yes"

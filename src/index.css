@@ -36,6 +36,9 @@ html.blue .blue\:border-r-blue {
 html.blue .blue\:border-l-light-blue {
   border-color: #2b2d50;
 }
+html.blue .blue\:border-white {
+  border-color: #fff;
+}
 
 /* Blue - Theme Colors */
 html.blue .blue\:bg-light-blue {

@@ -9,9 +9,15 @@ html.blue .blue\:bg-transparent {
 html.blue .blue\:text-white {
   color: #fff;
 }
+html.blue .blue\:text-gray-400 {
+  color: #6f767e;
+}
 /* Hover text color for blue theme */
 html.blue .blue\:hover\:text-black:hover {
   color: #000;
+}
+html.blue .blue\:hover\:text-white:hover {
+  color: #fff;
 }
 
 /* Border */
@@ -20,6 +26,12 @@ html.blue .blue\:border-blue {
 }
 html.blue .blue\:border-b-blue {
   border-color: #797e93;
+}
+html.blue .blue\:border-r-blue {
+  border-color: #797e93;
+}
+html.blue .blue\:border-l-light-blue {
+  border-color: #2b2d50;
 }
 
 /* Blue - Theme Colors */

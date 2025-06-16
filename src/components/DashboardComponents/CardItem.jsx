@@ -39,7 +39,7 @@ const CardItem = ({ item }) => {
         if (i > 4) return null;
         return columnValue.type === "status" ? (
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
               {columnValue.column.title}
             </span>
             <span
@@ -59,7 +59,7 @@ const CardItem = ({ item }) => {
           </div>
         ) : columnValue.type === "people" ? (
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
               {columnValue.column.title}
             </span>
             <div className="flex">
@@ -80,7 +80,7 @@ const CardItem = ({ item }) => {
           </div>
         ) : (
           <div className="flex justify-between items-center truncate mb-2">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
               {columnValue.column.title}
             </span>
             <span className="text-sm text-black dark:text-white blue:text-white">

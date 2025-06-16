@@ -1,11 +1,8 @@
-import React from "react";
-
 // library imports
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/LayoutComponents/Sidebar";
 import Navbar from "../components/LayoutComponents/Navbar";
 import RouteGuard from "../components/RouteGuard";
-// component imports
 
 export default function MainPage() {
   return (

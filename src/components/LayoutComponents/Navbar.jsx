@@ -1,22 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Search,
-  Bell,
-  User,
-  LogOut,
-  Key,
-  Palette,
-  ChevronRight,
-} from "lucide-react";
+import { Search, LogOut, Palette, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const notificationsRef = useRef(null);
   const userMenuRef = useRef(null);
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -32,12 +22,6 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        notificationsRef.current &&
-        !notificationsRef.current.contains(event.target)
-      ) {
-        setShowNotifications(false);
-      }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
         setShowThemeMenu(false);
@@ -79,38 +63,6 @@ const Navbar = () => {
 
       {/* Icons and Avatar - adjusted spacing */}
       <div className="flex items-center space-x-3 sm:space-x-4">
-        {/* Notifications */}
-        <div className="relative" ref={notificationsRef}>
-          <button
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative"
-          >
-            <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white blue:text-white" />
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full"></span>
-          </button>
-
-          {/* Notifications Dropdown */}
-          {showNotifications && (
-            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-light-black blue:bg-light-blue rounded-lg shadow-lg border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue py-2 z-50">
-              <div className="px-4 py-2 border-b border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
-                <h3 className="font-semibold text-black dark:text-white blue:text-white">
-                  Notifications
-                </h3>
-              </div>
-              <div className="max-h-[300px] overflow-y-auto">
-                <div className="px-4 py-3 hover:bg-gray-50 dark:hover:text-black blue:hover:text-black cursor-pointer text-black dark:text-white blue:text-white">
-                  <p className="text-sm">New order received</p>
-                  <p className="text-xs mt-1">2 minutes ago</p>
-                </div>
-                <div className="px-4 py-3 hover:bg-gray-50 dark:hover:text-black blue:hover:text-black cursor-pointer">
-                  <p className="text-sm">Payment confirmed</p>
-                  <p className="text-xs mt-1">1 hour ago</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* User Profile */}
         <div className="relative" ref={userMenuRef}>
           <button
@@ -127,26 +79,6 @@ const Navbar = () => {
           {/* User Menu Dropdown */}
           {showUserMenu && (
             <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-light-black blue:bg-light-blue rounded-lg shadow-lg py-2 z-50 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
-              <button
-                onClick={() => {
-                  setShowUserMenu(false);
-                  navigate("profile");
-                }}
-                className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black flex items-center text-sm sm:text-base"
-              >
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </button>
-              <button
-                onClick={() => {
-                  setShowUserMenu(false);
-                  navigate("password-reset");
-                }}
-                className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black flex items-center text-sm sm:text-base"
-              >
-                <Key className="mr-2 h-4 w-4" />
-                Password Reset
-              </button>
               <div className="relative">
                 <button
                   // onClick={() => setShowThemeMenu((prev) => !prev)}

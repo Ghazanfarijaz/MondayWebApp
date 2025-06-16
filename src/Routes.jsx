@@ -6,8 +6,8 @@ import MainPage from "./pages/MainPage";
 import SignIn from "./pages/SignIn";
 import ErrorPage from "./components/UIComponents/ErrorPage";
 import Board from "./components/DashboardComponents/MainBoard";
-import ProfileSettings from "./components/DashboardComponents/ProfileSettings";
-import ResetPassword from "./components/DashboardComponents/ResetPassword";
+// import ProfileSettings from "./components/DashboardComponents/ProfileSettings";
+// import ResetPassword from "./components/DashboardComponents/ResetPassword";
 import BoradDetails from "./components/DashboardComponents/BoradDetails";
 
 export const router = createBrowserRouter([
@@ -41,14 +41,14 @@ export const router = createBrowserRouter([
             path: "item-details/:id",
             element: <BoradDetails />,
           },
-          {
-            path: "profile",
-            element: <ProfileSettings />,
-          },
-          {
-            path: "password-reset",
-            element: <ResetPassword />,
-          },
+          // {
+          //   path: "profile",
+          //   element: <ProfileSettings />,
+          // },
+          // {
+          //   path: "password-reset",
+          //   element: <ResetPassword />,
+          // },
         ],
       },
       {

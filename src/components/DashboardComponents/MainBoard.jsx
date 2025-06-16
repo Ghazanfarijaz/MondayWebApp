@@ -101,8 +101,8 @@ const Board = () => {
   }
 
   return (
-    <div className="p-[40px] bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
-      <div className="flex justify-between items-center mb-6">
+    <div className="ps-10 py-10 bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
+      <div className="flex justify-between items-center mb-6 pr-10">
         <h1 className="text-sm md:text-2xl font-bold text-black dark:text-white blue:text-white">
           Board 1
         </h1>
@@ -145,12 +145,12 @@ const Board = () => {
 
       <div
         ref={containerRef}
-        className="space-y-6 w-full flex-1 overflow-y-auto"
+        className="space-y-6 w-full flex-1 overflow-y-auto pr-10"
       >
         <BoardGroup groupData={groupData} viewMode={viewMode} />
         {loading && (
           <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white blue:border-white"></div>
           </div>
         )}
         {!hasMore && groupData.length > 0 && (

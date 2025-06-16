@@ -85,7 +85,7 @@ export const authAPI = {
         try {
           await authAPI.refreshToken();
           // If refresh successful, try again
-          const retryResponse = await api.get(`/api/credentials/check-auth`);
+          const retryResponse = await api.get(`/api/auth/check-auth`);
           return {
             isAuthenticated: true,
             user: retryResponse.data.user,

@@ -1,104 +1,11 @@
-// import React, { useEffect, useState } from "react";
-// import BoardGroup from "./BoardGroup";
-// import { boardsAPI } from "../../api/board";
-
-// const Board = () => {
-//   const [viewMode, setViewMode] = useState("card");
-//   const [apiData, setApiData] = useState(null);
-//   const [cursor, setCursor] = useState(null);
-//   const [groupData, setGroupData] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   console.log("Group Data:", groupData);
-//   console.log("API Data:", apiData);
-//   console.log("Cursor:", cursor);
-//   console.log("Loading:", loading);
-//   console.log("Error:", error);
-
-//   // Fetch data function
-//   const fetchData = async () => {
-//     try {
-//       setLoading(true);
-//       const response = await boardsAPI.getItems(cursor);
-//       setApiData(response.data);
-//       setCursor(response.data.cursor);
-//       setGroupData(response.data.items);
-//     } catch (err) {
-//       setError(err.message || "Failed to fetch data");
-//       console.error("API Error:", err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // Initial data fetch
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   if (loading) {
-//     return (
-//       <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
-//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
-//         <p className="text-red-500">Error: {error}</p>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="p-[40px] overflow-auto bg-gray-200 flex flex-col h-full">
-//       <div className="flex justify-between items-center mb-6 border-b">
-//         <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-
-//         <div className="flex space-x-2">
-//           <button
-//             className={`px-3 py-1 rounded ${
-//               viewMode === "card" ? "bg-blue-500 text-white" : "bg-gray-200"
-//             }`}
-//             onClick={() => setViewMode("card")}
-//           >
-//             Card View
-//           </button>
-//           <button
-//             className={`px-3 py-1 rounded ${
-//               viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
-//             }`}
-//             onClick={() => setViewMode("list")}
-//           >
-//             List View
-//           </button>
-//           <button
-//             className={`px-3 py-1 rounded ${
-//               viewMode === "table" ? "bg-blue-500 text-white" : "bg-gray-200"
-//             }`}
-//             onClick={() => setViewMode("table")}
-//           >
-//             Table View
-//           </button>
-//         </div>
-//       </div>
-
-//       <div className="space-y-6 w-full px-[24] flex-1 overflow-y-auto">
-//         <BoardGroup groupData={groupData} viewMode={viewMode} cursor={cursor} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Board;
-
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import BoardGroup from "./BoardGroup";
 import { boardsAPI } from "../../api/board";
 import Loader from "../UIComponents/Loader";
+import { LayoutGrid, List, Table } from "lucide-react";
+import card from "../../assets/card.png";
+import list from "../../assets/list.png";
+import table from "../../assets/table.png";
 
 const Board = () => {
   const [viewMode, setViewMode] = useState("card");
@@ -198,7 +105,7 @@ const Board = () => {
 
   return (
     <div className="p-[40px] bg-gray-200 flex flex-col h-full">
-      <div className="flex justify-between items-center mb-6 border-b">
+      {/* <div className="flex justify-between items-center mb-6 border-b">
         <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
         <div className="flex space-x-2">
           <button
@@ -226,7 +133,85 @@ const Board = () => {
             Table View
           </button>
         </div>
+      </div> */}
+
+      <div className="flex justify-between items-center mb-6 border-b">
+        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
+        <div className="flex space-x-3 md:space-x-3 bg-white p-2 rounded-full px-4 py-2">
+          <button
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
+              viewMode === "card"
+                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
+                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+            }`}
+            onClick={() => setViewMode("card")}
+          >
+            <LayoutGrid className="w-4 h-4" />
+            <span className="hidden md:inline">Card View</span>
+          </button>
+          <button
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
+              viewMode === "list"
+                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
+                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+            }`}
+            onClick={() => setViewMode("list")}
+          >
+            <List className="w-4 h-4" />
+            <span className="hidden md:inline">List View</span>
+          </button>
+          <button
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
+              viewMode === "table"
+                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
+                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+            }`}
+            onClick={() => setViewMode("table")}
+          >
+            <Table className="w-4 h-4" />
+            <span className="hidden md:inline">Table View</span>
+          </button>
+        </div>
       </div>
+
+      {/* <div className="flex justify-between items-center mb-6 border-b">
+        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
+        <div className="flex space-x-1 md:space-x-2">
+          <div
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
+              viewMode === "card"
+                ? "bg-gray-300 text-black text-bold"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => setViewMode("card")}
+          >
+            <img src={card} alt="Card View" className="w-4 h-4" />
+            <span className="hidden md:inline">Card View</span>
+          </div>
+          <div
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
+              viewMode === "list"
+                ? "bg-gray-300 text-black text-bold"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => setViewMode("list")}
+          >
+            <img src={list} alt="List View" className="w-4 h-4" />
+            <span className="hidden md:inline">List View</span>
+          </div>
+          <div
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
+              viewMode === "table"
+                ? "bg-gray-300 text-black text-bold"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => setViewMode("table")}
+          >
+            <img src={table} alt="Table View" className="w-4 h-4" />
+            <span className="hidden md:inline">Table View</span>
+          </div>
+        </div>
+      </div> */}
 
       <div
         ref={containerRef}

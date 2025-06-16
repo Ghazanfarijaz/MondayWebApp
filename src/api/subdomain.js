@@ -1,21 +1,3 @@
-// import axios from "axios";
-
-// export const checkSubdomain = async (subdomain) => {
-//   try {
-//     const subdomaintest = "localhost:3000";
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_API_BASE_URL}/api/subdomain/${subdomaintest}`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message: error.response?.data?.message || "Subdomain validation failed",
-//       status: error.response?.status || 500,
-//     };
-//   }
-// };
-
 import axios from "axios";
 
 export const checkSubdomain = async (subdomain) => {

@@ -1,11 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Bell, User, LogOut, Key } from "lucide-react";
+import {
+  Search,
+  Bell,
+  User,
+  LogOut,
+  Key,
+  Palette,
+  ChevronRight,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const notificationsRef = useRef(null);
   const userMenuRef = useRef(null);
@@ -31,6 +40,7 @@ const Navbar = () => {
       }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
+        setShowThemeMenu(false);
       }
     };
 
@@ -135,16 +145,53 @@ const Navbar = () => {
                 <Key className="mr-2 h-4 w-4" />
                 Password Reset
               </button>
-              <button
-                onClick={() => {
-                  setShowUserMenu(false);
-                  navigate("password-reset");
-                }}
-                className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"
-              >
-                <Key className="mr-2 h-4 w-4" />
-                Password Reset
-              </button>
+              <div className="relative">
+                <button
+                  // onClick={() => setShowThemeMenu((prev) => !prev)}
+                  className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center justify-between text-sm sm:text-base"
+                  onMouseEnter={() => setShowThemeMenu(true)}
+                >
+                  <div className="flex items-center">
+                    <Palette className="mr-2 h-4 w-4" />
+                    Theme
+                  </div>
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                {showThemeMenu && (
+                  <div className="absolute right-full top-0 mt-0 mr-1 w-40 bg-white rounded-lg shadow-lg py-2 border border-gray-100 z-50">
+                    <button
+                      onClick={() => {
+                        setShowThemeMenu(false);
+                        setShowUserMenu(false);
+                        setTheme("light");
+                      }}
+                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-sm"
+                    >
+                      Light
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowThemeMenu(false);
+                        setShowUserMenu(false);
+                        setTheme("dark");
+                      }}
+                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-sm"
+                    >
+                      Dark
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowThemeMenu(false);
+                        setShowUserMenu(false);
+                        setTheme("blue");
+                      }}
+                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-sm"
+                    >
+                      Blue
+                    </button>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleLogout}
                 className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"

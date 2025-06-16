@@ -19,30 +19,32 @@ const BoardGroup = ({ groupData, viewMode }) => {
   ];
 
   return (
-    <div className="w-full mb-6 bg-white px-[24px] py-[24px] rounded-lg shadow-sm">
+    <div className="w-full mb-6 bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <div className={`w-4 h-8 rounded-[4px] bg-purple-300`}></div>
-          <h2 className="ml-2 font-semibold text-lg">Group 1</h2>
+          <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
+            Group 1
+          </h2>
         </div>
 
         {/* Filter Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 dark:text-white blue:text-white bg-gray-50 dark:bg-light-black blue:bg-light-blue hover:bg-gray-100 rounded-md transition-colors "
           >
-            <FiFilter className="text-gray-500" />
+            <FiFilter className="text-gray-500 dark:text-white blue:text-white" />
             Sort
             <FiChevronDown
               className={`transition-transform ${
                 isFilterOpen ? "rotate-180" : ""
-              }`}
+              } text-gray-500 dark:text-white blue:text-white`}
             />
           </button>
 
           {isFilterOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-10 border border-gray-100">
+            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-light-black blue:bg-light-blue rounded-md shadow-lg z-10 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
               <div className="py-1">
                 {sortOptions.map((option) => (
                   <button
@@ -54,13 +56,13 @@ const BoardGroup = ({ groupData, viewMode }) => {
                     }}
                     className={`flex items-center justify-between w-full px-4 py-2 text-sm text-left ${
                       selectedSort === option.value
-                        ? "bg-purple-50 text-purple-700"
-                        : "text-gray-700 hover:bg-gray-50"
-                    }`}
+                        ? "bg-gray-200/25 text-black"
+                        : "hover:text-black dark:hover:text-black blue:hover:text-black hover:bg-gray-50"
+                    } text-gray-700 dark:text-white blue:text-white`}
                   >
                     {option.label}
                     {selectedSort === option.value && (
-                      <FiCheck className="text-purple-500" />
+                      <FiCheck className="text-gray-700 dark:text-white blue:text-white" />
                     )}
                   </button>
                 ))}
@@ -79,28 +81,28 @@ const BoardGroup = ({ groupData, viewMode }) => {
         </div>
       ) : viewMode === "table" ? (
         <>
-          <div className="w-full border border-gray-200 rounded-md overflow-hidden">
+          <div className="w-full border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
             {/* Desktop Table with Headers (hidden on mobile) */}
             <div className="hidden md:block">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                  <tr className="bg-white dark:bg-black blue:bg-dark-blue border-b border-b-gray-200 dark:border-b-[#4E4E4E] blue:border-b-blue border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                       Item Name <span className="ml-1">↕</span>
                     </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                       Status <span className="ml-1">↕</span>
                     </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                       Priority <span className="ml-1">↕</span>
                     </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                       Date <span className="ml-1">↕</span>
                     </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                       People <span className="ml-1">↕</span>
                     </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 text-sm">
+                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                       Numbers <span className="ml-1">↕</span>
                     </th>
                   </tr>

@@ -29,9 +29,11 @@ const CardItem = ({ item }) => {
   return (
     <div
       onClick={() => handleClick(item.id)}
-      className="bg-white p-6 rounded-lg shadow mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow mb-4 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue hover:shadow-lg transition-shadow duration-300 cursor-pointer"
     >
-      <h3 className="font-medium mb-2">{item.name}</h3>
+      <h3 className="font-medium mb-2 text-black dark:text-white blue:text-white">
+        {item.name}
+      </h3>
 
       {item.column_values.map((columnValue, i) => {
         if (i > 4) return null;
@@ -42,7 +44,6 @@ const CardItem = ({ item }) => {
             </span>
             <span
               className="px-2 py-1 text-xs rounded-[4px] text-white"
-              // style={{ backgroundColor: columnValue.label_style.color }}
               style={{
                 backgroundColor: `${
                   columnValue.label_style?.color || "#e5e7eb"
@@ -53,7 +54,7 @@ const CardItem = ({ item }) => {
                 }`,
               }}
             >
-              {columnValue.text}
+              {columnValue.text || "N/A"}
             </span>
           </div>
         ) : columnValue.type === "people" ? (
@@ -64,7 +65,9 @@ const CardItem = ({ item }) => {
             <div className="flex">
               {columnValue.persons_and_teams?.map((person, index) => (
                 <img
-                  className="w-6 h-6 rounded-full -mr-1"
+                  className={`w-6 h-6 rounded-full ${
+                    columnValue.persons_and_teams.length > 1 && "-mr-1"
+                  }`}
                   src={
                     usersPhotoThumb.users.data.find(
                       (user) => user.id === person.id
@@ -80,7 +83,7 @@ const CardItem = ({ item }) => {
             <span className="text-sm text-gray-600">
               {columnValue.column.title}
             </span>
-            <span className="text-sm">
+            <span className="text-sm text-black dark:text-white blue:text-white">
               {columnValue.type === "checkbox"
                 ? columnValue.text
                   ? "Yes"

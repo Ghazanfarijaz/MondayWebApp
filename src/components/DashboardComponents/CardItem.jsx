@@ -4,11 +4,10 @@ import { useBoard } from "../../contexts/BoardContext";
 
 const CardItem = ({ item }) => {
   const navigate = useNavigate();
-  console.log("item", item);
   const { usersPhotoThumb, usersError, usersLoading } = useBoard();
 
   const handleClick = (id) => {
-    navigate(`/mainpage/item-details/${id}`);
+    navigate(`/item-details/${id}`);
   };
 
   if (usersLoading) {

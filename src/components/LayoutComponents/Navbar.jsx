@@ -12,6 +12,15 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  // Set the theme based on localStorage or default to light
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark", "blue");
+    root.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -115,6 +124,16 @@ const Navbar = () => {
               >
                 <User className="mr-2 h-4 w-4" />
                 Profile
+              </button>
+              <button
+                onClick={() => {
+                  setShowUserMenu(false);
+                  navigate("password-reset");
+                }}
+                className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"
+              >
+                <Key className="mr-2 h-4 w-4" />
+                Password Reset
               </button>
               <button
                 onClick={() => {

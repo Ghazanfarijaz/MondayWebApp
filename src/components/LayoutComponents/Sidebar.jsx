@@ -19,7 +19,7 @@ const Sidebar = () => {
       active: board.id === id,
     }));
     setBoards(updatedBoards);
-    navigate("/mainpage");
+    navigate("/");
   };
 
   return (

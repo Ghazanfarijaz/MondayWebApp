@@ -88,7 +88,12 @@ const Board = () => {
       // <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
       //   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
       // </div>
-      <Loader type="bounce" message="Loading Board Items.." color="primary" />
+      <Loader
+        type="bounce"
+        message="Loading Board Items.."
+        color="primary"
+        fullScreen={false}
+      />
     );
   }
 

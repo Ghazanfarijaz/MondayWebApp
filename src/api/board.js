@@ -30,8 +30,9 @@ export const boardsAPI = {
       return {
         success: response.data.success,
         data: {
-          cursor: response.data.data.cursor,
-          items: response.data.data.items,
+          cursor: response.data.data.result.cursor,
+          items: response.data.data.result.items,
+          customization: response.data.data.customization,
         },
       };
     } catch (error) {

@@ -57,7 +57,7 @@ export default function App() {
   }, [validationState, navigate]);
 
   if (validationState.loading) {
-    return <Loader message="Validating subdomain..." fullScreen />;
+    return <Loader message="Validating subdomain..." fullScreen={true} />;
   }
   return (
     <React.Fragment>

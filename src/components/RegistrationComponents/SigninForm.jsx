@@ -23,7 +23,7 @@ const SigninForm = () => {
 
         if (result.success) {
           // Redirect to main page on success
-          navigate("/mainpage");
+          navigate("/", { replace: true });
         } else {
           setError(result.error || "Login failed. Please try again.");
         }

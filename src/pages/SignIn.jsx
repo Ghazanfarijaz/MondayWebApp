@@ -6,7 +6,7 @@ const SignIn = () => {
   return (
     <div className="w-full min-h-screen flex flex-col lg:flex-row">
       {/* Form Section - Centered vertically on mobile */}
-      <div className="w-full lg:w-1/2 px-6 lg:px-12 py-12 lg:py-0 flex items-center justify-center">
+      <div className="w-full lg:w-1/2 px-6 lg:px-12 py-12 lg:py-0 flex items-center justify-center bg-gray-50">
         <div className="w-full max-w-md">
           <SigninForm />
         </div>

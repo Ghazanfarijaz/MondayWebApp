@@ -148,7 +148,7 @@ const Loader = ({
       )}
 
       {/* Add global styles for animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes orbit {
           0% {
             transform: translateX(-50%) rotate(0deg) translateY(-${size}px)
@@ -204,8 +204,6 @@ const Loader = ({
 };
 
 export default Loader;
-
-
 
 /*
 

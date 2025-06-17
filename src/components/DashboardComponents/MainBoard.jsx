@@ -145,6 +145,7 @@ const Board = () => {
 
       <div
         ref={containerRef}
+        id="board-content-container"
         className="space-y-6 w-full flex-1 overflow-y-auto pr-10"
       >
         <BoardGroup groupData={groupData} viewMode={viewMode} />

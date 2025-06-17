@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
   const { groupData, loading, error } = useBoard();
-  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
+  const { usersError, usersLoading } = useBoard();
 
   // Local States
   const [formattingData, setFormattingData] = useState(false);
@@ -67,7 +67,23 @@ const EditItemDetails = () => {
     );
   }
 
-  console.log("filteredItems", filteredItems);
+  const handleupdateItemValue = ({ itemId, newValue }) => {
+    const updatedItems = filteredItems.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          text: newValue,
+        };
+      }
+      return item;
+    });
+
+    setFilteredItems(updatedItems);
+  };
+
+  const handleUpdate = () => {
+    console.log("Updated Values", selectedItem);
+  };
 
   return (
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
@@ -98,7 +114,45 @@ const EditItemDetails = () => {
       </h1>
 
       {/* Edit Details Form */}
-      <form className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm"></form>
+      <div className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-8">
+        {filteredItems.map((item) => {
+          if (item.type === "checkbox") {
+            return <p>It is a checkbox field!</p>;
+          } else {
+            return (
+              <div className="flex flex-col gap-2" key={item.id}>
+                <label
+                  htmlFor={item.id}
+                  className="text-black dark:text-white blue:text-white"
+                >
+                  {item.column.title}
+                </label>
+                <input
+                  id={item.id}
+                  className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg"
+                  placeholder="Enter value here..."
+                  value={item.text}
+                  onChange={(e) =>
+                    handleupdateItemValue({
+                      itemId: item.id,
+                      newValue: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            );
+          }
+        })}
+        <div className="xl:col-span-3 lg:col-span-2 col-span-1">
+          <button
+            type="button"
+            className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+            onClick={handleUpdate}
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

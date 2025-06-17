@@ -1,3 +1,23 @@
 .App {
   text-align: center;
 }
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #afafaf; /* Track background */
+  border-radius: 4px; /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #737373; /* Scrollbar color */
+  border-radius: 4px;
+  border: 1px solid #cdcdcd; /* Border around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* On hover */
+}

@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useBoard } from "../../contexts/BoardContext";
 import { useEffect, useState } from "react";
+import { FileText, CloudUpload } from "lucide-react";
 
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
@@ -19,7 +20,9 @@ const EditItemDetails = () => {
     const item = groupData?.find((item) => item.id === itemId);
 
     // Filter out the columns in which "isEditable" is true
-    const filtredData = item?.column_values.filter((col) => col.isEditable);
+    const filtredData = item?.column_values.filter((col) => {
+      return col.isEditable && col.type !== "doc" && col.type !== "timeline";
+    });
 
     setSelectedItem(item);
     setFilteredItems(filtredData);
@@ -81,6 +84,27 @@ const EditItemDetails = () => {
     setFilteredItems(updatedItems);
   };
 
+  const handleUploadFile = ({ itemId, file }) => {
+    const updatedItems = filteredItems.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          file: file, // Assuming you want to store the file directly
+          text: file.name, // Update text to show the file name
+        };
+      }
+      return item;
+    });
+
+    setFilteredItems(updatedItems);
+
+    // Now remove the file input value to allow re-uploading the same file
+    const fileInput = document.getElementById(itemId);
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
+
   const handleUpdate = () => {
     console.log("Updated Values", selectedItem);
   };
@@ -114,10 +138,91 @@ const EditItemDetails = () => {
       </h1>
 
       {/* Edit Details Form */}
-      <div className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-8">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpdate();
+        }}
+        className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-8"
+      >
         {filteredItems.map((item) => {
-          if (item.type === "checkbox") {
-            return <p>It is a checkbox field!</p>;
+          if (item.type === "file") {
+            return (
+              <div className="flex flex-col gap-2" key={item.id}>
+                <p className="text-black dark:text-white blue:text-white">
+                  {item.column.title}
+                </p>
+                <label
+                  htmlFor={item.id}
+                  className={`text-black dark:text-white blue:text-white bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg cursor-pointer border border-dashed ${
+                    item.file ? "border-green-500" : "border-gray-400"
+                  } hover:bg-gray-200 transition-colors flex items-center justify-center text-[12px] h-[40.75px]`}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) {
+                      handleUploadFile({
+                        itemId: item.id,
+                        file: file,
+                      });
+                    }
+                  }}
+                >
+                  {item.file ? (
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-5 text-black dark:text-white blue:text-white" />
+                      <span>{item.text}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <CloudUpload className="w-5 text-black dark:text-white blue:text-white" />
+                      <span>Drop file here or click to upload</span>
+                    </div>
+                  )}
+                </label>
+                <input
+                  id={item.id}
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleUploadFile({
+                        itemId: item.id,
+                        file: file,
+                      });
+                    }
+                  }}
+                />
+              </div>
+            );
+          } else if (item.type === "date") {
+            return (
+              <div className="flex flex-col gap-2" key={item.id}>
+                <label
+                  htmlFor={item.id}
+                  className="text-black dark:text-white blue:text-white"
+                >
+                  {item.column.title}{" "}
+                  <span className="text-[14px]">(YYYY-MM-DD)</span>
+                </label>
+                <input
+                  id={item.id}
+                  className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white"
+                  placeholder="Enter date here..."
+                  value={item.text}
+                  onChange={(e) =>
+                    handleupdateItemValue({
+                      itemId: item.id,
+                      newValue: e.target.value,
+                    })
+                  }
+                  pattern="^\d{4}-\d{2}-\d{2}$"
+                  title="Date must be in YYYY-MM-DD format"
+                />
+              </div>
+            );
           } else {
             return (
               <div className="flex flex-col gap-2" key={item.id}>
@@ -129,7 +234,7 @@ const EditItemDetails = () => {
                 </label>
                 <input
                   id={item.id}
-                  className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg"
+                  className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white"
                   placeholder="Enter value here..."
                   value={item.text}
                   onChange={(e) =>
@@ -144,15 +249,11 @@ const EditItemDetails = () => {
           }
         })}
         <div className="xl:col-span-3 lg:col-span-2 col-span-1">
-          <button
-            type="button"
-            className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
-            onClick={handleUpdate}
-          >
+          <button className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit">
             Save Changes
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

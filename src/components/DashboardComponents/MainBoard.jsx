@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import BoardGroup from "./BoardGroup";
 import { boardsAPI } from "../../api/board";
-import Loader from "../UIComponents/Loader";
+import Loader from "../UIComponents/Loader/Loader";
 import { LayoutGrid, List, Table } from "lucide-react";
 
 const Board = () => {
@@ -85,14 +85,11 @@ const Board = () => {
 
   if (initialLoading) {
     return (
-      // <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
-      //   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      // </div>
       <Loader
         type="bounce"
         message="Loading Board Items.."
         color="primary"
-        fullScreen={false}
+        fullScreen={true}
       />
     );
   }

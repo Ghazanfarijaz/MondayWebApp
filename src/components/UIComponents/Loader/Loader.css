@@ -1,0 +1,45 @@
+@keyframes orbit {
+  0% {
+    transform: translateX(-50%) rotate(0deg) translateY(-80px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg) translateY(-80px) rotate(-360deg);
+  }
+}
+@keyframes orbit-reverse {
+  0% {
+    transform: translateX(-50%) rotate(0deg) translateY(80px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(-360deg) translateY(80px) rotate(360deg);
+  }
+}
+@keyframes pulse-slow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+@keyframes wave {
+  0%,
+  100% {
+    height: 8px;
+  }
+  50% {
+    height: 24px;
+  }
+}

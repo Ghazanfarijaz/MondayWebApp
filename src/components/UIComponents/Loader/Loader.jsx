@@ -1,6 +1,5 @@
-// components/Loader.js
-import React from "react";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../../assets/Logo.png";
+import "./Loader.css";
 
 const Loader = ({
   type = "logo-pulse",
@@ -146,82 +145,8 @@ const Loader = ({
           {type === "wave" && <span className="animate-pulse">...</span>}
         </div>
       )}
-
-      {/* Add global styles for animations */}
-      <style>{`
-        @keyframes orbit {
-          0% {
-            transform: translateX(-50%) rotate(0deg) translateY(-${size}px)
-              rotate(0deg);
-          }
-          100% {
-            transform: translateX(-50%) rotate(360deg) translateY(-${size}px)
-              rotate(-360deg);
-          }
-        }
-        @keyframes orbit-reverse {
-          0% {
-            transform: translateX(-50%) rotate(0deg) translateY(${size}px)
-              rotate(0deg);
-          }
-          100% {
-            transform: translateX(-50%) rotate(-360deg) translateY(${size}px)
-              rotate(360deg);
-          }
-        }
-        @keyframes pulse-slow {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.05);
-            opacity: 0.8;
-          }
-        }
-        @keyframes bounce-slow {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-15px);
-          }
-        }
-        @keyframes wave {
-          0%,
-          100% {
-            height: 8px;
-          }
-          50% {
-            height: 24px;
-          }
-        }
-      `}</style>
     </div>
   );
 };
 
 export default Loader;
-
-/*
-
-// Simple logo pulse with default settings
-<Loader />
-
-// Orbit animation with secondary color
-<Loader type="logo-orbit" color="secondary" size={100} />
-
-// Bouncing animation with custom message
-<Loader type="bounce" message="Almost there..." color="success" />
-
-// Wave animation in dark mode
-<Loader type="wave" color="dark" message="Processing data" />
-
-// Non-fullscreen loader
-<Loader fullScreen={false} />
-
-
-
-*/

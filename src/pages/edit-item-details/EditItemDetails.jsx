@@ -1,7 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { useBoard } from "../../contexts/BoardContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileText, CloudUpload, Link as LinkIcon } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { boardsAPI } from "../../api/board";
 
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
@@ -13,6 +15,7 @@ const EditItemDetails = () => {
   const [selectedItem, setSelectedItem] = useState({});
   const [filteredItems, setFilteredItems] = useState([]);
 
+  const originalFilteredItemsRef = useRef(null);
   useEffect(() => {
     setFormattingData(true);
 
@@ -44,10 +47,36 @@ const EditItemDetails = () => {
     setSelectedItem(item);
     setFilteredItems(filteredData);
 
+    // Store original snapshot (deep clone to prevent mutations)
+    originalFilteredItemsRef.current = JSON.parse(JSON.stringify(filteredData));
+
     setFormattingData(false);
   }, [groupData, itemId]);
 
-  if (loading || formattingData) {
+  const updateColumnsData = useMutation({
+    mutationFn: () => {
+      const chnagedColumns = filteredItems.filter((newCol) => {
+        const originalCol = originalFilteredItemsRef.current.find(
+          (col) => col.id === newCol.id
+        );
+
+        // Check if text was updated
+        const textChanged = originalCol?.text !== newCol.text;
+
+        // Check if a new file was uploaded
+        const fileUploaded = !!newCol.newlyUploadedFile;
+
+        return textChanged || fileUploaded;
+      });
+
+      return boardsAPI.updateColumnValuesofItem({
+        itemId,
+        columnValues: chnagedColumns,
+      });
+    },
+  });
+
+  if (loading || formattingData || updateColumnsData.isPending) {
     return (
       <div className="p-[40px] bg-gray-200 dark:bg-light-black blue:bg-light-blue flex items-center justify-center h-full">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100 blue:border-white"></div>
@@ -106,7 +135,7 @@ const EditItemDetails = () => {
       if (item.id === itemId) {
         return {
           ...item,
-          file: file, // Assuming you want to store the file directly
+          newlyUploadedFile: file, // Assuming you want to store the file directly
         };
       }
       return item;
@@ -119,10 +148,6 @@ const EditItemDetails = () => {
     if (fileInput) {
       fileInput.value = "";
     }
-  };
-
-  const handleUpdate = () => {
-    console.log("Updated Values", selectedItem);
   };
 
   return (
@@ -157,7 +182,11 @@ const EditItemDetails = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleUpdate();
+          if (!e.target.checkValidity()) {
+            e.target.reportValidity(); // show browser's tooltip
+            return;
+          }
+          updateColumnsData.mutate();
         }}
         className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-8"
       >
@@ -171,7 +200,9 @@ const EditItemDetails = () => {
                 <label
                   htmlFor={item.id}
                   className={`text-black dark:text-white blue:text-white bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg cursor-pointer border border-dashed ${
-                    item.file ? "border-green-500" : "border-gray-400"
+                    item.newlyUploadedFile
+                      ? "border-green-500"
+                      : "border-gray-400"
                   } hover:bg-gray-200 transition-colors flex items-center justify-center text-[12px] h-[40.75px]`}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => {
@@ -185,10 +216,10 @@ const EditItemDetails = () => {
                     }
                   }}
                 >
-                  {item.file ? (
+                  {item.newlyUploadedFile ? (
                     <div className="flex items-center gap-2">
                       <FileText className="w-5 text-black dark:text-white blue:text-white" />
-                      <span>{item.text}</span>
+                      <span>{item.newlyUploadedFile.name}</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
@@ -259,6 +290,29 @@ const EditItemDetails = () => {
                   }
                   pattern="^\d{4}-\d{2}-\d{2}$"
                   title="Date must be in YYYY-MM-DD format"
+                />
+              </div>
+            );
+          } else if (item.type === "dropdown") {
+            return (
+              <div className="flex flex-col gap-2" key={item.id}>
+                <label
+                  htmlFor={item.id}
+                  className="text-black dark:text-white blue:text-white"
+                >
+                  {item.column.title}
+                </label>
+                <input
+                  id={item.id}
+                  className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white"
+                  placeholder="e.g. label 1, label 2, label 3"
+                  value={item.text}
+                  onChange={(e) =>
+                    handleupdateItemValue({
+                      itemId: item.id,
+                      newValue: e.target.value,
+                    })
+                  }
                 />
               </div>
             );

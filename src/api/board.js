@@ -13,11 +13,6 @@ const api = axios.create({
 });
 
 export const boardsAPI = {
-  /**
-   * Fetch board items with cursor-based pagination
-   * @param {string|null} cursor - Optional cursor for pagination
-   * @returns {Promise<{success: boolean, data: {cursor: string, items: Array}}>}
-   */
   getItems: async (cursor = null) => {
     try {
       const params = {};
@@ -64,13 +59,6 @@ export const boardsAPI = {
     }
   },
 
-  /**
-   * Fetch all items by automatically handling pagination
-   * @returns {Promise<Array>} - Combined array of all items
-   */
-
-  // Example usage in a component
-
   getAllItems: async () => {
     try {
       let allItems = [];
@@ -89,6 +77,46 @@ export const boardsAPI = {
     } catch (error) {
       console.error("Error fetching all board items:", error);
       throw error;
+    }
+  },
+
+  // Update the Column Values of an Item
+  updateColumnValuesofItem: async ({ itemId, columnValues }) => {
+    const formData = new FormData();
+
+    columnValues.forEach((col) => {
+      formData.append(`columnValues[${col.id}][id]`, col.id);
+      formData.append(`columnValues[${col.id}][type]`, col.type);
+      formData.append(`columnValues[${col.id}][text]`, col.text || "");
+
+      // If there's a file, append it
+      if (col.newlyUploadedFile) {
+        formData.append(
+          `columnValues[${col.id}][newlyUploadedFile]`,
+          col.newlyUploadedFile
+        );
+      }
+    });
+
+    try {
+      const response = await api.post(
+        `/api/boards/updateItem/${itemId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            subdomain: "localhost:3000",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error updating item:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          "Failed to update item. Please try again."
+      );
     }
   },
 };

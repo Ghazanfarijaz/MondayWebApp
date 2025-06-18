@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useBoard } from "../../contexts/BoardContext";
 import { useEffect, useState } from "react";
-import { FileText, CloudUpload } from "lucide-react";
+import { FileText, CloudUpload, Link as LinkIcon } from "lucide-react";
 
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
@@ -19,13 +19,30 @@ const EditItemDetails = () => {
     // Find the specific item by matching the ID
     const item = groupData?.find((item) => item.id === itemId);
 
+    if (!item) {
+      setFormattingData(false);
+      setSelectedItem(null);
+      return setFilteredItems([]);
+    }
+
     // Filter out the columns in which "isEditable" is true
-    const filtredData = item?.column_values.filter((col) => {
-      return col.isEditable && col.type !== "doc" && col.type !== "timeline";
-    });
+    // and sort them to ensure "dropdown" and "file" types come last
+    const filteredData = item?.column_values
+      .filter(
+        (col) => col.isEditable && col.type !== "doc" && col.type !== "timeline"
+      )
+      .sort((a, b) => {
+        const lastTypes = ["dropdown", "file"];
+        const aIsLast = lastTypes.includes(a.type);
+        const bIsLast = lastTypes.includes(b.type);
+
+        if (aIsLast && !bIsLast) return 1; // a should come after b
+        if (!aIsLast && bIsLast) return -1; // a should come before b
+        return 0; // keep original order otherwise
+      });
 
     setSelectedItem(item);
-    setFilteredItems(filtredData);
+    setFilteredItems(filteredData);
 
     setFormattingData(false);
   }, [groupData, itemId]);
@@ -90,7 +107,6 @@ const EditItemDetails = () => {
         return {
           ...item,
           file: file, // Assuming you want to store the file directly
-          text: file.name, // Update text to show the file name
         };
       }
       return item;
@@ -195,6 +211,29 @@ const EditItemDetails = () => {
                     }
                   }}
                 />
+                <div className="flex flex-col gap-1">
+                  <p className="text-black dark:text-white blue:text-white font-semibold">
+                    Previous File:
+                  </p>
+                  <div className="flex items-center">
+                    {item.text && (
+                      <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
+                    )}
+                    <div className="text-[12px]">
+                      {item.text ? (
+                        <Link
+                          to={item.text}
+                          className="text-black dark:text-white blue:text-white font-semibold hover:underline"
+                        >
+                          {/* Get the last name after last / */}
+                          {item.text.split("/").pop()}
+                        </Link>
+                      ) : (
+                        "No file uploaded"
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             );
           } else if (item.type === "date") {

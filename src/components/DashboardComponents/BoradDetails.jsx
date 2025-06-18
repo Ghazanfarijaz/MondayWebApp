@@ -1,4 +1,4 @@
-import React from "react";
+import { Link as LinkIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBoard } from "../../contexts/BoardContext";
 import { useParams } from "react-router-dom";
@@ -123,6 +123,35 @@ const ItemDetails = () => {
                       alt="Person 1"
                     />
                   ))}
+                </div>
+              </div>
+            );
+          } else if (columnValue.type === "file") {
+            return (
+              <div
+                key={columnValue.id}
+                className="grid grid-cols-[150px_1fr] gap-[32px] items-start mb-4"
+              >
+                <span className="text-gray-500 dark:text-[#6F767E] blue:text-gray-400">
+                  {columnValue.column.title}
+                </span>
+                <div className="flex items-center">
+                  {columnValue.text && (
+                    <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
+                  )}
+                  <div className="text-[12px]">
+                    {columnValue.text ? (
+                      <Link
+                        to={columnValue.text}
+                        className="text-black dark:text-white blue:text-white font-semibold hover:underline"
+                      >
+                        {/* Get the last name after last / */}
+                        {columnValue.text.split("/").pop()}
+                      </Link>
+                    ) : (
+                      "No file uploaded"
+                    )}
+                  </div>
                 </div>
               </div>
             );

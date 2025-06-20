@@ -15,35 +15,75 @@ const Board = () => {
   const containerRef = useRef(null);
   const initialFetchDone = useRef(false);
   const isFetching = useRef(false); // Track if we're currently fetching
+  const [sortConfig, setSortConfig] = useState(null); // Add sort state
+  const [sortLoading, setSortLoading] = useState(false);
+  const [showSortLoader, setShowSortLoader] = useState(false);
 
-  // Fetch data function
-  const fetchData = useCallback(async () => {
-    if (isFetching.current || !hasMore) return;
+  // Modified fetchData function
+  const fetchData = useCallback(
+    async (reset = false) => {
+      if (isFetching.current || (!hasMore && !reset)) return;
 
-    try {
-      isFetching.current = true;
-      setLoading(true);
-      const response = await boardsAPI.getItems(cursor);
+      try {
+        isFetching.current = true;
+        setLoading(true);
 
-      // Filter out any duplicates just in case
-      setGroupData((prev) => {
-        const newItems = response.data.items.filter(
-          (newItem) => !prev.some((item) => item.id === newItem.id)
+        const response = await boardsAPI.getItems(
+          reset ? null : cursor, // Use null cursor when resetting
+          sortConfig
         );
-        return [...prev, ...newItems];
-      });
 
-      setCursor(response.data.cursor);
-      setHasMore(response.data.cursor !== null);
-    } catch (err) {
-      setError(err.message || "Failed to fetch data");
-      console.error("API Error:", err);
-    } finally {
-      isFetching.current = false;
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  }, [cursor, hasMore]);
+        // Replace items on reset (sort change), append on scroll
+        setGroupData((prev) =>
+          reset ? response.data.items : [...prev, ...response.data.items]
+        );
+
+        // Always update cursor (will be null when reset)
+        setCursor(response.data.cursor);
+        setHasMore(response.data.cursor !== null);
+      } catch (err) {
+        setError(err.message || "Failed to fetch data");
+      } finally {
+        isFetching.current = false;
+        setLoading(false);
+        setInitialLoading(false);
+      }
+    },
+    [cursor, hasMore, sortConfig]
+  );
+
+  // Sort change handler - forces reset
+  const handleSortChange = (newSortConfig) => {
+    setSortLoading(true);
+    const timer = setTimeout(() => setShowSortLoader(true), 100);
+    fetchData(true).finally(() => {
+      clearTimeout(timer);
+      setSortLoading(false);
+      setShowSortLoader(false);
+    });
+    setSortConfig(newSortConfig);
+    setCursor(null); // Reset cursor
+    setHasMore(true); // Reset hasMore flag
+    fetchData(true); // Force reset with new sort
+  };
+
+  // Infinite scroll handler
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || initialLoading || !cursor) return; // Only trigger when we have a cursor
+
+    const handleScroll = () => {
+      if (isFetching.current || !hasMore) return;
+
+      const { scrollTop, clientHeight, scrollHeight } = container;
+      if (scrollTop + clientHeight >= scrollHeight - 300) {
+        fetchData(); // Normal paginated fetch (not reset)
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [fetchData, hasMore, initialLoading, cursor]); // Add cursor to dependencies
 
   // Initial data fetch
   useEffect(() => {
@@ -150,7 +190,18 @@ const Board = () => {
         id="board-content-container"
         className="space-y-6 w-full flex-1 overflow-y-auto pr-10"
       >
-        <BoardGroup groupData={groupData} viewMode={viewMode} />
+        {" "}
+        {sortLoading && (
+          <div className="flex justify-center py-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500"></div>
+          </div>
+        )}
+        <BoardGroup
+          groupData={groupData}
+          viewMode={viewMode}
+          onSortChange={handleSortChange} // Pass handler to child
+          currentSort={sortConfig} // Pass current sort for UI
+        />
         {loading && (
           <div className="flex justify-center py-4">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white blue:border-white"></div>

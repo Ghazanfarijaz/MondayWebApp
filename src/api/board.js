@@ -18,12 +18,37 @@ export const boardsAPI = {
    * @param {string|null} cursor - Optional cursor for pagination
    * @returns {Promise<{success: boolean, data: {cursor: string, items: Array}}>}
    */
-  getItems: async (cursor = null) => {
+  // getItems: async (cursor = null) => {
+  //   try {
+  //     const params = {};
+  //     if (cursor) {
+  //       params.cursor = cursor;
+  //     }
+
+  //     const response = await api.get(`/api/boards/items`, { params });
+
+  //     return {
+  //       success: response.data.success,
+  //       data: {
+  //         cursor: response.data.data.cursor,
+  //         items: response.data.data.items,
+  //       },
+  //     };
+  //   } catch (error) {
+  //     console.error("Error fetching board items:", error);
+  //     throw new Error(
+  //       error.response?.data?.message ||
+  //         error.message ||
+  //         "Failed to fetch board items. Please try again."
+  //     );
+  //   }
+  // },
+
+  getItems: async (cursor = null, sortBy = null) => {
     try {
       const params = {};
-      if (cursor) {
-        params.cursor = cursor;
-      }
+      if (cursor) params.cursor = cursor;
+      if (sortBy) params.sortBy = JSON.stringify(sortBy); // Add sorting params
 
       const response = await api.get(`/api/boards/items`, { params });
 
@@ -43,7 +68,6 @@ export const boardsAPI = {
       );
     }
   },
-
   getUsersPhotoThumb: async () => {
     try {
       const response = await api.get(`/api/users/photothumb`);

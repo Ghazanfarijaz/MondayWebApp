@@ -19,11 +19,11 @@ const Sidebar = () => {
       active: board.id === id,
     }));
     setBoards(updatedBoards);
-    navigate("/mainpage");
+    navigate("/");
   };
 
   return (
-    <div className="w-[268px] h-screen bg-white p-4 border-r hidden md:block">
+    <div className="w-[268px] h-screen bg-white dark:bg-black blue:bg-dark-blue p-4 hidden md:block">
       <div className="flex items-center mb-8">
         <img
           src={Logo}
@@ -32,13 +32,17 @@ const Sidebar = () => {
         />
       </div>
 
-      <h2 className="text-lg font-semibold mb-4">My Boards</h2>
+      <h2 className="text-lg font-semibold mb-4 text-black dark:text-white blue:text-white">
+        My Boards
+      </h2>
       <ul className="space-y-2">
         {boards.map((board) => (
           <li
             key={board.id}
             className={`p-2 rounded-md cursor-pointer ${
-              board.active ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
+              board.active
+                ? "bg-gray-100 dark:bg-light-black blue:bg-light-blue text-black dark:text-white blue:text-white"
+                : "hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-black dark:text-white blue:text-white"
             }`}
             onClick={() => handleBoardClick(board.id)}
           >

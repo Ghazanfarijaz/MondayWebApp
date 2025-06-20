@@ -25,12 +25,12 @@ const ListItem = ({ item }) => {
 
   return (
     <div
-      onClick={() => navigate(`/mainpage/item-details/${item.id}`)}
-      className="grid grid-cols-6 gap-4 p-4 my-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer shadow-sm transition-colors duration-200"
+      onClick={() => navigate(`/item-details/${item.id}`)}
+      className="grid grid-cols-6 gap-4 p-4 my-2 bg-white dark:bg-black blue:bg-dark-blue rounded-lg border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue cursor-pointer shadow-sm transition-colors duration-200"
     >
       {/* Title Column */}
       <div className="flex items-center">
-        <span className="text-gray-700 font-medium truncate">
+        <span className="text-gray-700 dark:text-white blue:text-white font-medium truncate">
           {item.name || "Untitled Item"}
         </span>
       </div>
@@ -58,7 +58,7 @@ const ListItem = ({ item }) => {
               {columnValue.persons_and_teams?.slice(0, 3).map((person) => (
                 <img
                   key={person.id}
-                  className="w-6 h-6 rounded-full border-2 border-white object-cover"
+                  className="w-6 h-6 rounded-full object-cover"
                   src={
                     usersPhotoThumb.users.data.find(
                       (user) => user.id === person.id
@@ -79,7 +79,7 @@ const ListItem = ({ item }) => {
               )}
             </div>
           ) : (
-            <span className="text-sm text-gray-600 truncate max-w-full">
+            <span className="text-sm text-gray-600 dark:text-white blue:text-white truncate max-w-full">
               {columnValue.type === "checkbox"
                 ? columnValue.text
                   ? "Yes"

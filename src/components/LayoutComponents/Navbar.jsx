@@ -1,27 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Bell, User, LogOut, Key } from "lucide-react";
+import { Search, LogOut, Palette, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const notificationsRef = useRef(null);
   const userMenuRef = useRef(null);
   const navigate = useNavigate();
   const { logout } = useAuth();
 
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  // Set the theme based on localStorage or default to light
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark", "blue");
+    root.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        notificationsRef.current &&
-        !notificationsRef.current.contains(event.target)
-      ) {
-        setShowNotifications(false);
-      }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
+        setShowThemeMenu(false);
       }
     };
 
@@ -45,7 +48,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white border-b px-6 sm:px-6 lg:px-8 relative z-50">
+    <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue border-l border-l-[#eaeaea] dark:border-l-light-black blue:border-l-light-blue px-6 sm:px-6 lg:px-8 relative z-50">
       {/* Search bar - made more responsive */}
       <div className="relative w-3/4 max-w-xs lg:max-w-sm flex items-center">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -53,48 +56,18 @@ const Navbar = () => {
         </div>
         <input
           type="search"
-          className="lg:w-full w-3/4 p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          className="lg:w-full w-3/4 p-2 pl-10 text-sm text-gray-900 rounded-lg bg-gray-50 dark:bg-light-black blue:bg-light-blue outline-none focus:outline-none"
           placeholder="Search"
         />
       </div>
 
       {/* Icons and Avatar - adjusted spacing */}
       <div className="flex items-center space-x-3 sm:space-x-4">
-        {/* Notifications */}
-        <div className="relative" ref={notificationsRef}>
-          <button
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-1.5 rounded-full hover:bg-gray-100 transition-colors"
-          >
-            <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full"></span>
-          </button>
-
-          {/* Notifications Dropdown */}
-          {showNotifications && (
-            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-              <div className="px-4 py-2 border-b border-gray-100">
-                <h3 className="font-semibold text-gray-900">Notifications</h3>
-              </div>
-              <div className="max-h-[300px] overflow-y-auto">
-                <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                  <p className="text-sm text-gray-800">New order received</p>
-                  <p className="text-xs text-gray-500 mt-1">2 minutes ago</p>
-                </div>
-                <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                  <p className="text-sm text-gray-800">Payment confirmed</p>
-                  <p className="text-xs text-gray-500 mt-1">1 hour ago</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* User Profile */}
         <div className="relative" ref={userMenuRef}>
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex items-center"
           >
             <img
               src={Avatar}
@@ -105,30 +78,57 @@ const Navbar = () => {
 
           {/* User Menu Dropdown */}
           {showUserMenu && (
-            <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-              <button
-                onClick={() => {
-                  setShowUserMenu(false);
-                  navigate("profile");
-                }}
-                className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"
-              >
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </button>
-              <button
-                onClick={() => {
-                  setShowUserMenu(false);
-                  navigate("password-reset");
-                }}
-                className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"
-              >
-                <Key className="mr-2 h-4 w-4" />
-                Password Reset
-              </button>
+            <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-light-black blue:bg-light-blue rounded-lg shadow-lg py-2 z-50 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
+              <div className="relative">
+                <button
+                  // onClick={() => setShowThemeMenu((prev) => !prev)}
+                  className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black flex items-center justify-between text-sm sm:text-base"
+                  onMouseEnter={() => setShowThemeMenu(true)}
+                >
+                  <div className="flex items-center">
+                    <Palette className="mr-2 h-4 w-4" />
+                    Theme
+                  </div>
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                {showThemeMenu && (
+                  <div className="absolute right-full top-0 mt-0 mr-1 w-40 bg-white dark:bg-light-black blue:bg-light-blue rounded-lg shadow-lg py-2 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue dark:hover:text-black blue:hover:text-black z-50">
+                    <button
+                      onClick={() => {
+                        setShowThemeMenu(false);
+                        setShowUserMenu(false);
+                        setTheme("light");
+                      }}
+                      className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-sm"
+                    >
+                      Light
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowThemeMenu(false);
+                        setShowUserMenu(false);
+                        setTheme("dark");
+                      }}
+                      className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-sm"
+                    >
+                      Dark
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowThemeMenu(false);
+                        setShowUserMenu(false);
+                        setTheme("blue");
+                      }}
+                      className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-sm"
+                    >
+                      Blue
+                    </button>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleLogout}
-                className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center text-sm sm:text-base"
+                className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black flex items-center text-sm sm:text-base"
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout

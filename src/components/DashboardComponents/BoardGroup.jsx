@@ -1,203 +1,285 @@
-import React, { useState } from "react";
-import CardItem from "./CardItem";
-import ListItem from "./ListItem";
-import TableView from "./TableView";
-import { FiFilter, FiChevronDown, FiCheck } from "react-icons/fi";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import BoardGroup from "./BoardGroup";
+import { boardsAPI } from "../../api/board";
+import Loader from "../UIComponents/Loader";
+import { LayoutGrid, List, Table } from "lucide-react";
 
-const BoardGroup = ({ groupData, viewMode, onSortChange, currentSort }) => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Simplified sort options
-  const sortOptions = [
-    { value: "default", label: "Default", apiConfig: null },
-    {
-      value: "name-asc",
-      label: "Name (A-Z)",
-      apiConfig: [{ columnId: "name", direction: "asc" }],
-    },
-    {
-      value: "name-desc",
-      label: "Name (Z-A)",
-      apiConfig: [{ columnId: "name", direction: "desc" }],
-    },
-    {
-      value: "date-asc",
-      label: "Date (Oldest first)",
-      apiConfig: [{ columnId: "date_mkqzac6z", direction: "asc" }],
-    },
-    {
-      value: "date-desc",
-      label: "Date (Newest first)",
-      apiConfig: [{ columnId: "date_mkqzac6z", direction: "desc" }],
-    },
-    {
-      value: "priority-high",
-      label: "Priority (High first)",
-      apiConfig: [{ columnId: "numeric_mkqzr3ws", direction: "desc" }],
-    },
-    {
-      value: "priority-low",
-      label: "Priority (Low first)",
-      apiConfig: [{ columnId: "numeric_mkqzr3ws", direction: "asc" }],
-    },
-  ];
+const Board = () => {
+  const [viewMode, setViewMode] = useState("card");
+  const [groupData, setGroupData] = useState([]);
+  const [cursor, setCursor] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const containerRef = useRef(null);
+  const initialFetchDone = useRef(false);
+  const isFetching = useRef(false); // Track if we're currently fetching
+  const [sortConfig, setSortConfig] = useState(null); // Add sort state
+  const [sortLoading, setSortLoading] = useState(false);
+  const [showSortLoader, setShowSortLoader] = useState(false);
 
-  // Map UI selections to API format
-  const getSortConfig = (value) => {
-    switch (value) {
-      case "name-asc":
-        return [{ columnId: "name", direction: "asc" }];
-      case "name-desc":
-        return [{ columnId: "name", direction: "desc" }];
-      case "date-asc":
-        return [{ columnId: "date_mkqzac6z", direction: "asc" }];
-      case "date-desc":
-        return [{ columnId: "date_mkqzac6z", direction: "desc" }];
-      case "priority-high":
-        return [{ columnId: "numeric_mkqzr3ws", direction: "desc" }];
-      case "priority-low":
-        return [{ columnId: "numeric_mkqzr3ws", direction: "asc" }];
-      default:
-        return null;
+  // Modified fetchData function
+  const fetchData = useCallback(
+    async (reset = false) => {
+      if (isFetching.current || (!hasMore && !reset)) return;
+
+      try {
+        isFetching.current = true;
+        setLoading(true);
+
+        const response = await boardsAPI.getItems(
+          reset ? null : cursor, // Use null cursor when resetting
+          sortConfig
+        );
+
+        // Replace items on reset (sort change), append on scroll
+        setGroupData((prev) =>
+          reset ? response.data.items : [...prev, ...response.data.items]
+        );
+
+        // Always update cursor (will be null when reset)
+        setCursor(response.data.cursor);
+        setHasMore(response.data.cursor !== null);
+      } catch (err) {
+        setError(err.message || "Failed to fetch data");
+      } finally {
+        isFetching.current = false;
+        setLoading(false);
+        setInitialLoading(false);
+      }
+    },
+    [cursor, hasMore, sortConfig]
+  );
+
+  // Sort change handler - forces reset
+  const handleSortChange = (newSortConfig) => {
+    setSortLoading(true);
+    const timer = setTimeout(() => setShowSortLoader(true), 100);
+    fetchData(true).finally(() => {
+      clearTimeout(timer);
+      setSortLoading(false);
+      setShowSortLoader(false);
+    });
+    setSortConfig(newSortConfig);
+    setCursor(null); // Reset cursor
+    setHasMore(true); // Reset hasMore flag
+    fetchData(true); // Force reset with new sort
+  };
+
+  // Infinite scroll handler
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || initialLoading || !cursor) return; // Only trigger when we have a cursor
+
+    const handleScroll = () => {
+      if (isFetching.current || !hasMore) return;
+
+      const { scrollTop, clientHeight, scrollHeight } = container;
+      if (scrollTop + clientHeight >= scrollHeight - 300) {
+        fetchData(); // Normal paginated fetch (not reset)
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [fetchData, hasMore, initialLoading, cursor]); // Add cursor to dependencies
+
+  // Initial data fetch
+  useEffect(() => {
+    if (!initialFetchDone.current) {
+      initialFetchDone.current = true;
+      fetchData();
     }
-  };
+  }, [fetchData]);
 
-  // Find current sort value for UI
-  const getCurrentSortValue = () => {
-    if (!currentSort) return "default";
+  // Infinite scroll handler with debouncing
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || initialLoading) return;
 
-    console.log("Current Sort:", currentSort);
+    let timeoutId;
 
-    const found = sortOptions.find(
-      (option) =>
-        JSON.stringify(option.apiConfig) === JSON.stringify(currentSort)
+    const handleScroll = () => {
+      // Clear any pending scroll checks
+      clearTimeout(timeoutId);
+
+      // Wait 200ms after scrolling stops before checking position
+      timeoutId = setTimeout(() => {
+        if (isFetching.current || !hasMore) return;
+
+        const { scrollTop, clientHeight, scrollHeight } = container;
+        // Check if we're near the bottom (within 300px)
+        if (scrollTop + clientHeight >= scrollHeight - 300) {
+          fetchData();
+        }
+      }, 200);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [fetchData, hasMore, initialLoading]);
+
+  if (initialLoading) {
+    return (
+      // <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+      //   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      // </div>
+      <Loader type="bounce" message="Loading Board Items.." color="primary" />
     );
+  }
 
-    return found ? found.value : "default";
-  };
+  if (error) {
+    return (
+      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full mb-6 bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <div className={`w-4 h-8 rounded-[4px] bg-purple-300`}></div>
-          <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
-            Group 1
-          </h2>
-        </div>
-
-        {/* Filter Dropdown */}
-        <div className="relative">
+    <div className="p-[40px] bg-gray-200 flex flex-col h-full">
+      {/* <div className="flex justify-between items-center mb-6 border-b">
+        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
+        <div className="flex space-x-2">
           <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 dark:text-white blue:text-white bg-gray-50 dark:bg-light-black blue:bg-light-blue hover:bg-gray-100 rounded-md transition-colors "
+            className={`px-3 py-1 rounded ${
+              viewMode === "card" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => setViewMode("card")}
           >
-            <FiFilter className="text-gray-500 dark:text-white blue:text-white" />
-            Sort
-            <FiChevronDown
-              className={`transition-transform ${
-                isFilterOpen ? "rotate-180" : ""
-              } text-gray-500 dark:text-white blue:text-white`}
-            />
+            Card View
           </button>
+          <button
+            className={`px-3 py-1 rounded ${
+              viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => setViewMode("list")}
+          >
+            List View
+          </button>
+          <button
+            className={`px-3 py-1 rounded ${
+              viewMode === "table" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => setViewMode("table")}
+          >
+            Table View
+          </button>
+        </div>
+      </div> */}
 
-          {isFilterOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-light-black blue:bg-light-blue rounded-md shadow-lg z-10 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
-              <div className="py-1">
-                {sortOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      onSortChange(getSortConfig(option.value));
-                      setIsFilterOpen(false);
-                      // Here you would implement the actual sorting logic
-                    }}
-                    className={`flex items-center justify-between w-full px-4 py-2 text-sm text-left ${
-
-                      getCurrentSortValue() === option.value
-                        ? "bg-purple-50 text-purple-700"
-                        : "text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    {option.label}
-                    {getCurrentSortValue() === option.value && (
-                      <FiCheck className="text-purple-500" />
-                      selectedSort === option.value
-                        ? "bg-gray-200/25 text-black"
-                        : "hover:text-black dark:hover:text-black blue:hover:text-black hover:bg-gray-50"
-                    } text-gray-700 dark:text-white blue:text-white`}
-                  >
-                    {option.label}
-                    {selectedSort === option.value && (
-                      <FiCheck className="text-gray-700 dark:text-white blue:text-white" />
-
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+      <div className="flex justify-between items-center mb-6 border-b">
+        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
+        <div className="flex space-x-3 md:space-x-3 bg-white p-2 rounded-full px-4 py-2">
+          <button
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
+              viewMode === "card"
+                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
+                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+            }`}
+            onClick={() => setViewMode("card")}
+          >
+            <LayoutGrid className="w-4 h-4" />
+            <span className="hidden md:inline">Card View</span>
+          </button>
+          <button
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
+              viewMode === "list"
+                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
+                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+            }`}
+            onClick={() => setViewMode("list")}
+          >
+            <List className="w-4 h-4" />
+            <span className="hidden md:inline">List View</span>
+          </button>
+          <button
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
+              viewMode === "table"
+                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
+                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
+            }`}
+            onClick={() => setViewMode("table")}
+          >
+            <Table className="w-4 h-4" />
+            <span className="hidden md:inline">Table View</span>
+          </button>
         </div>
       </div>
 
-      {viewMode === "list" ? (
-        <div className="w-full">
-          {/* List items */}
-          {groupData?.map((item) => (
-            <ListItem key={item.id} item={item} />
-          ))}
-        </div>
-      ) : viewMode === "table" ? (
-        <>
-          <div className="w-full border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
-            {/* Desktop Table with Headers (hidden on mobile) */}
-            <div className="hidden md:block">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-white dark:bg-black blue:bg-dark-blue border-b border-b-gray-200 dark:border-b-[#4E4E4E] blue:border-b-blue border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                      Item Name <span className="ml-1">↕</span>
-                    </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                      Status <span className="ml-1">↕</span>
-                    </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                      Priority <span className="ml-1">↕</span>
-                    </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                      Date <span className="ml-1">↕</span>
-                    </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                      People <span className="ml-1">↕</span>
-                    </th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                      Numbers <span className="ml-1">↕</span>
-                    </th>
-                  </tr>
-                </thead>
-                {groupData?.map((item) => (
-                  <TableView key={item.id} item={item} />
-                ))}
-              </table>
-            </div>
-
-            {/* Mobile Card View (no headers) */}
-            <div className="md:hidden p-2 space-y-2">
-              {groupData?.map((item) => (
-                <TableView key={item.id} item={item} />
-              ))}
-            </div>
+      {/* <div className="flex justify-between items-center mb-6 border-b">
+        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
+        <div className="flex space-x-1 md:space-x-2">
+          <div
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
+              viewMode === "card"
+                ? "bg-gray-300 text-black text-bold"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => setViewMode("card")}
+          >
+            <img src={card} alt="Card View" className="w-4 h-4" />
+            <span className="hidden md:inline">Card View</span>
           </div>
-        </>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {groupData?.map((item) => (
-            <CardItem key={item.id} item={item} />
-          ))}
+          <div
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
+              viewMode === "list"
+                ? "bg-gray-300 text-black text-bold"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => setViewMode("list")}
+          >
+            <img src={list} alt="List View" className="w-4 h-4" />
+            <span className="hidden md:inline">List View</span>
+          </div>
+          <div
+            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
+              viewMode === "table"
+                ? "bg-gray-300 text-black text-bold"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
+            onClick={() => setViewMode("table")}
+          >
+            <img src={table} alt="Table View" className="w-4 h-4" />
+            <span className="hidden md:inline">Table View</span>
+          </div>
         </div>
-      )}
+      </div> */}
+
+      <div
+        ref={containerRef}
+        className="space-y-6 w-full px-[24px] flex-1 overflow-y-auto"
+      >
+        {" "}
+        {sortLoading && (
+          <div className="flex justify-center py-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500"></div>
+          </div>
+        )}
+        <BoardGroup
+          groupData={groupData}
+          viewMode={viewMode}
+          onSortChange={handleSortChange} // Pass handler to child
+          currentSort={sortConfig} // Pass current sort for UI
+        />
+        {loading && (
+          <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        )}
+        {!hasMore && groupData.length > 0 && (
+          <div className="text-center py-4 text-gray-500">
+            No more items to load
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default BoardGroup;
+export default Board;

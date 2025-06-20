@@ -9,6 +9,7 @@ import Board from "./components/DashboardComponents/MainBoard";
 // import ProfileSettings from "./components/DashboardComponents/ProfileSettings";
 // import ResetPassword from "./components/DashboardComponents/ResetPassword";
 import BoradDetails from "./components/DashboardComponents/BoradDetails";
+import EditItemDetails from "./pages/edit-item-details/EditItemDetails";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
           {
             path: "item-details/:id",
             element: <BoradDetails />,
+          },
+          {
+            path: "item-details/:id/edit-details",
+            element: <EditItemDetails />,
           },
           // {
           //   path: "profile",

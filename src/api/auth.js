@@ -2,7 +2,6 @@
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
-console.log("Base URL:", BASE_URL); // Log the base URL for debugging
 
 // Configure axios to always include credentials (cookies)
 axios.defaults.withCredentials = true;

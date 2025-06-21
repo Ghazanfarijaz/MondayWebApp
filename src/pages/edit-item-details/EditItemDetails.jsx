@@ -32,7 +32,11 @@ const EditItemDetails = () => {
     // and sort them to ensure "dropdown" and "file" types come last
     const filteredData = item?.column_values
       .filter(
-        (col) => col.isEditable && col.type !== "doc" && col.type !== "timeline"
+        (col) =>
+          col.isEditable &&
+          col.type !== "doc" &&
+          col.type !== "timeline" &&
+          col.type !== "people"
       )
       .sort((a, b) => {
         const lastTypes = ["dropdown", "file"];

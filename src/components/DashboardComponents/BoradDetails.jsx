@@ -135,23 +135,30 @@ const ItemDetails = () => {
                 <span className="text-gray-500 dark:text-[#6F767E] blue:text-gray-400">
                   {columnValue.column.title}
                 </span>
-                <div className="flex items-center">
-                  {columnValue.text && (
-                    <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
-                  )}
-                  <div className="text-[12px]">
-                    {columnValue.text ? (
-                      <Link
-                        to={columnValue.text}
-                        className="text-black dark:text-white blue:text-white font-semibold hover:underline"
-                      >
-                        {/* Get the last name after last / */}
-                        {columnValue.text.split("/").pop()}
-                      </Link>
-                    ) : (
-                      "No file uploaded"
-                    )}
-                  </div>
+                <div className="flex items-center gap-4">
+                  {columnValue?.files?.length < 1
+                    ? "No file uploaded"
+                    : columnValue?.files?.map((file, index) => (
+                        <div className="flex items-center" key={index}>
+                          {columnValue.text && (
+                            <LinkIcon className="text-gray-700 dark:text-white blue:text-white h-[12px]" />
+                          )}
+                          <div className="text-[12px]">
+                            <Link
+                              to={file.asset.public_url}
+                              className="text-gray-700 dark:text-white blue:text-white font-semibold hover:underline"
+                            >
+                              {/* Get the last name after last / */}
+                              {file.asset.name}
+                            </Link>
+                          </div>
+                          {index < columnValue.files.length - 1 && (
+                            <p className="ps-4 text-gray-700 dark:text-white blue:text-white">
+                              |
+                            </p>
+                          )}
+                        </div>
+                      ))}
                 </div>
               </div>
             );

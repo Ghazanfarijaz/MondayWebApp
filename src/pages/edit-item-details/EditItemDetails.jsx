@@ -248,26 +248,26 @@ const EditItemDetails = () => {
                 />
                 <div className="flex flex-col gap-1">
                   <p className="text-black dark:text-white blue:text-white font-semibold">
-                    Previous File:
+                    Previous Files:
                   </p>
-                  <div className="flex items-center">
-                    {item.text && (
-                      <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
-                    )}
-                    <div className="text-[12px]">
-                      {item.text ? (
-                        <Link
-                          to={item.text}
-                          className="text-black dark:text-white blue:text-white font-semibold hover:underline"
-                        >
-                          {/* Get the last name after last / */}
-                          {item.text.split("/").pop()}
-                        </Link>
-                      ) : (
-                        "No file uploaded"
-                      )}
-                    </div>
-                  </div>
+                  {item?.files?.length < 1
+                    ? "No file uploaded"
+                    : item?.files?.map((file, index) => (
+                        <div className="flex items-center" key={index}>
+                          {item.text && (
+                            <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
+                          )}
+                          <div className="text-[12px]">
+                            <Link
+                              to={file.asset.public_url}
+                              className="text-black dark:text-white blue:text-white font-semibold hover:underline"
+                            >
+                              {/* Get the last name after last / */}
+                              {file.asset.name}
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
                 </div>
               </div>
             );

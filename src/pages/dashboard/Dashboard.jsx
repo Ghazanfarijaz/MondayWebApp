@@ -3,6 +3,7 @@ import { LayoutGrid, List, Table } from "lucide-react";
 import BoardGroup from "../../components/DashboardComponents/BoardGroup";
 import { boardsAPI } from "../../api/board";
 import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkeleton";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const [viewMode, setViewMode] = useState("card");
@@ -88,8 +89,12 @@ const Dashboard = () => {
   }
 
   if (error) {
+    toast.error("Error!", {
+      description: "Could not load data. Please try again later.",
+    });
+
     return (
-      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
+      <div className="p-[40px] bg-gray-200 dark:bg-light-black blue:bg-light-blue flex items-center justify-center h-full">
         <p className="text-red-500">Error: {error}</p>
       </div>
     );

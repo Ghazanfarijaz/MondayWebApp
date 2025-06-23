@@ -5,6 +5,9 @@ import { router } from "./Routes";
 import { RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+// Sonner Toast
+import { Toaster } from "sonner";
+
 // Mantine UI styles
 import { createTheme, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
@@ -18,11 +21,19 @@ const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <MantineProvider theme={theme}>
+  <MantineProvider theme={theme}>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </MantineProvider>
-  </QueryClientProvider>
+    </QueryClientProvider>
+
+    <Toaster
+      style={{
+        fontFamily: "Plus Jakarta Sans",
+      }}
+      duration={3000}
+      richColors={true}
+    />
+  </MantineProvider>
 );
 
 reportWebVitals();

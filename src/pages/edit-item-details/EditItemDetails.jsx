@@ -320,6 +320,30 @@ const EditItemDetails = () => {
                 />
               </div>
             );
+          } else if (item.type === "email") {
+            return (
+              <div className="flex flex-col gap-2" key={item.id}>
+                <label
+                  htmlFor={item.id}
+                  className="text-black dark:text-white blue:text-white"
+                >
+                  {item.column.title}
+                </label>
+                <input
+                  id={item.id}
+                  type="email"
+                  className={`bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white`}
+                  placeholder="Enter email here..."
+                  value={item.text}
+                  onChange={(e) =>
+                    handleupdateItemValue({
+                      itemId: item.id,
+                      newValue: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            );
           } else {
             return (
               <div className="flex flex-col gap-2" key={item.id}>

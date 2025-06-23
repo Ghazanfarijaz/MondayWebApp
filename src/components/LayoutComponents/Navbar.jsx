@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { LogOut, Palette } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
 import { useAuth } from "../../contexts/AuthContext";
 import Logo from "../../assets/Logo.png";
@@ -42,11 +42,13 @@ const Navbar = () => {
 
   return (
     <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue border-l border-l-[#eaeaea] dark:border-l-light-black blue:border-l-light-blue px-6 sm:px-6 lg:px-8 relative z-50">
-      <img
-        src={Logo}
-        alt="Logo"
-        className="object-contain w-[48px] h-[48px] cursor-pointer"
-      />
+      <Link to="/">
+        <img
+          src={Logo}
+          alt="Logo"
+          className="object-contain w-[48px] h-[48px]"
+        />
+      </Link>
 
       {/* Icons and Avatar - adjusted spacing */}
       <div className="flex items-center space-x-3 sm:space-x-4">

@@ -13,7 +13,7 @@ const ViewItemDetails = () => {
   const navigate = useNavigate();
 
   // Fetch item details - Query
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isFetching, isError, error } = useQuery({
     queryKey: ["itemDetails", id],
     queryFn: () =>
       boardsAPI.getItemDetails({
@@ -44,7 +44,7 @@ const ViewItemDetails = () => {
         </span>
       </div>
 
-      {isPending || usersLoading ? (
+      {usersLoading || isFetching ? (
         <ItemDetailsSkeleton />
       ) : (
         <>

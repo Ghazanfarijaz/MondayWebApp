@@ -1,14 +1,16 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { FileText, CloudUpload, Link as LinkIcon } from "lucide-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { boardsAPI } from "../../api/board";
-import ItemDetailsSkeleton from "../../features/view-item-details/components/ItemDetailsSkeleton";
 import { toast } from "sonner";
+import LoadingBackdrop from "../../components/UIComponents/LoadingBackdrop";
+import EditItemDetailsSkeleton from "../../features/edit-item-details/components/EditItemDetailsSkeleton";
 
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // Local States
   const [formattingData, setFormattingData] = useState(false);
@@ -83,6 +85,14 @@ const EditItemDetails = () => {
         columnValues: chnagedColumns,
       });
     },
+    onSuccess: () => {
+      toast.success("Item details updated successfully!");
+      const id = "";
+      queryClient.invalidateQueries({
+        queryKey: ["itemDetails", id],
+      });
+      navigate(`/item-details/${itemId}`);
+    },
   });
 
   const handleupdateItemValue = ({ itemId, newValue }) => {
@@ -149,8 +159,10 @@ const EditItemDetails = () => {
         </span>
       </div>
 
-      {isPending || formattingData || updateColumnsData.isPending ? (
-        <ItemDetailsSkeleton />
+      {updateColumnsData.isPending && <LoadingBackdrop />}
+
+      {isPending || formattingData ? (
+        <EditItemDetailsSkeleton />
       ) : (
         <>
           {/* Item Title */}

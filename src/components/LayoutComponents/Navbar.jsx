@@ -59,45 +59,19 @@ const Navbar = () => {
             />
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Sub width={130}>
+            <Menu.Sub
+              width={130}
+              leftSection={<Palette className="mr-2 h-4 w-4" />}
+            >
               <Menu.Sub.Target>
-                <Menu.Sub.Item>
-                  <div className="flex items-center">
-                    <Palette className="mr-2 h-4 w-4" />
-                    Theme
-                  </div>
-                </Menu.Sub.Item>
+                <Menu.Sub.Item>Theme</Menu.Sub.Item>
               </Menu.Sub.Target>
               <Menu.Sub.Dropdown>
-                <Menu.Item>
-                  <button
-                    onClick={() => {
-                      setTheme("light");
-                    }}
-                  >
-                    Light
-                  </button>
-                </Menu.Item>
+                <Menu.Item onClick={() => setTheme("light")}>Light</Menu.Item>
                 <Menu.Divider />
-                <Menu.Item>
-                  <button
-                    onClick={() => {
-                      setTheme("dark");
-                    }}
-                  >
-                    Dark
-                  </button>
-                </Menu.Item>
+                <Menu.Item onClick={() => setTheme("dark")}>Dark</Menu.Item>
                 <Menu.Divider />
-                <Menu.Item>
-                  <button
-                    onClick={() => {
-                      setTheme("blue");
-                    }}
-                  >
-                    Blue
-                  </button>
-                </Menu.Item>
+                <Menu.Item onClick={() => setTheme("blue")}>Blue</Menu.Item>
               </Menu.Sub.Dropdown>
             </Menu.Sub>
             <Menu.Divider />

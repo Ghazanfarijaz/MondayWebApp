@@ -2,9 +2,9 @@ import "./App.css";
 import { useNavigate, Outlet } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { checkSubdomain } from "./api/subdomain";
-import Loader from "./components/UIComponents/Loader/Loader";
 import SessionManager from "./components/SessionManager";
 import Navbar from "./components/LayoutComponents/Navbar";
+import LoadingBackdrop from "./components/UIComponents/LoadingBackdrop";
 
 export default function App() {
   const navigate = useNavigate();
@@ -57,8 +57,8 @@ export default function App() {
     }
   }, [validationState, navigate]);
 
-  if (validationState.loading) {
-    return <Loader message="Validating subdomain..." fullScreen={true} />;
+  if (validationState.loadin) {
+    return <LoadingBackdrop />;
   }
   return (
     <React.Fragment>

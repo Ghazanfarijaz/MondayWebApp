@@ -95,6 +95,22 @@ const BoardGroup = ({ groupData, viewMode }) => {
             <thead>
               <tr className="bg-white dark:bg-black blue:bg-dark-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
                 <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
+                  Name
+                  <span className="ml-1">↕</span>
+                </th>
+
+                {groupData[0].column_values.slice(0, 5).map((item, index) => (
+                  <th
+                    key={index}
+                    className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"
+                  >
+                    {item.column.title}
+                    <span className="ml-1">↕</span>
+                  </th>
+                ))}
+              </tr>
+              {/* <tr className="bg-white dark:bg-black blue:bg-dark-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
+                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                   Item Name <span className="ml-1">↕</span>
                 </th>
                 <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
@@ -112,7 +128,7 @@ const BoardGroup = ({ groupData, viewMode }) => {
                 <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                   Numbers <span className="ml-1">↕</span>
                 </th>
-              </tr>
+              </tr> */}
             </thead>
 
             <tbody className="table-row-group">

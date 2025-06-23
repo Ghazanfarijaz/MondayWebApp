@@ -2,14 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { BoardProvider } from "./contexts/BoardContext";
-import MainPage from "./pages/MainPage";
 import SignIn from "./pages/SignIn";
 import ErrorPage from "./components/UIComponents/ErrorPage";
-import Board from "./components/DashboardComponents/MainBoard";
-// import ProfileSettings from "./components/DashboardComponents/ProfileSettings";
-// import ResetPassword from "./components/DashboardComponents/ResetPassword";
-import BoradDetails from "./components/DashboardComponents/BoradDetails";
 import EditItemDetails from "./pages/edit-item-details/EditItemDetails";
+import ViewItemDetails from "./pages/view-item-details/ViewItemDetails";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -23,38 +20,16 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "login",
-        element: <SignIn />,
+        index: "/",
+        element: <Dashboard />,
       },
       {
-        path: "error",
-        element: <ErrorPage fullScreen />,
+        path: "item-details/:id",
+        element: <ViewItemDetails />,
       },
       {
-        path: "/",
-        element: <MainPage />,
-        children: [
-          {
-            index: true,
-            element: <Board />,
-          },
-          {
-            path: "item-details/:id",
-            element: <BoradDetails />,
-          },
-          {
-            path: "item-details/:id/edit-details",
-            element: <EditItemDetails />,
-          },
-          // {
-          //   path: "profile",
-          //   element: <ProfileSettings />,
-          // },
-          // {
-          //   path: "password-reset",
-          //   element: <ResetPassword />,
-          // },
-        ],
+        path: "item-details/:id/edit-details",
+        element: <EditItemDetails />,
       },
       {
         path: "*",
@@ -63,5 +38,17 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "login",
+    element: (
+      <AuthProvider>
+        <SignIn />
+      </AuthProvider>
+    ),
+  },
+  {
+    path: "error",
+    element: <ErrorPage fullScreen />,
   },
 ]);

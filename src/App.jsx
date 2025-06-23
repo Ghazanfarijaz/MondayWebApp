@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { checkSubdomain } from "./api/subdomain";
 import Loader from "./components/UIComponents/Loader/Loader";
 import SessionManager from "./components/SessionManager";
+import Navbar from "./components/LayoutComponents/Navbar";
 
 export default function App() {
   const navigate = useNavigate();
@@ -62,7 +63,13 @@ export default function App() {
   return (
     <React.Fragment>
       <SessionManager />
-      <Outlet />
+      <div className="flex flex-col h-screen w-screen">
+        {/* Right side: Navbar at the top, then Board below */}
+        <Navbar />
+        <div className="flex-1 overflow-auto">
+          <Outlet />
+        </div>
+      </div>
     </React.Fragment>
   );
 }

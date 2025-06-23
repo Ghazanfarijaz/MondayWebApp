@@ -91,6 +91,9 @@ const EditItemDetails = () => {
       queryClient.invalidateQueries({
         queryKey: ["itemDetails", id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["boardData"],
+      });
       navigate(`/item-details/${itemId}`);
     },
   });

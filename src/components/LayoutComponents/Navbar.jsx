@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Search, LogOut, Palette, ChevronRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { LogOut, Palette, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
 import { useAuth } from "../../contexts/AuthContext";
+import Logo from "../../assets/Logo.png";
 
 const Navbar = () => {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
@@ -49,17 +50,11 @@ const Navbar = () => {
 
   return (
     <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue border-l border-l-[#eaeaea] dark:border-l-light-black blue:border-l-light-blue px-6 sm:px-6 lg:px-8 relative z-50">
-      {/* Search bar - made more responsive */}
-      <div className="relative w-3/4 max-w-xs lg:max-w-sm flex items-center">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Search className="w-4 h-4 text-gray-500" />
-        </div>
-        <input
-          type="search"
-          className="lg:w-full w-3/4 p-2 pl-10 text-sm text-gray-900 rounded-lg bg-gray-50 dark:bg-light-black blue:bg-light-blue outline-none focus:outline-none"
-          placeholder="Search"
-        />
-      </div>
+      <img
+        src={Logo}
+        alt="Logo"
+        className="object-contain w-[48px] h-[48px] cursor-pointer"
+      />
 
       {/* Icons and Avatar - adjusted spacing */}
       <div className="flex items-center space-x-3 sm:space-x-4">

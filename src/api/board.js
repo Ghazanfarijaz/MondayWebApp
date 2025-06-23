@@ -124,7 +124,27 @@ export const boardsAPI = {
   getItemDetails: async ({ itemId }) => {
     try {
       const response = await api.get(`/api/items/${itemId}`);
-      return response.data.data;
+
+      const customizationFields = response.data.customization.fields;
+
+      // Add the 'isEditable' Field in the data
+      const updatedColumnValues = response.data.data.column_values.map(
+        (col) => {
+          const customization = customizationFields.find(
+            (field) => field.columnId === col.id
+          );
+          return {
+            ...col,
+            isEditable: customization?.isEditable ?? false,
+          };
+        }
+      );
+
+      return {
+        id: response.data.data.id,
+        name: response.data.data.name,
+        column_values: updatedColumnValues,
+      };
     } catch (error) {
       console.error("Error fetching item details:", error);
       throw new Error(

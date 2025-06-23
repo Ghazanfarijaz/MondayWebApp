@@ -137,7 +137,7 @@ const BoardGroup = ({ groupData, viewMode }) => {
                   key={item.id}
                   className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
                   onClick={() => {
-                    navigate(`/mainpage/item-details/${item.id}`);
+                    navigate(`/item-details/${item.id}`);
                   }}
                 >
                   <td className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium">

@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { LayoutGrid, List, Table } from "lucide-react";
 import BoardGroup from "../../components/DashboardComponents/BoardGroup";
-import Loader from "../../components/UIComponents/Loader/Loader";
 import { boardsAPI } from "../../api/board";
+import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkeleton";
 
 const Dashboard = () => {
   const [viewMode, setViewMode] = useState("card");
@@ -84,14 +84,7 @@ const Dashboard = () => {
   }, [fetchData, hasMore, initialLoading]);
 
   if (initialLoading) {
-    return (
-      <Loader
-        type="bounce"
-        message="Loading Board Items.."
-        color="primary"
-        fullScreen={true}
-      />
-    );
+    return <BoardDataSkeleton type={viewMode} />;
   }
 
   if (error) {

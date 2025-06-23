@@ -96,7 +96,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="ps-10 py-10 bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
+    <div className="md:ps-10 md:py-10 py-4 ps-4 bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
       <div className="flex justify-between items-center mb-6 pr-10">
         <h1 className="text-sm md:text-2xl font-bold text-black dark:text-white blue:text-white">
           Board 1
@@ -141,7 +141,7 @@ const Dashboard = () => {
       <div
         ref={containerRef}
         id="board-content-container"
-        className="space-y-6 w-full flex-1 overflow-y-auto pr-10"
+        className="space-y-6 w-full flex-1 overflow-y-auto md:pr-10 pr-4"
       >
         <BoardGroup groupData={groupData} viewMode={viewMode} />
         {loading && (

@@ -38,7 +38,10 @@ const CardItem = ({ item }) => {
       {item.column_values.map((columnValue, i) => {
         if (i > 4) return null;
         return columnValue.type === "status" ? (
-          <div className="flex justify-between items-center mb-2">
+          <div
+            key={columnValue.id}
+            className="flex justify-between items-center mb-2"
+          >
             <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
               {columnValue.column.title}
             </span>
@@ -58,7 +61,10 @@ const CardItem = ({ item }) => {
             </span>
           </div>
         ) : columnValue.type === "people" ? (
-          <div className="flex justify-between items-center mb-2">
+          <div
+            key={columnValue.id}
+            className="flex justify-between items-center mb-2"
+          >
             <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
               {columnValue.column.title}
             </span>
@@ -79,7 +85,10 @@ const CardItem = ({ item }) => {
             </div>
           </div>
         ) : (
-          <div className="flex justify-between items-center truncate mb-2">
+          <div
+            key={columnValue.id}
+            className="flex justify-between items-center truncate mb-2"
+          >
             <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
               {columnValue.column.title}
             </span>
@@ -93,46 +102,6 @@ const CardItem = ({ item }) => {
           </div>
         );
       })}
-
-      {/* <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-600">Status</span>
-        <span className="px-2 py-1 text-xs rounded-[4px] bg-green-100 text-green-800">
-          {item.name}
-        </span>
-      </div> */}
-
-      {/* <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-600">Priority</span>
-        <span className="px-2 py-1 text-xs rounded-[4px] bg-red-500 text-white">
-          {item.priority}
-        </span>
-      </div> */}
-
-      {/* <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-600">Date</span>
-        <span className="text-sm"></span>
-      </div> */}
-
-      {/* <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-600">People</span>
-        <div className="flex">
-          <img
-            className="w-6 h-6 rounded-full -mr-1"
-            // src={item.people?.image1}
-            alt="Person 1"
-          />
-          <img
-            className="w-6 h-6 rounded-full"
-            // src={item.people?.image2}
-            alt="Person 2"
-          />
-        </div>
-      </div> */}
-
-      {/* <div className="flex justify-between items-center">
-        <span className="text-sm text-gray-600">Board</span>
-        <span className="text-sm"></span>
-      </div> */}
     </div>
   );
 };

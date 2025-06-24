@@ -13,12 +13,13 @@ const api = axios.create({
 });
 
 export const boardsAPI = {
-  getItems: async (cursor = null) => {
+
+  getItems: async (cursor = null, sortBy = null) => {
+
     try {
       const params = {};
-      if (cursor) {
-        params.cursor = cursor;
-      }
+      if (cursor) params.cursor = cursor;
+      if (sortBy) params.sortBy = JSON.stringify(sortBy); // Add sorting params
 
       const response = await api.get(`/api/boards/items`, { params });
 
@@ -39,7 +40,6 @@ export const boardsAPI = {
       );
     }
   },
-
   getUsersPhotoThumb: async () => {
     try {
       const response = await api.get(`/api/users/photothumb`);

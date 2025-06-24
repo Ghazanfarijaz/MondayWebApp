@@ -1,26 +1,116 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CardItem from "./CardItem";
 import ListItem from "./ListItem";
 import TableView from "./TableView";
-import { FiFilter, FiChevronDown, FiCheck } from "react-icons/fi";
+
 import { useBoard } from "../../contexts/BoardContext";
 import { useNavigate } from "react-router-dom";
+import SortFilter from "../UIComponents/SortFilter";
 
 const BoardGroup = ({ groupData, viewMode }) => {
   const { usersPhotoThumb } = useBoard();
   const navigate = useNavigate();
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("default");
 
-  const sortOptions = [
-    { value: "default", label: "Default" },
-    { value: "name-asc", label: "Name (A-Z)" },
-    { value: "name-desc", label: "Name (Z-A)" },
-    { value: "date-asc", label: "Date (Oldest first)" },
-    { value: "date-desc", label: "Date (Newest first)" },
-    { value: "priority-high", label: "Priority (High first)" },
-    { value: "priority-low", label: "Priority (Low first)" },
-  ];
+  const [filteredData, setFilteredData] = useState(groupData);
+  const [sortOptions, setSortOptions] = useState([]);
+  const [selectedSort, setSelectedSort] = useState({
+    value: "default",
+    label: "Default",
+  });
+
+  const handleSortChange = ({ value, label }) => {
+    if (value === "default") {
+      return setFilteredData(groupData);
+    }
+
+    const [sortType, columnId, order] = value.split("-");
+
+    const sortedData = [...groupData].sort((a, b) => {
+      const columnA = a.column_values.find((col) => col.id === columnId);
+      const columnB = b.column_values.find((col) => col.id === columnId);
+
+      if (!columnA || !columnB) return 0;
+
+      let aText = columnA.text ?? "";
+      let bText = columnB.text ?? "";
+
+      let comparison = 0;
+      if (sortType === "text" || sortType === "status") {
+        comparison = aText.localeCompare(bText);
+      } else if (sortType === "date") {
+        const aDate = new Date(aText);
+        const bDate = new Date(bText);
+        comparison = aDate - bDate;
+      } else if (sortType === "priority") {
+        const aPriority = columnA.priority ?? 0;
+        const bPriority = columnB.priority ?? 0;
+        comparison = aPriority - bPriority;
+      }
+
+      return order === "asc" ? comparison : -comparison;
+    });
+
+    setFilteredData(sortedData);
+  };
+
+  // useMemo to memoize filteredData based on groupData and sortOptions
+  useMemo(() => {
+    let sortingOptions = [
+      {
+        value: "default",
+        label: "Default",
+      },
+    ];
+
+    if (groupData.length > 0) {
+      const firstItem = groupData[0];
+      const columnValues = firstItem.column_values;
+
+      columnValues.slice(0, 5).forEach((column) => {
+        if (column.type === "text") {
+          sortingOptions.push({
+            value: `text-${column.id}-asc`,
+            label: `${column.column.title} (A-Z)`,
+          });
+          sortingOptions.push({
+            value: `text-${column.id}-desc`,
+            label: `${column.column.title} (Z-A)`,
+          });
+        } else if (column.type === "date") {
+          sortingOptions.push({
+            value: `date-${column.id}-asc`,
+            label: `${column.column.title} (Oldest First)`,
+          });
+          sortingOptions.push({
+            value: `date-${column.id}-desc`,
+            label: `${column.column.title} (Newest First)`,
+          });
+        } else if (column.type === "status") {
+          sortingOptions.push({
+            value: `status-${column.id}-asc`,
+            label: `${column.column.title} (Status Asc)`,
+          });
+          sortingOptions.push({
+            value: `status-${column.id}-desc`,
+            label: `${column.column.title} (Status Desc)`,
+          });
+        } else if (column.type === "priority") {
+          sortingOptions.push({
+            value: `priority-${column.id}-asc`,
+            label: `${column.column.title} (Priority Asc)`,
+          });
+          sortingOptions.push({
+            value: `priority-${column.id}-desc`,
+            label: `${column.column.title} (Priority Desc)`,
+          });
+        }
+      });
+    }
+
+    setSortOptions(sortingOptions);
+    handleSortChange(selectedSort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupData, setSortOptions, setFilteredData]);
 
   return (
     <div className="w-full mb-6 bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm">
@@ -33,57 +123,25 @@ const BoardGroup = ({ groupData, viewMode }) => {
         </div>
 
         {/* Filter Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 dark:text-white blue:text-white bg-gray-50 dark:bg-light-black blue:bg-light-blue hover:bg-gray-100 rounded-md transition-colors "
-          >
-            <FiFilter className="text-gray-500 dark:text-white blue:text-white" />
-            Sort
-            <FiChevronDown
-              className={`transition-transform ${
-                isFilterOpen ? "rotate-180" : ""
-              } text-gray-500 dark:text-white blue:text-white`}
-            />
-          </button>
-
-          {isFilterOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-light-black blue:bg-light-blue rounded-md shadow-lg z-10 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
-              <div className="py-1">
-                {sortOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      setSelectedSort(option.value);
-                      setIsFilterOpen(false);
-                      // Here you would implement the actual sorting logic
-                    }}
-                    className={`flex items-center justify-between w-full px-4 py-2 text-sm text-left ${
-                      selectedSort === option.value
-                        ? "bg-gray-200/25 text-black"
-                        : "hover:text-black dark:hover:text-black blue:hover:text-black hover:bg-gray-50"
-                    } text-gray-700 dark:text-white blue:text-white`}
-                  >
-                    {option.label}
-                    {selectedSort === option.value && (
-                      <FiCheck className="text-gray-700 dark:text-white blue:text-white" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <SortFilter
+          selectedOption={selectedSort}
+          setSelectedOption={setSelectedSort}
+          sortOptions={sortOptions}
+          onFilterChange={(value) => {
+            setSelectedSort(value);
+            handleSortChange(value);
+          }}
+        />
       </div>
 
-      {groupData.length < 1 ? (
+      {filteredData.length < 1 ? (
         <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
           Couldn't find any items in this group.
         </p>
       ) : viewMode === "list" ? (
         <div className="w-full">
           {/* List items */}
-          {groupData?.map((item) => (
+          {filteredData?.map((item) => (
             <ListItem key={item.id} item={item} />
           ))}
         </div>
@@ -93,46 +151,28 @@ const BoardGroup = ({ groupData, viewMode }) => {
 
           <table className="hidden lg:table w-full table-auto border-collapse">
             <thead>
-              <tr className="bg-white dark:bg-black blue:bg-dark-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
+              <tr className="bg-gray-200 dark:bg-[#222] blue:bg-light-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
                 <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                   Name
-                  <span className="ml-1">↕</span>
+                  {/* <span className="ml-1">↕</span> */}
                 </th>
 
-                {groupData[0].column_values.slice(0, 5).map((item, index) => (
-                  <th
-                    key={index}
-                    className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"
-                  >
-                    {item.column.title}
-                    <span className="ml-1">↕</span>
-                  </th>
-                ))}
+                {filteredData[0].column_values
+                  .slice(0, 5)
+                  .map((item, index) => (
+                    <th
+                      key={index}
+                      className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"
+                    >
+                      {item.column.title}
+                      {/* <span className="ml-1">↕</span> */}
+                    </th>
+                  ))}
               </tr>
-              {/* <tr className="bg-white dark:bg-black blue:bg-dark-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
-                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                  Item Name <span className="ml-1">↕</span>
-                </th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                  Status <span className="ml-1">↕</span>
-                </th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                  Priority <span className="ml-1">↕</span>
-                </th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                  Date <span className="ml-1">↕</span>
-                </th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                  People <span className="ml-1">↕</span>
-                </th>
-                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
-                  Numbers <span className="ml-1">↕</span>
-                </th>
-              </tr> */}
             </thead>
 
             <tbody className="table-row-group">
-              {groupData.map((item) => (
+              {filteredData.map((item) => (
                 <tr
                   key={item.id}
                   className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
@@ -196,13 +236,13 @@ const BoardGroup = ({ groupData, viewMode }) => {
           </table>
 
           {/* Mobile Card View (no headers) */}
-          {groupData?.map((item) => (
+          {filteredData?.map((item) => (
             <TableView key={item.id} item={item} />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {groupData?.map((item) => (
+          {filteredData?.map((item) => (
             <CardItem key={item.id} item={item} />
           ))}
         </div>

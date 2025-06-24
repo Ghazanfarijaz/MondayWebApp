@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
     const refreshToken = async () => {
       try {
         await authAPI.refreshToken();
-        console.log("Token refreshed");
       } catch (error) {
         console.error("Token refresh failed:", error);
         // On refresh failure, we'll clear user data

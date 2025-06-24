@@ -20,7 +20,28 @@ export const BoardProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await boardsAPI.getItems();
-      setGroupData(response.data.items);
+
+      const customizationFields = response.data.customization.fields;
+
+      // Add the 'isEditable' Field in the data
+      const updatedData = response.data.items.map((item) => {
+        const updatedColumnValues = item.column_values.map((col) => {
+          const customization = customizationFields.find(
+            (field) => field.columnId === col.id
+          );
+          return {
+            ...col,
+            isEditable: customization?.isEditable ?? false, // default to false if not found
+          };
+        });
+
+        return {
+          ...item,
+          column_values: updatedColumnValues,
+        };
+      });
+
+      setGroupData(updatedData);
     } catch (err) {
       console.error("Failed to fetch board items:", err);
       setError(err.message);
@@ -64,6 +85,7 @@ export const BoardProvider = ({ children }) => {
     usersLoading,
     loading,
     error,
+    usersError,
     refreshBoardItems,
     refreshUsersPhotoThumb,
   };

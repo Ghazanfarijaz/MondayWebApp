@@ -1,285 +1,254 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import BoardGroup from "./BoardGroup";
-import { boardsAPI } from "../../api/board";
-import Loader from "../UIComponents/Loader";
-import { LayoutGrid, List, Table } from "lucide-react";
+import { useMemo, useState } from "react";
+import CardItem from "./CardItem";
+import ListItem from "./ListItem";
+import TableView from "./TableView";
 
+import { useBoard } from "../../contexts/BoardContext";
+import { useNavigate } from "react-router-dom";
+import SortFilter from "../UIComponents/SortFilter";
 
-const Board = () => {
-  const [viewMode, setViewMode] = useState("card");
-  const [groupData, setGroupData] = useState([]);
-  const [cursor, setCursor] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const containerRef = useRef(null);
-  const initialFetchDone = useRef(false);
-  const isFetching = useRef(false); // Track if we're currently fetching
-  const [sortConfig, setSortConfig] = useState(null); // Add sort state
-  const [sortLoading, setSortLoading] = useState(false);
-  const [showSortLoader, setShowSortLoader] = useState(false);
+const BoardGroup = ({ groupData, viewMode }) => {
+  const { usersPhotoThumb } = useBoard();
+  const navigate = useNavigate();
 
-  // Modified fetchData function
-  const fetchData = useCallback(
-    async (reset = false) => {
-      if (isFetching.current || (!hasMore && !reset)) return;
+  const [filteredData, setFilteredData] = useState(groupData);
+  const [sortOptions, setSortOptions] = useState([]);
+  const [selectedSort, setSelectedSort] = useState({
+    value: "default",
+    label: "Default",
+  });
 
-      try {
-        isFetching.current = true;
-        setLoading(true);
+  const handleSortChange = ({ value, label }) => {
+    if (value === "default") {
+      return setFilteredData(groupData);
+    }
 
-        const response = await boardsAPI.getItems(
-          reset ? null : cursor, // Use null cursor when resetting
-          sortConfig
-        );
+    const [sortType, columnId, order] = value.split("-");
 
-        // Replace items on reset (sort change), append on scroll
-        setGroupData((prev) =>
-          reset ? response.data.items : [...prev, ...response.data.items]
-        );
+    const sortedData = [...groupData].sort((a, b) => {
+      const columnA = a.column_values.find((col) => col.id === columnId);
+      const columnB = b.column_values.find((col) => col.id === columnId);
 
-        // Always update cursor (will be null when reset)
-        setCursor(response.data.cursor);
-        setHasMore(response.data.cursor !== null);
-      } catch (err) {
-        setError(err.message || "Failed to fetch data");
-      } finally {
-        isFetching.current = false;
-        setLoading(false);
-        setInitialLoading(false);
+      if (!columnA || !columnB) return 0;
+
+      let aText = columnA.text ?? "";
+      let bText = columnB.text ?? "";
+
+      let comparison = 0;
+      if (sortType === "text" || sortType === "status") {
+        comparison = aText.localeCompare(bText);
+      } else if (sortType === "date") {
+        const aDate = new Date(aText);
+        const bDate = new Date(bText);
+        comparison = aDate - bDate;
+      } else if (sortType === "priority") {
+        const aPriority = columnA.priority ?? 0;
+        const bPriority = columnB.priority ?? 0;
+        comparison = aPriority - bPriority;
       }
-    },
-    [cursor, hasMore, sortConfig]
-  );
 
-  // Sort change handler - forces reset
-  const handleSortChange = (newSortConfig) => {
-    setSortLoading(true);
-    const timer = setTimeout(() => setShowSortLoader(true), 100);
-    fetchData(true).finally(() => {
-      clearTimeout(timer);
-      setSortLoading(false);
-      setShowSortLoader(false);
+      return order === "asc" ? comparison : -comparison;
     });
-    setSortConfig(newSortConfig);
-    setCursor(null); // Reset cursor
-    setHasMore(true); // Reset hasMore flag
-    fetchData(true); // Force reset with new sort
+
+    setFilteredData(sortedData);
   };
 
-  // Infinite scroll handler
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container || initialLoading || !cursor) return; // Only trigger when we have a cursor
+  // useMemo to memoize filteredData based on groupData and sortOptions
+  useMemo(() => {
+    let sortingOptions = [
+      {
+        value: "default",
+        label: "Default",
+      },
+    ];
 
-    const handleScroll = () => {
-      if (isFetching.current || !hasMore) return;
+    if (groupData.length > 0) {
+      const firstItem = groupData[0];
+      const columnValues = firstItem.column_values;
 
-      const { scrollTop, clientHeight, scrollHeight } = container;
-      if (scrollTop + clientHeight >= scrollHeight - 300) {
-        fetchData(); // Normal paginated fetch (not reset)
-      }
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [fetchData, hasMore, initialLoading, cursor]); // Add cursor to dependencies
-
-  // Initial data fetch
-  useEffect(() => {
-    if (!initialFetchDone.current) {
-      initialFetchDone.current = true;
-      fetchData();
-    }
-  }, [fetchData]);
-
-  // Infinite scroll handler with debouncing
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container || initialLoading) return;
-
-    let timeoutId;
-
-    const handleScroll = () => {
-      // Clear any pending scroll checks
-      clearTimeout(timeoutId);
-
-      // Wait 200ms after scrolling stops before checking position
-      timeoutId = setTimeout(() => {
-        if (isFetching.current || !hasMore) return;
-
-        const { scrollTop, clientHeight, scrollHeight } = container;
-        // Check if we're near the bottom (within 300px)
-        if (scrollTop + clientHeight >= scrollHeight - 300) {
-          fetchData();
+      columnValues.slice(0, 5).forEach((column) => {
+        if (column.type === "text") {
+          sortingOptions.push({
+            value: `text-${column.id}-asc`,
+            label: `${column.column.title} (A-Z)`,
+          });
+          sortingOptions.push({
+            value: `text-${column.id}-desc`,
+            label: `${column.column.title} (Z-A)`,
+          });
+        } else if (column.type === "date") {
+          sortingOptions.push({
+            value: `date-${column.id}-asc`,
+            label: `${column.column.title} (Oldest First)`,
+          });
+          sortingOptions.push({
+            value: `date-${column.id}-desc`,
+            label: `${column.column.title} (Newest First)`,
+          });
+        } else if (column.type === "status") {
+          sortingOptions.push({
+            value: `status-${column.id}-asc`,
+            label: `${column.column.title} (Status Asc)`,
+          });
+          sortingOptions.push({
+            value: `status-${column.id}-desc`,
+            label: `${column.column.title} (Status Desc)`,
+          });
+        } else if (column.type === "priority") {
+          sortingOptions.push({
+            value: `priority-${column.id}-asc`,
+            label: `${column.column.title} (Priority Asc)`,
+          });
+          sortingOptions.push({
+            value: `priority-${column.id}-desc`,
+            label: `${column.column.title} (Priority Desc)`,
+          });
         }
-      }, 200);
-    };
+      });
+    }
 
-    container.addEventListener("scroll", handleScroll);
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, [fetchData, hasMore, initialLoading]);
-
-  if (initialLoading) {
-    return (
-      // <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
-      //   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-      // </div>
-      <Loader type="bounce" message="Loading Board Items.." color="primary" />
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-[40px] bg-gray-200 flex items-center justify-center h-full">
-        <p className="text-red-500">Error: {error}</p>
-      </div>
-    );
-  }
+    setSortOptions(sortingOptions);
+    handleSortChange(selectedSort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupData, setSortOptions, setFilteredData]);
 
   return (
-    <div className="p-[40px] bg-gray-200 flex flex-col h-full">
-      {/* <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-        <div className="flex space-x-2">
-          <button
-            className={`px-3 py-1 rounded ${
-              viewMode === "card" ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setViewMode("card")}
-          >
-            Card View
-          </button>
-          <button
-            className={`px-3 py-1 rounded ${
-              viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setViewMode("list")}
-          >
-            List View
-          </button>
-          <button
-            className={`px-3 py-1 rounded ${
-              viewMode === "table" ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setViewMode("table")}
-          >
-            Table View
-          </button>
+    <div className="w-full mb-6 bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <div className={`w-4 h-8 rounded-[4px] bg-purple-300`}></div>
+          <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
+            Group 1
+          </h2>
         </div>
-      </div> */}
 
-      <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-        <div className="flex space-x-3 md:space-x-3 bg-white p-2 rounded-full px-4 py-2">
-          <button
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-              viewMode === "card"
-                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
-                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
-            }`}
-            onClick={() => setViewMode("card")}
-          >
-            <LayoutGrid className="w-4 h-4" />
-            <span className="hidden md:inline">Card View</span>
-          </button>
-          <button
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-              viewMode === "list"
-                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
-                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
-            }`}
-            onClick={() => setViewMode("list")}
-          >
-            <List className="w-4 h-4" />
-            <span className="hidden md:inline">List View</span>
-          </button>
-          <button
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-              viewMode === "table"
-                ? "bg-gray-200 text-black text-bold rounded-full px-4 py-2"
-                : "bg-white hover:bg-gray-200 rounded-full px-4 py-2"
-            }`}
-            onClick={() => setViewMode("table")}
-          >
-            <Table className="w-4 h-4" />
-            <span className="hidden md:inline">Table View</span>
-          </button>
-        </div>
-      </div>
-
-      {/* <div className="flex justify-between items-center mb-6 border-b">
-        <h1 className="text-sm md:text-2xl font-bold">Board 1</h1>
-        <div className="flex space-x-1 md:space-x-2">
-          <div
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
-              viewMode === "card"
-                ? "bg-gray-300 text-black text-bold"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => setViewMode("card")}
-          >
-            <img src={card} alt="Card View" className="w-4 h-4" />
-            <span className="hidden md:inline">Card View</span>
-          </div>
-          <div
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
-              viewMode === "list"
-                ? "bg-gray-300 text-black text-bold"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => setViewMode("list")}
-          >
-            <img src={list} alt="List View" className="w-4 h-4" />
-            <span className="hidden md:inline">List View</span>
-          </div>
-          <div
-            className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm cursor-pointer ${
-              viewMode === "table"
-                ? "bg-gray-300 text-black text-bold"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => setViewMode("table")}
-          >
-            <img src={table} alt="Table View" className="w-4 h-4" />
-            <span className="hidden md:inline">Table View</span>
-          </div>
-        </div>
-      </div> */}
-
-      <div
-        ref={containerRef}
-        className="space-y-6 w-full px-[24px] flex-1 overflow-y-auto"
-      >
-        {" "}
-        {sortLoading && (
-          <div className="flex justify-center py-2">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500"></div>
-          </div>
-        )}
-        <BoardGroup
-          groupData={groupData}
-          viewMode={viewMode}
-          onSortChange={handleSortChange} // Pass handler to child
-          currentSort={sortConfig} // Pass current sort for UI
+        {/* Filter Dropdown */}
+        <SortFilter
+          selectedOption={selectedSort}
+          setSelectedOption={setSelectedSort}
+          sortOptions={sortOptions}
+          onFilterChange={(value) => {
+            setSelectedSort(value);
+            handleSortChange(value);
+          }}
         />
-        {loading && (
-          <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-          </div>
-        )}
-        {!hasMore && groupData.length > 0 && (
-          <div className="text-center py-4 text-gray-500">
-            No more items to load
-          </div>
-        )}
       </div>
+
+      {filteredData.length < 1 ? (
+        <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
+          Couldn't find any items in this group.
+        </p>
+      ) : viewMode === "list" ? (
+        <div className="w-full">
+          {/* List items */}
+          {filteredData?.map((item) => (
+            <ListItem key={item.id} item={item} />
+          ))}
+        </div>
+      ) : viewMode === "table" ? (
+        <div className="w-full lg:border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
+          {/* Desktop Table with Headers (hidden on mobile) */}
+
+          <table className="hidden lg:table w-full table-auto border-collapse">
+            <thead>
+              <tr className="bg-gray-200 dark:bg-[#222] blue:bg-light-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
+                <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
+                  Name
+                  {/* <span className="ml-1">↕</span> */}
+                </th>
+
+                {filteredData[0].column_values
+                  .slice(0, 5)
+                  .map((item, index) => (
+                    <th
+                      key={index}
+                      className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"
+                    >
+                      {item.column.title}
+                      {/* <span className="ml-1">↕</span> */}
+                    </th>
+                  ))}
+              </tr>
+            </thead>
+
+            <tbody className="table-row-group">
+              {filteredData.map((item) => (
+                <tr
+                  key={item.id}
+                  className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
+                  onClick={() => {
+                    navigate(`/item-details/${item.id}`);
+                  }}
+                >
+                  <td className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium">
+                    {item.name || "Untitled Item"}
+                  </td>
+
+                  {item.column_values.slice(0, 5).map((columnValue) => (
+                    <td key={columnValue.id} className="py-3 px-4">
+                      {columnValue.type === "status" ? (
+                        <span
+                          className="px-3 py-1 text-xs rounded-full font-medium whitespace-nowrap"
+                          style={{
+                            backgroundColor: `${
+                              columnValue.label_style?.color || "#e5e7eb"
+                            }20`,
+                            color: columnValue.label_style?.color || "#374151",
+                            border: `1px solid ${
+                              columnValue.label_style?.color || "#e5e7eb"
+                            }`,
+                          }}
+                        >
+                          {columnValue.text || "N/A"}
+                        </span>
+                      ) : columnValue.type === "people" ? (
+                        <div className="flex">
+                          {columnValue.persons_and_teams?.map((person) => (
+                            <img
+                              key={person.id}
+                              className="w-6 h-6 rounded-full border-2 border-white -mr-2"
+                              src={
+                                usersPhotoThumb?.users?.data?.find(
+                                  (user) => user.id === person.id
+                                )?.photo_thumb || "/api/placeholder/24/24"
+                              }
+                              alt={`Person ${person.id}`}
+                              onError={(e) => {
+                                e.target.src = "/api/placeholder/24/24";
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-700 dark:text-white blue:text-white block">
+                          {columnValue.type === "checkbox"
+                            ? columnValue.text
+                              ? "Yes"
+                              : "No"
+                            : columnValue.text || "N/A"}
+                        </span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Mobile Card View (no headers) */}
+          {filteredData?.map((item) => (
+            <TableView key={item.id} item={item} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredData?.map((item) => (
+            <CardItem key={item.id} item={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Board;
+export default BoardGroup;

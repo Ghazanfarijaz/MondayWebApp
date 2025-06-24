@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Search, LogOut, Palette, ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { LogOut, Palette } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
 import { useAuth } from "../../contexts/AuthContext";
+import Logo from "../../assets/Logo.png";
+import { Menu } from "@mantine/core";
+import { toast } from "sonner";
 
 const Navbar = () => {
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const userMenuRef = useRef(null);
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -20,122 +20,71 @@ const Navbar = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-        setShowUserMenu(false);
-        setShowThemeMenu(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const handleLogout = async () => {
     try {
-      setShowUserMenu(false);
       const result = await logout();
       if (result.success) {
         navigate("/login");
       } else {
         console.error("Logout failed:", result.error);
-        alert("Failed to logout. Please try again.");
+        toast.error("Error logging out!", {
+          description: result.error || "",
+        });
       }
     } catch (error) {
       console.error("Logout error:", error);
+
+      toast.error("Error logging out!", {
+        description: error.response.data.message || "",
+      });
     }
   };
 
   return (
     <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue border-l border-l-[#eaeaea] dark:border-l-light-black blue:border-l-light-blue px-6 sm:px-6 lg:px-8 relative z-50">
-      {/* Search bar - made more responsive */}
-      <div className="relative w-3/4 max-w-xs lg:max-w-sm flex items-center">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Search className="w-4 h-4 text-gray-500" />
-        </div>
-        <input
-          type="search"
-          className="lg:w-full w-3/4 p-2 pl-10 text-sm text-gray-900 rounded-lg bg-gray-50 dark:bg-light-black blue:bg-light-blue outline-none focus:outline-none"
-          placeholder="Search"
+      <Link to="/">
+        <img
+          src={Logo}
+          alt="Logo"
+          className="object-contain w-[48px] h-[48px]"
         />
-      </div>
+      </Link>
 
       {/* Icons and Avatar - adjusted spacing */}
       <div className="flex items-center space-x-3 sm:space-x-4">
-        {/* User Profile */}
-        <div className="relative" ref={userMenuRef}>
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center"
-          >
+        <Menu shadow="md" width={180} position="bottom-end" withArrow>
+          <Menu.Target>
             <img
               src={Avatar}
               alt="User profile"
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover hover:cursor-pointer"
             />
-          </button>
-
-          {/* User Menu Dropdown */}
-          {showUserMenu && (
-            <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-light-black blue:bg-light-blue rounded-lg shadow-lg py-2 z-50 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue">
-              <div className="relative">
-                <button
-                  // onClick={() => setShowThemeMenu((prev) => !prev)}
-                  className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black flex items-center justify-between text-sm sm:text-base"
-                  onMouseEnter={() => setShowThemeMenu(true)}
-                >
-                  <div className="flex items-center">
-                    <Palette className="mr-2 h-4 w-4" />
-                    Theme
-                  </div>
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-                {showThemeMenu && (
-                  <div className="absolute right-full top-0 mt-0 mr-1 w-40 bg-white dark:bg-light-black blue:bg-light-blue rounded-lg shadow-lg py-2 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue dark:hover:text-black blue:hover:text-black z-50">
-                    <button
-                      onClick={() => {
-                        setShowThemeMenu(false);
-                        setShowUserMenu(false);
-                        setTheme("light");
-                      }}
-                      className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-sm"
-                    >
-                      Light
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowThemeMenu(false);
-                        setShowUserMenu(false);
-                        setTheme("dark");
-                      }}
-                      className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-sm"
-                    >
-                      Dark
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowThemeMenu(false);
-                        setShowUserMenu(false);
-                        setTheme("blue");
-                      }}
-                      className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black text-sm"
-                    >
-                      Blue
-                    </button>
-                  </div>
-                )}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="w-full px-4 py-2 text-left text-gray-700 dark:text-white blue:text-white hover:bg-gray-100 dark:hover:text-black blue:hover:text-black flex items-center text-sm sm:text-base"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Sub
+              width={130}
+              leftSection={<Palette className="mr-2 h-4 w-4" />}
+            >
+              <Menu.Sub.Target>
+                <Menu.Sub.Item>Theme</Menu.Sub.Item>
+              </Menu.Sub.Target>
+              <Menu.Sub.Dropdown>
+                <Menu.Item onClick={() => setTheme("light")}>Light</Menu.Item>
+                <Menu.Divider />
+                <Menu.Item onClick={() => setTheme("dark")}>Dark</Menu.Item>
+                <Menu.Divider />
+                <Menu.Item onClick={() => setTheme("blue")}>Blue</Menu.Item>
+              </Menu.Sub.Dropdown>
+            </Menu.Sub>
+            <Menu.Divider />
+            <Menu.Item
+              color="red"
+              leftSection={<LogOut className="mr-2 h-4 w-4" />}
+            >
+              <button onClick={handleLogout}>Logout</button>
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </div>
     </div>
   );

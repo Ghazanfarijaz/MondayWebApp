@@ -1,10 +1,9 @@
 import axios from "axios";
 
 export const checkSubdomain = async (subdomain) => {
-  // 2. Check environment variable
-  const baseUrl = "http://localhost:8080";
+  const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
 
-  if (!baseUrl) {
+  if (!BASE_URL) {
     const errorMsg =
       "VITE_API_BASE_URL is not defined in environment variables";
     console.error("[checkSubdomain]", errorMsg);
@@ -12,7 +11,7 @@ export const checkSubdomain = async (subdomain) => {
   }
 
   // 3. Prepare the full URL
-  const apiUrl = `${baseUrl}/api/subdomain/${subdomain}`;
+  const apiUrl = `${BASE_URL}/api/subdomain/${subdomain}`;
 
   try {
     // 4. Make the actual API call

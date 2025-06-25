@@ -4,7 +4,7 @@ import SigninForm from "../components/RegistrationComponents/SigninForm";
 
 const SignIn = () => {
   return (
-    <div className="w-screen min-h-screen grid lg:grid-cols-2">
+    <div className="w-screen h-screen grid lg:grid-cols-2">
       {/* Form Section - Centered vertically on mobile */}
       <div className="lg:p-[0px_48px] p-[48px_24px] flex items-center justify-center bg-gray-50">
         <SigninForm />
@@ -13,7 +13,11 @@ const SignIn = () => {
       {/* Image Section - With right padding */}
       <div className="hidden lg:flex items-center justify-center p-12 bg-gray-50">
         {/* <SigninImage /> */}
-        <img src={SIGN_IN_IMAGE} alt="portal-snapshot" />
+        <img
+          src={SIGN_IN_IMAGE}
+          alt="portal-snapshot"
+          className="object-contain h-full"
+        />
       </div>
     </div>
   );

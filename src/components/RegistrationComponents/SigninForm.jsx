@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
-import { useAuth } from "../../contexts/AuthContext";
+import { authAPI } from "../../api/auth";
 
 const SigninForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,9 +18,10 @@ const SigninForm = () => {
       setIsLoading(true);
       try {
         // Use the login function from context
-        const result = await login(email, password);
+        const result = await authAPI.login(email, password);
 
         if (result.success) {
+          localStorage.setItem("userData", JSON.stringify(result.user));
           // Redirect to main page on success
           navigate("/", { replace: true });
         } else {

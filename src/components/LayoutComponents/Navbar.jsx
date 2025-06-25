@@ -80,8 +80,9 @@ const Navbar = () => {
             <Menu.Item
               color="red"
               leftSection={<LogOut className="mr-2 h-4 w-4" />}
+              onClick={handleLogout}
             >
-              <button onClick={handleLogout}>Logout</button>
+              Logout
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>

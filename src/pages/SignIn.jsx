@@ -1,22 +1,19 @@
-import React from "react";
+import SIGN_IN_IMAGE from "../assets/signin-image.svg";
 import SigninForm from "../components/RegistrationComponents/SigninForm";
-import SigninImage from "../components/RegistrationComponents/SigninImage";
+// import SigninImage from "../components/RegistrationComponents/SigninImage";
 
 const SignIn = () => {
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row">
+    <div className="w-screen min-h-screen grid lg:grid-cols-2">
       {/* Form Section - Centered vertically on mobile */}
-      <div className="w-full lg:w-1/2 px-6 lg:px-12 py-12 lg:py-0 flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md">
-          <SigninForm />
-        </div>
+      <div className="lg:p-[0px_48px] p-[48px_24px] flex items-center justify-center bg-gray-50">
+        <SigninForm />
       </div>
 
       {/* Image Section - With right padding */}
-      <div className="hidden lg:flex lg:w-1/2 pl-6 pr-12 items-center justify-center bg-gray-50">
-        <div className="w-full max-w-2xl">
-          <SigninImage />
-        </div>
+      <div className="hidden lg:flex items-center justify-center p-12 bg-gray-50">
+        {/* <SigninImage /> */}
+        <img src={SIGN_IN_IMAGE} alt="portal-snapshot" />
       </div>
     </div>
   );

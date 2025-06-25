@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { authAPI } from "../api/auth";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // Create context
 const AuthContext = createContext(null);
@@ -7,79 +10,39 @@ const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check if user is authenticated on initial load
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        // Try to get user from localStorage first for immediate UI update
-        const storedUser = localStorage.getItem("userData");
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-
-        // Verify with the server
-        const { isAuthenticated, user: serverUser } = await authAPI.checkAuth();
-
-        if (isAuthenticated && serverUser) {
-          setUser(serverUser);
-          localStorage.setItem("userData", JSON.stringify(serverUser));
-        } else if (!isAuthenticated) {
-          // Clear localStorage if server says not authenticated
-          setUser(null);
-          localStorage.removeItem("userData");
-        }
-      } catch (err) {
-        console.error("Authentication check failed:", err);
-        // If server check fails, still use localStorage data
-      } finally {
-        setLoading(false);
+  const {
+    data: authStatus,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["authStatus"],
+    queryFn: () => {
+      // Try to get user from localStorage first for immediate UI update
+      const storedUser = localStorage.getItem("userData");
+      if (!storedUser) {
+        throw new Error("No user data found in localStorage");
       }
-    };
 
-    checkAuthStatus();
-  }, []);
+      setUser(JSON.parse(storedUser));
+      // Verify with the server
+      return authAPI.checkAuth();
+    },
+    retry: false,
+  });
 
-  // Set up automatic token refresh
   useEffect(() => {
-    if (!user) return;
+    setLoading(false);
+  }, [authStatus]);
 
-    const refreshToken = async () => {
-      try {
-        await authAPI.refreshToken();
-      } catch (error) {
-        console.error("Token refresh failed:", error);
-        // On refresh failure, we'll clear user data
-        if (error.response?.status === 401) {
-          setUser(null);
-          localStorage.removeItem("userData");
-        }
-      }
-    };
-
-    // Refresh token every 45 minutes
-    const refreshInterval = setInterval(refreshToken, 45 * 60 * 1000);
-
-    return () => clearInterval(refreshInterval);
-  }, [user]);
-
-  const login = async (email, password) => {
-    try {
-      setLoading(true);
-      const response = await authAPI.login(email, password);
-
-      // Update user state with returned user data
-      setUser(response.user);
-      localStorage.setItem("userData", JSON.stringify(response.user));
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message };
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (isError) {
+    console.error("Error fetching auth status:", error);
+    toast.error("Authentication error. Please log in again.");
+    return navigate("/login", { replace: true });
+  }
 
   const logout = async () => {
     try {
@@ -99,7 +62,6 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     isAuthenticated: !!user,
-    login,
     logout,
   };
 

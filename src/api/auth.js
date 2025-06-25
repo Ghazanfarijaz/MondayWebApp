@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
+// const BASE_URL = "http://localhost:8080";
 
 // Create an axios instance with consistent configuration
 const api = axios.create({
@@ -70,31 +71,19 @@ export const authAPI = {
     try {
       // Try to access a protected endpoint
       const response = await api.get(`/api/auth/check-auth`);
+
       return {
         isAuthenticated: true,
         user: response.data.user,
       };
     } catch (error) {
-      if (error.response?.status === 401) {
-        // Try to refresh token
-        try {
-          await authAPI.refreshToken();
-          // If refresh successful, try again
-          const retryResponse = await api.get(`/api/auth/check-auth`);
-          return {
-            isAuthenticated: true,
-            user: retryResponse.data.user,
-          };
-        } catch (refreshError) {
-          // If refresh fails, user is not authenticated
-          return {
-            isAuthenticated: false,
-          };
-        }
-      }
-      return {
-        isAuthenticated: false,
-      };
+      console.error("Authentication check error:", error);
+
+      throw new Error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to check authentication status."
+      );
     }
   },
 };

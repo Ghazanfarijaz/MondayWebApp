@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
 
 // Reuse the existing axios instance configuration
 const api = axios.create({
@@ -13,9 +13,7 @@ const api = axios.create({
 });
 
 export const boardsAPI = {
-
   getItems: async (cursor = null, sortBy = null) => {
-
     try {
       const params = {};
       if (cursor) params.cursor = cursor;

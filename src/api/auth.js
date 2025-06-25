@@ -1,10 +1,6 @@
-// api/auth.js
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
-
-// Configure axios to always include credentials (cookies)
-axios.defaults.withCredentials = true;
+const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
 
 // Create an axios instance with consistent configuration
 const api = axios.create({

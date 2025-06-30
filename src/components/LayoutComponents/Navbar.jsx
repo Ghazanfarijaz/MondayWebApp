@@ -2,14 +2,12 @@ import { useState, useEffect } from "react";
 import { LogOut, Palette } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../../assets/Avatar.png";
-import { useAuth } from "../../contexts/AuthContext";
 import Logo from "../../assets/Logo.png";
 import { Menu } from "@mantine/core";
 import { toast } from "sonner";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
 
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   // Set the theme based on localStorage or default to light
@@ -22,15 +20,12 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const result = await logout();
-      if (result.success) {
-        navigate("/login");
-      } else {
-        console.error("Logout failed:", result.error);
-        toast.error("Error logging out!", {
-          description: result.error || "",
-        });
-      }
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userData");
+
+      navigate("/login", {
+        replace: true,
+      });
     } catch (error) {
       console.error("Logout error:", error);
 

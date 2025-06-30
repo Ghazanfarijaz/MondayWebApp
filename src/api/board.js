@@ -1,17 +1,4 @@
-import axios from "axios";
-
-// const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
-const BASE_URL = "http://localhost:8080";
-
-// Reuse the existing axios instance configuration
-const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-    subdomain: "localhost:3000",
-  },
-});
+import { axiosInstance } from "../utils/axiosInstance";
 
 export const boardsAPI = {
   getItems: async (cursor = null) => {
@@ -19,7 +6,7 @@ export const boardsAPI = {
       const params = {};
       if (cursor) params.cursor = cursor;
 
-      const response = await api.get(`/api/boards/getAllItems`, {
+      const response = await axiosInstance.get(`/api/boards/getAllItems`, {
         params,
       });
 
@@ -42,7 +29,7 @@ export const boardsAPI = {
   },
   getUsersPhotoThumb: async () => {
     try {
-      const response = await api.get(`/api/boards/getPhotothumbs`);
+      const response = await axiosInstance.get(`/api/boards/getPhotothumbs`);
       return {
         success: response.data.success,
         data: {
@@ -77,7 +64,7 @@ export const boardsAPI = {
     });
 
     try {
-      const response = await api.post(
+      const response = await axiosInstance.post(
         `/api/boards/updateItem/${itemId}`,
         formData,
         {
@@ -100,7 +87,9 @@ export const boardsAPI = {
   // Get Specific Item Details
   getItemDetails: async ({ itemId }) => {
     try {
-      const response = await api.get(`/api/boards/getItemDetails/${itemId}`);
+      const response = await axiosInstance.get(
+        `/api/boards/getItemDetails/${itemId}`
+      );
 
       const customizationFields = response.data.customization.fields;
 

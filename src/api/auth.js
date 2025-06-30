@@ -1,26 +1,16 @@
-import axios from "axios";
-
-// const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
-const BASE_URL = "http://localhost:8080";
-
-// Create an axios instance with consistent configuration
-const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import { axiosInstance } from "../utils/axiosInstance";
 
 export const authAPI = {
   // Login User
   login: async ({ email, password, slug }) => {
     try {
-      const response = await api.post(`/api/auth/login`, {
+      const response = await axiosInstance.post(`/api/auth/login`, {
         email,
         password,
         slug,
       });
+
+      localStorage.setItem("accessToken", response.data.data.accessToken);
 
       return {
         success: response.data.success,
@@ -40,7 +30,7 @@ export const authAPI = {
   // Refresh token
   refreshToken: async () => {
     try {
-      const response = await api.post(`/api/auth/refresh-token`);
+      const response = await axiosInstance.post(`/api/auth/refresh-token`);
       return response.data;
     } catch (error) {
       console.error("Token refresh error:", error);
@@ -55,7 +45,7 @@ export const authAPI = {
   // Logout user
   logout: async () => {
     try {
-      const response = await api.post(`/api/auth/logout`);
+      const response = await axiosInstance.post(`/api/auth/logout`);
       return response.data;
     } catch (error) {
       console.error("Logout error:", error);
@@ -71,7 +61,7 @@ export const authAPI = {
   checkAuth: async () => {
     try {
       // Try to access a protected endpoint
-      const response = await api.get(`/api/auth/check-user-auth`);
+      const response = await axiosInstance.get(`/api/auth/check-user-auth`);
 
       return {
         isAuthenticated: true,

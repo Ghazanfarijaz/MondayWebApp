@@ -1,19 +1,10 @@
-import axios from "axios";
-
-// const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
-const BASE_URL = "http://localhost:8080";
+import { axiosInstance } from "../utils/axiosInstance";
 
 export const checkSubdomain = async ({ subdomain }) => {
   try {
     // 4. Make the actual API call
-    const response = await axios.get(
-      `${BASE_URL}/api/subdomain/validateSubDomain/${subdomain}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
+    const response = await axiosInstance.get(
+      `/api/subdomain/validateSubDomain/${subdomain}`
     );
 
     return response.data.data;

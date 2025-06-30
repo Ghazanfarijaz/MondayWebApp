@@ -11,13 +11,9 @@ const SignIn = () => {
       </div>
 
       {/* Image Section - With right padding */}
-      <div className="hidden lg:flex items-center justify-center p-12 bg-gray-50">
+      <div className="hidden lg:flex items-center justify-center p-12 bg-gray-50 h-full max-h-screen">
         {/* <SigninImage /> */}
-        <img
-          src={SIGN_IN_IMAGE}
-          alt="portal-snapshot"
-          className="object-contain h-full"
-        />
+        <img src={SIGN_IN_IMAGE} alt="portal-snapshot" className="h-full" />
       </div>
     </div>
   );

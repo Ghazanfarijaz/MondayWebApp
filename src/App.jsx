@@ -15,6 +15,7 @@ export default function App() {
     queryFn: () =>
       checkSubdomain({
         subdomain: window.location.hostname.split(".")[0],
+        // subdomain: "proto-it-consultants",
       }),
   });
 

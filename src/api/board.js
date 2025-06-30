@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
+// const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
+const BASE_URL = "http://localhost:8080";
 
 // Reuse the existing axios instance configuration
 const api = axios.create({
@@ -13,13 +14,14 @@ const api = axios.create({
 });
 
 export const boardsAPI = {
-  getItems: async (cursor = null, sortBy = null) => {
+  getItems: async (cursor = null) => {
     try {
       const params = {};
       if (cursor) params.cursor = cursor;
-      if (sortBy) params.sortBy = JSON.stringify(sortBy); // Add sorting params
 
-      const response = await api.get(`/api/boards/items`, { params });
+      const response = await api.get(`/api/boards/getAllItems`, {
+        params,
+      });
 
       return {
         success: response.data.success,
@@ -40,7 +42,7 @@ export const boardsAPI = {
   },
   getUsersPhotoThumb: async () => {
     try {
-      const response = await api.get(`/api/users/photothumb`);
+      const response = await api.get(`/api/boards/getPhotothumbs`);
       return {
         success: response.data.success,
         data: {
@@ -56,28 +58,6 @@ export const boardsAPI = {
       );
     }
   },
-
-  getAllItems: async () => {
-    try {
-      let allItems = [];
-      let cursor = null;
-      let hasMore = true;
-
-      while (hasMore) {
-        const response = await boardsAPI.getItems(cursor);
-        allItems = [...allItems, ...response.data.items];
-        cursor = response.data.cursor;
-        hasMore =
-          response.data.cursor !== null && response.data.items.length > 0;
-      }
-
-      return allItems;
-    } catch (error) {
-      console.error("Error fetching all board items:", error);
-      throw error;
-    }
-  },
-
   // Update the Column Values of an Item
   updateColumnValuesofItem: async ({ itemId, columnValues }) => {
     const formData = new FormData();
@@ -117,11 +97,10 @@ export const boardsAPI = {
       );
     }
   },
-
   // Get Specific Item Details
   getItemDetails: async ({ itemId }) => {
     try {
-      const response = await api.get(`/api/items/${itemId}`);
+      const response = await api.get(`/api/boards/getItemDetails/${itemId}`);
 
       const customizationFields = response.data.customization.fields;
 

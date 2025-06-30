@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useBoard } from "../../contexts/BoardContext";
 import PropTypes from "prop-types";
+import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
+import { Loader } from "@mantine/core";
 
 const TableView = ({ item }) => {
   const navigate = useNavigate();
-  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
+  const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
 
-  if (usersLoading) return <div>Loading user data...</div>;
-  if (usersError) return <div>Error loading user data</div>;
   if (!item || !item.column_values) return <div>No item data available</div>;
 
   // Safely get column values or default to empty array
@@ -20,7 +19,7 @@ const TableView = ({ item }) => {
       className="lg:hidden bg-white rounded-lg shadow-sm p-4 mb-3 border border-gray-100 hover:bg-gray-50 cursor-pointer"
       onClick={() => navigate(`/mainpage/item-details/${item.id}`)}
     >
-      {columnValues.slice(0, 4).map((columnValue) => (
+      {columnValues.slice(0, 5).map((columnValue) => (
         <div
           key={columnValue.id}
           className="flex justify-between items-center mb-2"
@@ -39,22 +38,27 @@ const TableView = ({ item }) => {
               {columnValue.text || "N/A"}
             </span>
           ) : columnValue.type === "people" ? (
-            <div className="flex">
-              {columnValue.persons_and_teams?.map((person) => (
-                <img
-                  key={person.id}
-                  className="w-6 h-6 rounded-full border-2 border-white -mr-2"
-                  src={
-                    usersPhotoThumb?.users?.data?.find(
-                      (user) => user.id === person.id
-                    )?.photo_thumb || "/api/placeholder/24/24"
-                  }
-                  alt={`Person ${person.id}`}
-                  onError={(e) => {
-                    e.target.src = "/api/placeholder/24/24";
-                  }}
-                />
-              ))}
+            <div className="flex -space-x-2">
+              {USER_PHOTO_THUMBS.isPending ? (
+                <Loader size="sm" />
+              ) : columnValue.persons_and_teams.length < 1 ? (
+                <p className="text-sm text-gray-600 dark:text-white blue:text-white">
+                  N/A
+                </p>
+              ) : (
+                columnValue.persons_and_teams?.map((person) => (
+                  <img
+                    key={person.id}
+                    className="w-6 h-6 rounded-full object-cover border-2 border-white"
+                    src={
+                      USER_PHOTO_THUMBS.users.find(
+                        (user) => user.id === person.id
+                      )?.photo_thumb
+                    }
+                    alt={`Person ${person.id}`}
+                  />
+                ))
+              )}
             </div>
           ) : (
             <span className="text-sm">

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
-import { BoardProvider } from "./contexts/BoardContext";
 import SignIn from "./pages/SignIn";
 import ErrorPage from "./components/UIComponents/ErrorPage";
 import EditItemDetails from "./pages/edit-item-details/EditItemDetails";
@@ -13,9 +12,7 @@ export const router = createBrowserRouter([
     path: "",
     element: (
       <AuthProvider>
-        <BoardProvider>
-          <App />
-        </BoardProvider>
+        <App />
       </AuthProvider>
     ),
     children: [

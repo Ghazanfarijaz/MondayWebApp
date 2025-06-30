@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
-// const BASE_URL = "http://localhost:8080";
+// const BASE_URL = process.env.REACT_APP_API_DEPLOYED_URL;
+const BASE_URL = "http://localhost:8080";
 
 // Create an axios instance with consistent configuration
 const api = axios.create({
@@ -14,11 +14,12 @@ const api = axios.create({
 
 export const authAPI = {
   // Login User
-  login: async (email, password) => {
+  login: async ({ email, password, slug }) => {
     try {
       const response = await api.post(`/api/auth/login`, {
         email,
         password,
+        slug,
       });
 
       return {
@@ -70,7 +71,7 @@ export const authAPI = {
   checkAuth: async () => {
     try {
       // Try to access a protected endpoint
-      const response = await api.get(`/api/auth/check-auth`);
+      const response = await api.get(`/api/auth/check-user-auth`);
 
       return {
         isAuthenticated: true,

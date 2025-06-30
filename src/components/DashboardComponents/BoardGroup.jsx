@@ -2,14 +2,14 @@ import { useMemo, useState } from "react";
 import CardItem from "./CardItem";
 import ListItem from "./ListItem";
 import TableView from "./TableView";
-
-import { useBoard } from "../../contexts/BoardContext";
 import { useNavigate } from "react-router-dom";
 import SortFilter from "../UIComponents/SortFilter";
+import useUsersPhotoThumbs from "./../../hooks/useUsersPhotoThumbs";
+import { Loader } from "@mantine/core";
 
 const BoardGroup = ({ groupData, viewMode }) => {
-  const { usersPhotoThumb } = useBoard();
   const navigate = useNavigate();
+  const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
 
   const [filteredData, setFilteredData] = useState(groupData);
   const [sortOptions, setSortOptions] = useState([]);
@@ -202,22 +202,30 @@ const BoardGroup = ({ groupData, viewMode }) => {
                           {columnValue.text || "N/A"}
                         </span>
                       ) : columnValue.type === "people" ? (
-                        <div className="flex">
-                          {columnValue.persons_and_teams?.map((person) => (
-                            <img
-                              key={person.id}
-                              className="w-6 h-6 rounded-full border-2 border-white -mr-2"
-                              src={
-                                usersPhotoThumb?.users?.data?.find(
-                                  (user) => user.id === person.id
-                                )?.photo_thumb || "/api/placeholder/24/24"
-                              }
-                              alt={`Person ${person.id}`}
-                              onError={(e) => {
-                                e.target.src = "/api/placeholder/24/24";
-                              }}
-                            />
-                          ))}
+                        <div className="flex -space-x-2">
+                          {USER_PHOTO_THUMBS.isPending ? (
+                            <Loader size="sm" />
+                          ) : columnValue.persons_and_teams.length < 1 ? (
+                            <p className="text-sm text-gray-600 dark:text-white blue:text-white">
+                              N/A
+                            </p>
+                          ) : (
+                            columnValue.persons_and_teams?.map((person) => (
+                              <img
+                                key={person.id}
+                                className="w-6 h-6 rounded-full border-2 border-white"
+                                src={
+                                  USER_PHOTO_THUMBS?.users?.find(
+                                    (user) => user.id === person.id
+                                  )?.photo_thumb || "/api/placeholder/24/24"
+                                }
+                                alt={`Person ${person.id}`}
+                                onError={(e) => {
+                                  e.target.src = "/api/placeholder/24/24";
+                                }}
+                              />
+                            ))
+                          )}
                         </div>
                       ) : (
                         <span className="text-gray-700 dark:text-white blue:text-white block">

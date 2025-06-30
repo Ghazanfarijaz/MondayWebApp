@@ -18,7 +18,11 @@ const SigninForm = () => {
       setIsLoading(true);
       try {
         // Use the login function from context
-        const result = await authAPI.login(email, password);
+        const result = await authAPI.login({
+          email,
+          password,
+          slug: "proto-it-consultants",
+        });
 
         if (result.success) {
           localStorage.setItem("userData", JSON.stringify(result.user));

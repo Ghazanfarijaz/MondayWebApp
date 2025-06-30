@@ -12,6 +12,7 @@ export const checkSubdomain = async ({ subdomain }) => {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       }
     );
 

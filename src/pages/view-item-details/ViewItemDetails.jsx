@@ -1,14 +1,15 @@
 import { Link as LinkIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useBoard } from "../../contexts/BoardContext";
 import { useQuery } from "@tanstack/react-query";
 import { boardsAPI } from "../../api/board";
 import { toast } from "sonner";
 import ItemDetailsSkeleton from "../../features/view-item-details/components/ItemDetailsSkeleton";
+import { Loader } from "@mantine/core";
+import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
 
 const ViewItemDetails = () => {
-  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
+  const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ const ViewItemDetails = () => {
       }),
   });
 
-  if (isError || usersError) {
+  if (isError) {
     toast.error("Error fetching item details!", {
       description: error.message || "Please try again.",
     });
@@ -44,7 +45,7 @@ const ViewItemDetails = () => {
         </span>
       </div>
 
-      {usersLoading || isFetching ? (
+      {isFetching ? (
         <ItemDetailsSkeleton />
       ) : (
         <>
@@ -91,21 +92,27 @@ const ViewItemDetails = () => {
                     <span className="text-gray-500 dark:text-[#6F767E] blue:text-gray-400">
                       {columnValue.column.title}
                     </span>
-                    <div className="flex">
-                      {columnValue.persons_and_teams?.map((person, index) => (
-                        <img
-                          key={index}
-                          className={`w-6 h-6 rounded-full ${
-                            columnValue.persons_and_teams.length > 1 && "-mr-1"
-                          }`}
-                          src={
-                            usersPhotoThumb.users.data.find(
-                              (user) => user.id === person.id
-                            )?.photo_thumb
-                          }
-                          alt="Person 1"
-                        />
-                      ))}
+                    <div className="flex -space-x-2">
+                      {USER_PHOTO_THUMBS.isPending ? (
+                        <Loader size="sm" />
+                      ) : columnValue.persons_and_teams.length < 1 ? (
+                        <p className="text-sm text-gray-600 dark:text-white blue:text-white">
+                          N/A
+                        </p>
+                      ) : (
+                        columnValue.persons_and_teams?.map((person, index) => (
+                          <img
+                            key={index}
+                            className="w-6 h-6 rounded-full object-cover border-2 border-white"
+                            src={
+                              USER_PHOTO_THUMBS?.users?.find(
+                                (user) => user.id === person.id
+                              )?.photo_thumb
+                            }
+                            alt="Person 1"
+                          />
+                        ))
+                      )}
                     </div>
                   </div>
                 );

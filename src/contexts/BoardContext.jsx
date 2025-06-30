@@ -64,20 +64,10 @@ export const BoardProvider = ({ children }) => {
     }
   };
 
-  // Fetch items on mount
+  // // Fetch items on mount
   useEffect(() => {
-    fetchBoardItems();
     fetchUsersPhotoThumb();
   }, []);
-
-  // Refresh function
-  const refreshBoardItems = () => {
-    fetchBoardItems();
-  };
-
-  const refreshUsersPhotoThumb = () => {
-    fetchUsersPhotoThumb();
-  };
 
   const value = {
     groupData,
@@ -86,8 +76,6 @@ export const BoardProvider = ({ children }) => {
     loading,
     error,
     usersError,
-    refreshBoardItems,
-    refreshUsersPhotoThumb,
   };
 
   return (

@@ -1,18 +1,10 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useBoard } from "../../contexts/BoardContext";
 import { Loader } from "@mantine/core";
-import { toast } from "sonner";
+import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
 
 const CardItem = ({ item }) => {
   const navigate = useNavigate();
-  const { usersPhotoThumb, usersError, usersLoading } = useBoard();
-
-  if (usersError) {
-    toast.error("Error!", {
-      description: "Could not load data. Please try again later.",
-    });
-  }
+  const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
 
   return (
     <div
@@ -57,18 +49,20 @@ const CardItem = ({ item }) => {
               <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
                 {columnValue.column.title}
               </span>
-              <div className="flex">
-                {usersLoading ? (
+              <div className="flex -space-x-2">
+                {USER_PHOTO_THUMBS.isPending ? (
                   <Loader size="sm" />
+                ) : columnValue.persons_and_teams.length < 1 ? (
+                  <p className="text-sm text-gray-600 dark:text-white blue:text-white">
+                    N/A
+                  </p>
                 ) : (
                   columnValue.persons_and_teams?.map((person, index) => (
                     <img
                       key={person.id}
-                      className={`w-6 h-6 rounded-full ${
-                        columnValue.persons_and_teams.length > 1 && "-mr-1"
-                      }`}
+                      className="w-6 h-6 rounded-full object-cover border-2 border-white"
                       src={
-                        usersPhotoThumb.users.data.find(
+                        USER_PHOTO_THUMBS.users.find(
                           (user) => user.id === person.id
                         )?.photo_thumb
                       }
@@ -86,7 +80,7 @@ const CardItem = ({ item }) => {
               <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
                 {columnValue.column.title}
               </span>
-              <span className="text-sm text-black dark:text-white blue:text-white text-right">
+              <span className="text-sm text-gray-600 dark:text-white blue:text-white text-right">
                 {columnValue.type === "checkbox"
                   ? columnValue.text
                     ? "Yes"

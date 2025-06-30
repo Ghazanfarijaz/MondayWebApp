@@ -15,7 +15,7 @@ export default function App() {
     queryFn: () =>
       checkSubdomain({
         subdomain:
-          process.env.REACT_APP_NODE_ENV === "production"
+          process.env.REACT_APP_ENVIRONMENT === "production"
             ? window.location.hostname.split(".")[0]
             : "proto-it-consultants",
       }),

@@ -4,7 +4,12 @@ export const checkSubdomain = async ({ subdomain }) => {
   try {
     // 4. Make the actual API call
     const response = await axiosInstance.get(
-      `/api/subdomain/validateSubDomain/${subdomain}`
+      `/api/subdomain/validateSubDomain/${subdomain}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
     );
 
     return response.data.data;

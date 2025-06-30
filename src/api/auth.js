@@ -61,7 +61,11 @@ export const authAPI = {
   checkAuth: async () => {
     try {
       // Try to access a protected endpoint
-      const response = await axiosInstance.get(`/api/auth/check-user-auth`);
+      const response = await axiosInstance.get(`/api/auth/check-user-auth`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
 
       return {
         isAuthenticated: true,

@@ -12,7 +12,13 @@ export default function App() {
 
   const { isPending, isError, error } = useQuery({
     queryKey: ["subdomainValidation"],
-    queryFn: () => checkSubdomain({ subdomain: "proto-it-consultants" }),
+    queryFn: () =>
+      checkSubdomain({
+        subdomain:
+          process.env.REACT_APP_NODE_ENV === "production"
+            ? window.location.hostname.split(".")[0]
+            : "proto-it-consultants",
+      }),
   });
 
   if (isPending) {

@@ -21,7 +21,8 @@ const SigninForm = () => {
         const result = await authAPI.login({
           email,
           password,
-          slug: "proto-it-consultants",
+          slug: window.location.hostname.split(".")[0],
+          // slug: "proto-it-consultants",
         });
 
         if (result.success) {

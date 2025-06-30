@@ -8,6 +8,9 @@ export const boardsAPI = {
 
       const response = await axiosInstance.get(`/api/boards/getAllItems`, {
         params,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
       });
 
       return {
@@ -29,7 +32,11 @@ export const boardsAPI = {
   },
   getUsersPhotoThumb: async () => {
     try {
-      const response = await axiosInstance.get(`/api/boards/getPhotothumbs`);
+      const response = await axiosInstance.get(`/api/boards/getPhotothumbs`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
       return {
         success: response.data.success,
         data: {
@@ -69,8 +76,7 @@ export const boardsAPI = {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-            subdomain: "localhost:3000",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
       );
@@ -88,7 +94,12 @@ export const boardsAPI = {
   getItemDetails: async ({ itemId }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/boards/getItemDetails/${itemId}`
+        `/api/boards/getItemDetails/${itemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
       );
 
       const customizationFields = response.data.customization.fields;

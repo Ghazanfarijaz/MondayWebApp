@@ -127,9 +127,6 @@ const BoardGroup = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsData, groupedData, setSortOptions, setFilteredData]);
 
-  console.log("Grouped Data", groupedData);
-  console.log("Filtered Data", filteredData);
-
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="flex justify-end">

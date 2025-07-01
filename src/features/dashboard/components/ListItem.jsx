@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
+import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader } from "@mantine/core";
 
 const ListItem = ({ item }) => {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@mantine/core";
-import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
+import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 
 const CardItem = ({ item }) => {
   const navigate = useNavigate();

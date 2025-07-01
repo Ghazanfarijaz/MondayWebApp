@@ -3,8 +3,8 @@ import CardItem from "./CardItem";
 import ListItem from "./ListItem";
 import TableView from "./TableView";
 import { useNavigate } from "react-router-dom";
-import SortFilter from "../UIComponents/SortFilter";
-import useUsersPhotoThumbs from "./../../hooks/useUsersPhotoThumbs";
+import SortFilter from "../../../components/UIComponents/SortFilter";
+import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader, Skeleton } from "@mantine/core";
 
 const BoardGroup = ({

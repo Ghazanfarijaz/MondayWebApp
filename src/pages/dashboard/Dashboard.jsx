@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LayoutGrid, List, Table } from "lucide-react";
-import BoardGroup from "../../components/DashboardComponents/BoardGroup";
+import BoardGroup from "../../features/dashboard/components/BoardGroup";
 import { boardsAPI } from "../../api/board";
 import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkeleton";
 import { toast } from "sonner";

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://c2c8a-service-23360785-a4c1a002.us.monday.app";
+const BASE_URL = "https://ca407-service-23360785-a4c1a002.us.monday.app";
 // const BASE_URL = "http://localhost:8080";
 
 export const axiosInstance = axios.create({

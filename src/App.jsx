@@ -2,7 +2,7 @@ import "./App.css";
 import { useNavigate, Outlet } from "react-router-dom";
 import React from "react";
 import { checkSubdomain } from "./api/subdomain";
-import Navbar from "./components/LayoutComponents/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import LoadingBackdrop from "./components/UIComponents/LoadingBackdrop";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";

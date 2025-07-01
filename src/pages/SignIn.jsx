@@ -1,6 +1,5 @@
 import SIGN_IN_IMAGE from "../assets/signin-image.svg";
-import SigninForm from "../components/RegistrationComponents/SigninForm";
-// import SigninImage from "../components/RegistrationComponents/SigninImage";
+import SigninForm from "../features/signin/components/SigninForm";
 
 const SignIn = () => {
   return (

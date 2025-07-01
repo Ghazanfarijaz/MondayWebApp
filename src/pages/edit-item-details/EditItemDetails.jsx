@@ -96,6 +96,11 @@ const EditItemDetails = () => {
       });
       navigate(`/item-details/${itemId}`);
     },
+    onError: (error) => {
+      toast.error("Error!", {
+        description: error.message || "Could not update item details!",
+      });
+    },
   });
 
   const handleupdateItemValue = ({ itemId, newValue }) => {

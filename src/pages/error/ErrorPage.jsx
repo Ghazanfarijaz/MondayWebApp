@@ -1,10 +1,8 @@
-// src/components/UIComponents/ErrorPage.jsx
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 
 const ErrorPage = ({
-  error, // Accept error object from API { status, message, title }
+  error,
   errorCode = 404,
   title = "Oops! Something went wrong",
   message = "An unexpected error occurred. Please try again later.",
@@ -12,7 +10,7 @@ const ErrorPage = ({
   redirectText = "Go back to safety",
   redirectPath = "/",
   fullScreen = true,
-  color = "danger", // Default to danger color for errors
+  color = "danger",
 }) => {
   const navigate = useNavigate();
   const location = useLocation();

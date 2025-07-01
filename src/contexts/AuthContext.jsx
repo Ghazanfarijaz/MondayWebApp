@@ -40,7 +40,9 @@ export const AuthProvider = ({ children }) => {
 
   if (isError) {
     console.error("Error fetching auth status:", error);
-    toast.error("Authentication error. Please log in again.");
+    toast.error("Error!", {
+      description: error.message || "Authentication Failed!",
+    });
     return navigate("/login", { replace: true });
   }
 

@@ -6,6 +6,7 @@ import { checkSubdomain } from "./api/subdomain";
 import Navbar from "./components/LayoutComponents/Navbar";
 import LoadingBackdrop from "./components/UIComponents/LoadingBackdrop";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function App() {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ export default function App() {
   }
 
   if (isError) {
+    toast.error("Error!", {
+      description: error.message || "Could not validate subdomain!",
+    });
     console.error("Error fetching subdomain validation:", error);
     return navigate("/error", {
       state: { error: error },

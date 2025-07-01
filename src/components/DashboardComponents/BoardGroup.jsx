@@ -315,12 +315,6 @@ const BoardGroup = ({
           <div className="flex flex-col gap-6">
             {Object.entries(filteredData).map(
               ([groupTitle, items], groupIndex, groupArray) => {
-                console.log({
-                  groupTitle: groupTitle,
-                  groupIndex: groupIndex,
-                  length: groupArray.length,
-                });
-
                 return (
                   <div key={groupTitle} className="flex flex-col gap-4">
                     <div className="flex items-center">

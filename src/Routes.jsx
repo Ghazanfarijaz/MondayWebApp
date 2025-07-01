@@ -2,10 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import SignIn from "./pages/SignIn";
-import ErrorPage from "./components/UIComponents/ErrorPage";
 import EditItemDetails from "./pages/edit-item-details/EditItemDetails";
 import ViewItemDetails from "./pages/view-item-details/ViewItemDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
+import ErrorPage from "./pages/error/ErrorPage";
 
 export const router = createBrowserRouter([
   {

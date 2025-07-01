@@ -11,7 +11,7 @@ const ListItem = ({ item }) => {
   return (
     <div
       onClick={() => navigate(`/item-details/${item.id}`)}
-      className="grid grid-cols-6 gap-4 p-4 my-2 bg-white dark:bg-black blue:bg-dark-blue rounded-lg border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue cursor-pointer shadow-sm transition-colors duration-200"
+      className="grid grid-cols-6 gap-4 p-4 bg-white dark:bg-black blue:bg-dark-blue rounded-lg border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue cursor-pointer shadow-sm transition-colors duration-200"
     >
       {/* Title Column */}
       <div className="flex items-center">

@@ -9,7 +9,7 @@ const CardItem = ({ item }) => {
   return (
     <div
       onClick={() => navigate(`/item-details/${item.id}`)}
-      className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow mb-4 border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue hover:shadow-lg transition-shadow duration-300 cursor-pointer"
     >
       <h3 className="font-medium mb-2 text-black dark:text-white blue:text-white">
         {item.name}

@@ -1,4 +1,4 @@
-import { Link as LinkIcon } from "lucide-react";
+import { Link as LinkIcon, ChevronLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -32,19 +32,28 @@ const ViewItemDetails = () => {
   return (
     <div className="h-full max-h-[calc(100dvh-68px)] md:p-10 p-4 overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       {/* Breadcrumb navigation */}
-      <div className="text-sm mb-4 text-gray-500 dark:text-white blue:text-white">
+      <div className="flex flex-col gap-4">
         <Link
-          to="/"
-          className="hover:underline text-gray-500 dark:text-white blue:text-white"
+          to={"/"}
+          className="text-gray-600 font-medium flex items-center gap-1"
         >
-          Board 1
-        </Link>{" "}
-        /{" "}
-        <span className="text-[#BDBDBD] dark:text-[#A2A2A2] blue:text-gray-100">
-          Item Details
-        </span>
-      </div>
+          <ChevronLeft size={20} />
+          <p>Go Back</p>
+        </Link>
 
+        <div className="text-sm mb-4 text-gray-500 dark:text-white blue:text-white">
+          <Link
+            to="/"
+            className="hover:underline text-gray-500 dark:text-white blue:text-white"
+          >
+            Board 1
+          </Link>{" "}
+          /{" "}
+          <span className="text-[#BDBDBD] dark:text-[#A2A2A2] blue:text-gray-100">
+            Item Details
+          </span>
+        </div>
+      </div>
       {isFetching ? (
         <ItemDetailsSkeleton />
       ) : (

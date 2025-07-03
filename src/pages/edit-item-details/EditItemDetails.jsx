@@ -1,6 +1,11 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { FileText, CloudUpload, Link as LinkIcon } from "lucide-react";
+import {
+  FileText,
+  CloudUpload,
+  Link as LinkIcon,
+  ChevronLeft,
+} from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { boardsAPI } from "../../api/board";
 import { toast } from "sonner";
@@ -118,6 +123,12 @@ const EditItemDetails = () => {
   };
 
   const handleUploadFile = ({ itemId, file }) => {
+    // Check if the file size exceeds 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      console.error("File size exceeds 5MB limit");
+      return;
+    }
+
     const updatedItems = filteredItems.map((item) => {
       if (item.id === itemId) {
         return {
@@ -146,25 +157,35 @@ const EditItemDetails = () => {
 
   return (
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
-      {/* Breadcrumb navigation */}
-      <div className="text-sm mb-4 text-gray-500 dark:text-white blue:text-white">
-        <Link
-          to="/"
-          className="hover:underline text-gray-500 dark:text-white blue:text-white"
-        >
-          Board 1
-        </Link>{" "}
-        /{" "}
+      <div className="flex flex-col gap-4">
         <Link
           to={`/item-details/${itemId}`}
-          className="hover:underline text-gray-500 dark:text-white blue:text-white"
+          className="text-gray-600 font-medium flex items-center gap-1"
         >
-          Item Details
-        </Link>{" "}
-        /{" "}
-        <span className="text-[#BDBDBD] dark:text-[#A2A2A2] blue:text-gray-100">
-          Edit Item
-        </span>
+          <ChevronLeft size={20} />
+          <p>Go Back</p>
+        </Link>
+
+        {/* Breadcrumb navigation */}
+        <div className="text-sm mb-4 text-gray-500 dark:text-white blue:text-white">
+          <Link
+            to="/"
+            className="hover:underline text-gray-500 dark:text-white blue:text-white"
+          >
+            Board 1
+          </Link>{" "}
+          /{" "}
+          <Link
+            to={`/item-details/${itemId}`}
+            className="hover:underline text-gray-500 dark:text-white blue:text-white"
+          >
+            Item Details
+          </Link>{" "}
+          /{" "}
+          <span className="text-[#BDBDBD] dark:text-[#A2A2A2] blue:text-gray-100">
+            Edit Item
+          </span>
+        </div>
       </div>
 
       {updateColumnsData.isPending && <LoadingBackdrop />}
@@ -242,6 +263,9 @@ const EditItemDetails = () => {
                         }
                       }}
                     />
+                    <span className="text-xs text-gray-500">
+                      (Max File size: 5MB)
+                    </span>
                     <div className="flex flex-col gap-1">
                       <p className="text-black dark:text-white blue:text-white font-semibold">
                         Previous Files:

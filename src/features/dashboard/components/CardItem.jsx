@@ -72,6 +72,25 @@ const CardItem = ({ item }) => {
                 )}
               </div>
             </div>
+          ) : columnValue.type === "file" ? (
+            <div
+              key={columnValue.id}
+              className="flex justify-between items-center gap-4"
+            >
+              <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
+                {columnValue.column.title}
+              </span>
+              {columnValue?.files?.length < 1 ? (
+                <span className="text-sm text-gray-600 dark:text-white blue:text-white text-right">
+                  N/A
+                </span>
+              ) : (
+                <span className="text-sm text-gray-600 dark:text-white blue:text-white text-right line-clamp-1">
+                  {/* Get the last name after last / */}
+                  {columnValue?.files[0]?.asset?.name},...
+                </span>
+              )}
+            </div>
           ) : (
             <div
               key={columnValue.id}

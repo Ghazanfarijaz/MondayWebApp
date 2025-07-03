@@ -270,6 +270,13 @@ const BoardGroup = ({
                                       )
                                     )}
                                   </div>
+                                ) : columnValue.type === "file" ? (
+                                  <span className="text-gray-700 dark:text-white blue:text-white block line-clamp-1">
+                                    {columnValue?.files[0]?.asset
+                                      ? columnValue?.files[0]?.asset?.name +
+                                        ",..."
+                                      : "N/A"}
+                                  </span>
                                 ) : (
                                   <span className="text-gray-700 dark:text-white blue:text-white block">
                                     {columnValue.type === "checkbox"

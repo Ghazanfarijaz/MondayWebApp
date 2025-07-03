@@ -123,6 +123,12 @@ const EditItemDetails = () => {
   };
 
   const handleUploadFile = ({ itemId, file }) => {
+    // Check if the file size exceeds 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      console.error("File size exceeds 5MB limit");
+      return;
+    }
+
     const updatedItems = filteredItems.map((item) => {
       if (item.id === itemId) {
         return {
@@ -257,6 +263,9 @@ const EditItemDetails = () => {
                         }
                       }}
                     />
+                    <span className="text-xs text-gray-500">
+                      (Max File size: 5MB)
+                    </span>
                     <div className="flex flex-col gap-1">
                       <p className="text-black dark:text-white blue:text-white font-semibold">
                         Previous Files:

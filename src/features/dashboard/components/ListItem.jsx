@@ -72,6 +72,12 @@ const ListItem = ({ item }) => {
                 </div>
               )}
             </div>
+          ) : columnValue.type === "file" ? (
+            <span className="text-sm text-gray-600 dark:text-white blue:text-white line-clamp-1 max-w-full">
+              {columnValue?.files[0]?.asset
+                ? columnValue?.files[0]?.asset?.name + ",..."
+                : "N/A"}
+            </span>
           ) : (
             <span className="text-sm text-gray-600 dark:text-white blue:text-white truncate max-w-full">
               {columnValue.type === "checkbox"

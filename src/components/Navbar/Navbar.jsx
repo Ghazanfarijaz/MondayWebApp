@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { LogOut, Palette } from "lucide-react";
+import { LogOut, Palette, Settings } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import Avatar from "../../assets/Avatar.png";
 import Logo from "../../assets/Logo.png";
 import { Menu } from "@mantine/core";
 import { toast } from "sonner";
+import { useAuth } from "./../../contexts/AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
-
+  const { user } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   // Set the theme based on localStorage or default to light
   useEffect(() => {
@@ -49,13 +49,29 @@ const Navbar = () => {
       <div className="flex items-center space-x-3 sm:space-x-4">
         <Menu shadow="md" width={180} position="bottom-end" withArrow>
           <Menu.Target>
-            <img
-              src={Avatar}
-              alt="User profile"
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover hover:cursor-pointer"
-            />
+            {user?.profilePicture ? (
+              <img
+                src={user?.profilePicture}
+                alt="User profile"
+                className="object-contain w-9 h-9 rounded-full"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-[#2A85FF] cursor-pointer">
+                <span className="text-[14px] text-white font-bold">
+                  {user?.name?.slice(0, 2).toUpperCase() ||
+                    user?.email?.slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+            )}
           </Menu.Target>
           <Menu.Dropdown>
+            <Menu.Item
+              leftSection={<Settings className="mr-2 h-4 w-4" />}
+              onClick={() => navigate("/settings")}
+            >
+              Settings
+            </Menu.Item>
+
             <Menu.Sub
               width={130}
               leftSection={<Palette className="mr-2 h-4 w-4" />}

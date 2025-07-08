@@ -11,11 +11,15 @@ import { boardsAPI } from "../../api/board";
 import { toast } from "sonner";
 import LoadingBackdrop from "../../components/UIComponents/LoadingBackdrop";
 import EditItemDetailsSkeleton from "../../features/edit-item-details/components/EditItemDetailsSkeleton";
+import { DateInput } from "@mantine/dates";
+import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
 
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const theme = useHtmlThemeClass();
+  const isBlueTheme = theme === "blue";
 
   // Local States
   const [formattingData, setFormattingData] = useState(false);
@@ -293,29 +297,26 @@ const EditItemDetails = () => {
                 );
               } else if (item.type === "date") {
                 return (
-                  <div className="flex flex-col gap-2" key={item.id}>
-                    <label
-                      htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white"
-                    >
-                      {item.column.title}{" "}
-                      <span className="text-[14px]">(YYYY-MM-DD)</span>
-                    </label>
-                    <input
-                      id={item.id}
-                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white"
-                      placeholder="Enter date here..."
-                      value={item.text}
-                      onChange={(e) =>
-                        handleupdateItemValue({
-                          itemId: item.id,
-                          newValue: e.target.value,
-                        })
-                      }
-                      pattern="^\d{4}-\d{2}-\d{2}$"
-                      title="Date must be in YYYY-MM-DD format"
-                    />
-                  </div>
+                  <DateInput
+                    value={item.text ? new Date(item.text) : null}
+                    onChange={(value) =>
+                      handleupdateItemValue({
+                        itemId: item.id,
+                        newValue: value,
+                      })
+                    }
+                    label={item.column.title}
+                    placeholder="Date input"
+                    valueFormat="YYYY-MM-DD"
+                    classNames={{
+                      label:
+                        "!text-black dark:!text-white !font-normal !text-[16px] !mb-2" +
+                        (isBlueTheme ? " !text-white" : ""),
+                      input:
+                        "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !h-[40px] !border-none !bg-gray-100 dark:!bg-light-black" +
+                        (isBlueTheme ? " !bg-[#2b2d50] !text-white" : ""),
+                    }}
+                  />
                 );
               } else if (item.type === "dropdown") {
                 return (

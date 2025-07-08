@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { LogOut, Palette, Settings } from "lucide-react";
+import { KeyRound, LogOut, Palette, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 import { Menu } from "@mantine/core";
@@ -66,12 +66,17 @@ const Navbar = () => {
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
-              leftSection={<Settings className="mr-2 h-4 w-4" />}
-              onClick={() => navigate("/settings")}
+              leftSection={<UserCog className="mr-2 h-4 w-4" />}
+              onClick={() => navigate("/settings/profile")}
             >
-              Settings
+              Profile Settings
             </Menu.Item>
-
+            <Menu.Item
+              leftSection={<KeyRound className="mr-2 h-4 w-4" />}
+              onClick={() => navigate("/settings/change-password")}
+            >
+              Change Password
+            </Menu.Item>
             <Menu.Sub
               width={130}
               leftSection={<Palette className="mr-2 h-4 w-4" />}

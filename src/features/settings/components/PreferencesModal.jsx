@@ -49,86 +49,68 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
       onClose={onCloseModal}
       loadingOverlay={false}
     >
-      {type === "itemView" ? (
-        <>
-          <ModalContent
-            heading="Item View Preference"
-            description="Please select an 'Item View' that you want to make default for your app."
-          />
-          <Select
-            id="default-item-view-select"
-            data={[
-              { value: "card", label: "Card View" },
-              { value: "list", label: "List View" },
-              { value: "table", label: "Table View" },
-            ]}
-            renderOption={renderSelectOption}
-            placeholder="Select Item View"
-            classNames={{
-              input: isBlueTheme
-                ? " !bg-[#191B34] !text-white !border-none !h-[42px] !rounded-lg !p-[8px_10px]"
-                : "!text-black !bg-gray-100 !border-none !h-[42px] !rounded-lg !p-[8px_10px]",
-              dropdown: isBlueTheme
-                ? "!bg-[#191B34] !text-white !border-[#2B2D50] !rounded-lg !outline-none"
-                : "bg-white !rounded-lg !outline-none",
-              option: isBlueTheme
-                ? "hover:!bg-[#2B2D50] !text-white"
-                : "hover:!bg-gray-100 !text-black",
-            }}
-            allowDeselect={false}
-            value={selectedItemView}
-            onChange={(value) => setSelectedItemView(value)}
-          />
-          <button
-            type="button"
-            className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
-            onClick={() => {
-              updatePreferences({ itemView: selectedItemView });
-              onCloseModal();
-            }}
-          >
-            Save Changes
-          </button>
-        </>
-      ) : (
-        type === "sorting" && (
-          <>
-            <ModalContent
-              heading="Sort Preference"
-              description="Please select a Default sorting option for Items."
-            />
-            <Select
-              id="default-sort-filter-select"
-              data={sortingOptions}
-              placeholder="Select Item View"
-              classNames={{
-                input: isBlueTheme
-                  ? " !bg-[#191B34] !text-white !border-none !h-[42px] !rounded-lg !p-[8px_10px]"
-                  : "!text-black !bg-gray-100 !border-none !h-[42px] !rounded-lg !p-[8px_10px]",
-                dropdown: isBlueTheme
-                  ? "!bg-[#191B34] !text-white !border-[#2B2D50] !rounded-lg !outline-none"
-                  : "bg-white !rounded-lg !outline-none",
-                option: isBlueTheme
-                  ? "hover:!bg-[#2B2D50] !text-white"
-                  : "hover:!bg-gray-100 !text-black",
-              }}
-              allowDeselect={false}
-              value={sortPreference}
-              onChange={(value) => setSortPreference(value)}
-            />
-            <button
-              type="button"
-              className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
-              onClick={() => {
-                updatePreferences({ sortPreference: sortPreference });
-                onCloseModal();
-              }}
-            >
-              Save Changes
-            </button>
-          </>
-        )
-      )}
+      <ModalContent
+        heading="Item View Preference"
+        description="Select your preferred item view and sorting option. These preferences will be saved for future sessions."
+      />
+      <Select
+        id="default-item-view-select"
+        label="Item View"
+        data={[
+          { value: "card", label: "Card View" },
+          { value: "list", label: "List View" },
+          { value: "table", label: "Table View" },
+        ]}
+        renderOption={renderSelectOption}
+        placeholder="Select Item View"
+        classNames={{
+          input: isBlueTheme
+            ? " !bg-[#191B34] !text-white !border-none !h-[42px] !rounded-lg !p-[8px_10px]"
+            : "!text-black !bg-gray-100 !border-none !h-[42px] !rounded-lg !p-[8px_10px]",
+          dropdown: isBlueTheme
+            ? "!bg-[#191B34] !text-white !border-[#2B2D50] !rounded-lg !outline-none"
+            : "bg-white !rounded-lg !outline-none",
+          option: isBlueTheme
+            ? "hover:!bg-[#2B2D50] !text-white"
+            : "hover:!bg-gray-100 !text-black",
+        }}
+        allowDeselect={false}
+        value={selectedItemView}
+        onChange={(value) => setSelectedItemView(value)}
+      />
+      <Select
+        id="default-sort-filter-select"
+        label="Sort Preference"
+        data={sortingOptions}
+        placeholder="Select Item View"
+        classNames={{
+          input: isBlueTheme
+            ? " !bg-[#191B34] !text-white !border-none !h-[42px] !rounded-lg !p-[8px_10px]"
+            : "!text-black !bg-gray-100 !border-none !h-[42px] !rounded-lg !p-[8px_10px]",
+          dropdown: isBlueTheme
+            ? "!bg-[#191B34] !text-white !border-[#2B2D50] !rounded-lg !outline-none"
+            : "bg-white !rounded-lg !outline-none",
+          option: isBlueTheme
+            ? "hover:!bg-[#2B2D50] !text-white"
+            : "hover:!bg-gray-100 !text-black",
+        }}
+        allowDeselect={false}
+        value={sortPreference}
+        onChange={(value) => setSortPreference(value)}
+      />
+      <button
+        type="button"
+        className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+        onClick={() => {
+          updatePreferences({
+            itemView: selectedItemView,
+            sortPreference: sortPreference,
+          });
+          onCloseModal();
+        }}
+      >
+        Save Changes
+      </button>
     </ModalRoot>
   );
 };

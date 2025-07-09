@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutGrid, List, Table } from "lucide-react";
 import BoardGroup from "../../features/dashboard/components/BoardGroup";
 import { boardsAPI } from "../../api/board";
@@ -8,6 +8,13 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
   const [viewMode, setViewMode] = useState("card");
+
+  useEffect(() => {
+    // Set the initial view mode from user preferences or default to 'card'
+    const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
+    const initialViewMode = userPreferences.itemView || "card";
+    setViewMode(initialViewMode);
+  }, []);
 
   const {
     data,

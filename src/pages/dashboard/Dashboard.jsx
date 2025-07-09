@@ -12,7 +12,7 @@ const Dashboard = () => {
   useEffect(() => {
     // Set the initial view mode from user preferences or default to 'card'
     const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
-    const initialViewMode = userPreferences.itemView || "card";
+    const initialViewMode = userPreferences?.itemView || "card";
     setViewMode(initialViewMode);
   }, []);
 

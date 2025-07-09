@@ -12,7 +12,8 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Sorting options on Dashboard
+  const [sortingOptions, setSortingOptions] = useState([]);
 
   const {
     data: authStatus,
@@ -21,13 +22,6 @@ export const AuthProvider = ({ children }) => {
   } = useQuery({
     queryKey: ["authStatus"],
     queryFn: () => {
-      // Try to get user from localStorage first for immediate UI update
-      const storedUser = localStorage.getItem("userData");
-      if (!storedUser) {
-        throw new Error("No user data found in localStorage");
-      }
-
-      setUser(JSON.parse(storedUser));
       // Verify with the server
       return authAPI.checkAuth();
     },
@@ -35,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    setLoading(false);
+    setUser(authStatus?.user || null);
   }, [authStatus]);
 
   if (isError) {
@@ -62,9 +56,10 @@ export const AuthProvider = ({ children }) => {
   // Provide auth context
   const value = {
     user,
-    loading,
     isAuthenticated: !!user,
     logout,
+    sortingOptions,
+    setSortingOptions,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

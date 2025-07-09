@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 // Mantine UI styles
 import { createTheme, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 
 const theme = createTheme({
   cursorType: "pointer",

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import CardItem from "./CardItem";
 import ListItem from "./ListItem";
 import TableView from "./TableView";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SortFilter from "../../../components/UIComponents/SortFilter";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader, Skeleton } from "@mantine/core";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const BoardGroup = ({
   itemsData,
@@ -17,6 +18,7 @@ const BoardGroup = ({
 }) => {
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
+  const { setSortingOptions } = useAuth();
 
   const [filteredData, setFilteredData] = useState({});
   const [sortOptions, setSortOptions] = useState([]);
@@ -69,7 +71,7 @@ const BoardGroup = ({
   };
 
   // useMemo to memoize filteredData based on itemsData and sortOptions
-  useMemo(() => {
+  useEffect(() => {
     let sortingOptions = [
       {
         value: "default",
@@ -123,7 +125,31 @@ const BoardGroup = ({
     }
 
     setSortOptions(sortingOptions);
-    handleSortChange(selectedSort);
+    // Sorting Options in Context
+    // To be used in Preferences modal
+    setSortingOptions(sortingOptions);
+
+    // Get User Preferences
+    const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
+
+    const savedSort = sortingOptions.find(
+      (option) => option.value === userPreferences.sortPreference
+    );
+
+    if (savedSort) {
+      setSelectedSort(savedSort);
+      return handleSortChange(savedSort);
+    }
+
+    // If saved sort option is not found, default to "Default"
+    handleSortChange({
+      value: "default",
+      label: "Default",
+    });
+    setSelectedSort({
+      value: "default",
+      label: "Default",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsData, groupedData, setSortOptions, setFilteredData]);
 
@@ -149,7 +175,7 @@ const BoardGroup = ({
           </p>
         ) : viewMode === "list" ? (
           <div className="w-full flex flex-col gap-6">
-            {Object.entries(groupedData).map(([groupTitle, items]) => (
+            {Object.entries(filteredData).map(([groupTitle, items]) => (
               <div key={groupTitle} className="flex flex-col gap-4">
                 <div className="flex items-center">
                   <div className={`w-4 h-8 rounded-[4px] bg-purple-300`}></div>

@@ -6,6 +6,9 @@ import EditItemDetails from "./pages/edit-item-details/EditItemDetails";
 import ViewItemDetails from "./pages/view-item-details/ViewItemDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ErrorPage from "./pages/error/ErrorPage";
+import Settings from "./pages/settings/Settings";
+import ProfileSettings from "./pages/settings/profile-settings/ProfileSettings";
+import ChangePassword from "./pages/settings/change-password/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +30,20 @@ export const router = createBrowserRouter([
       {
         path: "item-details/:id/edit-details",
         element: <EditItemDetails />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
+        children: [
+          {
+            path: "profile",
+            element: <ProfileSettings />,
+          },
+          {
+            path: "change-password",
+            element: <ChangePassword />,
+          },
+        ],
       },
       {
         path: "*",

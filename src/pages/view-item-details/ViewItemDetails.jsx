@@ -35,7 +35,7 @@ const ViewItemDetails = () => {
       <div className="flex flex-col gap-4">
         <Link
           to={"/"}
-          className="text-gray-600 font-medium flex items-center gap-1"
+          className="text-gray-600 dark:text-gray-400 blue:text-gray-100 font-medium flex items-center gap-1"
         >
           <ChevronLeft size={20} />
           <p>Go Back</p>

@@ -4,6 +4,7 @@ import { PasswordInput } from "@mantine/core";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { userAPIs } from "../../../api/user";
 import { toast } from "sonner";
+import LoadingBackdrop from "../../../components/UIComponents/LoadingBackdrop";
 
 const ChangePassword = () => {
   // Hooks
@@ -35,29 +36,49 @@ const ChangePassword = () => {
       }),
 
     onSuccess: () => {
-      toast.success("Password changed successfully.");
+      toast.success("Success!", {
+        description: "Password changed successfully.",
+      });
       changePasswordForm.reset();
     },
     onError: (error) => {
       console.log("Change Password Error", error);
-      toast.error(error.message || "Failed to change password.");
+      toast.error("Error!", {
+        description: error.message || "Failed to change password.",
+      });
     },
   });
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-black dark:text-white blue:text-white break-all">
-        Change Password
-      </h1>
-      <form
-        onSubmit={changePasswordForm.onSubmit(changePassword.mutate)}
-        className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm lg:grid grid-cols-2 flex flex-col gap-8 max-w-[800px]"
-      >
-        <div className="col-span-2 grid lg:grid-cols-2 grid-cols-1 gap-8">
+    <>
+      {changePassword.isPending && <LoadingBackdrop />}
+      <div className="flex flex-col gap-6">
+        <h1 className="text-2xl font-bold text-black dark:text-white blue:text-white break-all">
+          Change Password
+        </h1>
+        <form
+          onSubmit={changePasswordForm.onSubmit(changePassword.mutate)}
+          className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm lg:grid grid-cols-2 flex flex-col gap-8 max-w-[800px]"
+        >
+          <div className="col-span-2 grid lg:grid-cols-2 grid-cols-1 gap-8">
+            <PasswordInput
+              label="Current Password"
+              placeholder="Enter your current password"
+              {...changePasswordForm.getInputProps("currentPassword")}
+              classNames={{
+                label: isBlueTheme
+                  ? " !text-white !font-normal !text-[14px] !mb-2"
+                  : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+                input: isBlueTheme
+                  ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
+                  : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
+              }}
+            />
+          </div>
           <PasswordInput
-            label="Current Password"
-            placeholder="Enter your current password"
-            {...changePasswordForm.getInputProps("currentPassword")}
+            label="New Password"
+            placeholder="Enter your new password"
+            {...changePasswordForm.getInputProps("newPassword")}
             classNames={{
               label: isBlueTheme
                 ? " !text-white !font-normal !text-[14px] !mb-2"
@@ -66,46 +87,30 @@ const ChangePassword = () => {
                 ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
                 : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
             }}
-            disabled={changePassword.isPending}
           />
-        </div>
-        <PasswordInput
-          label="New Password"
-          placeholder="Enter your new password"
-          {...changePasswordForm.getInputProps("newPassword")}
-          classNames={{
-            label: isBlueTheme
-              ? " !text-white !font-normal !text-[14px] !mb-2"
-              : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
-            input: isBlueTheme
-              ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
-              : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
-          }}
-          disabled={changePassword.isPending}
-        />
-        <PasswordInput
-          label="Confirm Password"
-          placeholder="Confirm your new password"
-          {...changePasswordForm.getInputProps("confirmNewPassword")}
-          classNames={{
-            label: isBlueTheme
-              ? " !text-white !font-normal !text-[14px] !mb-2"
-              : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
-            input: isBlueTheme
-              ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
-              : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
-          }}
-          disabled={changePassword.isPending}
-        />
-        <button
-          type="submit"
-          className="px-4 py-2 bg-[#2A85FF] disabled:bg-gray-300 text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit disabled:cursor-not-allowed disabled:hover:scale-100"
-          disabled={changePassword.isPending}
-        >
-          {changePassword.isPending ? "Updating..." : "Update Password"}
-        </button>
-      </form>
-    </div>
+          <PasswordInput
+            label="Confirm Password"
+            placeholder="Confirm your new password"
+            {...changePasswordForm.getInputProps("confirmNewPassword")}
+            classNames={{
+              label: isBlueTheme
+                ? " !text-white !font-normal !text-[14px] !mb-2"
+                : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+              input: isBlueTheme
+                ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
+                : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
+            }}
+          />
+          <button
+            type="submit"
+            className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+            disabled={changePassword.isPending}
+          >
+            Update Password
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 

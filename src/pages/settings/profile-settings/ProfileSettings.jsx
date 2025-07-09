@@ -4,7 +4,7 @@ import { useAuth } from "./../../../contexts/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import ProfilePictureInput from "../../../features/settings/components/ProfilePictureInput";
 import { TextInput } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SquarePen } from "lucide-react";
 import { userAPIs } from "../../../api/user";
 import { toast } from "sonner";
@@ -21,9 +21,9 @@ const ProfileSettings = () => {
   // Form for updating profile
   const updateProfileForm = useForm({
     initialValues: {
-      name: user?.name || "",
-      email: user?.email || "",
-      profilePicture: user?.profilePicture || "",
+      name: "",
+      email: "",
+      profilePicture: "",
     },
 
     validate: {
@@ -50,6 +50,17 @@ const ProfileSettings = () => {
         description: error.message || "Failed to update profile.",
       }),
   });
+
+  const formRef = useRef(updateProfileForm);
+  useEffect(() => {
+    if (user) {
+      formRef.current.setValues({
+        name: user.name,
+        email: user.email,
+        profilePicture: user.profilePicture,
+      });
+    }
+  }, [user]);
 
   return (
     <>

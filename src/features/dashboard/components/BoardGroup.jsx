@@ -28,11 +28,6 @@ const BoardGroup = ({
   });
 
   const handleSortChange = ({ value, label }) => {
-    console.log("Handle Sort Change:", {
-      value: value,
-      label: label,
-    });
-
     if (value === "default") {
       return setFilteredData(groupedData);
     }
@@ -142,11 +137,16 @@ const BoardGroup = ({
     );
 
     if (savedSort) {
+      setSelectedSort(savedSort);
       return handleSortChange(savedSort);
     }
 
     // If saved sort option is not found, default to "Default"
     handleSortChange({
+      value: "default",
+      label: "Default",
+    });
+    setSelectedSort({
       value: "default",
       label: "Default",
     });

@@ -132,8 +132,8 @@ const BoardGroup = ({
     // Get User Preferences
     const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
 
-    const savedSort = sortingOptions.find(
-      (option) => option.value === userPreferences.sortPreference
+    const savedSort = sortingOptions?.find(
+      (option) => option.value === userPreferences?.sortPreference
     );
 
     if (savedSort) {

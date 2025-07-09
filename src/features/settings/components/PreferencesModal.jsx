@@ -37,9 +37,9 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
   // Sync state when preferences load from localStorage
   useEffect(() => {
     if (preferences?.itemView)
-      setSelectedItemView(preferences.itemView || "card");
+      setSelectedItemView(preferences?.itemView || "card");
     if (preferences?.sortPreference)
-      setSortPreference(preferences.sortPreference || "default");
+      setSortPreference(preferences?.sortPreference || "default");
   }, [preferences]);
 
   return (

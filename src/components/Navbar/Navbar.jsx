@@ -58,7 +58,7 @@ const Navbar = () => {
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">
           <Menu shadow="md" width={180} position="bottom-end" withArrow>
-            <Menu.Target>
+            <Menu.Target className="cursor-pointer">
               {user?.profilePicture ? (
                 <img
                   src={user?.profilePicture}

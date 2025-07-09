@@ -32,7 +32,7 @@ const SortFilter = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsFilterOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 dark:text-white blue:text-white bg-gray-50 dark:bg-light-black blue:bg-light-blue hover:bg-gray-100 rounded-md transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 dark:text-white blue:text-white bg-gray-50 dark:bg-black blue:bg-dark-blue hover:bg-gray-100 rounded-md transition-colors"
       >
         <FiFilter className="text-gray-500 dark:text-white blue:text-white" />
         Sort

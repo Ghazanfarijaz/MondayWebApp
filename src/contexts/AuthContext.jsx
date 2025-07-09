@@ -12,6 +12,8 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  // Sorting options on Dashboard
+  const [sortingOptions, setSortingOptions] = useState([]);
 
   const {
     data: authStatus,
@@ -56,6 +58,8 @@ export const AuthProvider = ({ children }) => {
     user,
     isAuthenticated: !!user,
     logout,
+    sortingOptions,
+    setSortingOptions,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

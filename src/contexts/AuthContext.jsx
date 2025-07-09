@@ -3,6 +3,8 @@ import { authAPI } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import LoadingBackdrop from "../components/UIComponents/LoadingBackdrop";
+import { checkSubdomain } from "../api/subdomain";
 
 // Create context
 const AuthContext = createContext(null);
@@ -18,10 +20,16 @@ export const AuthProvider = ({ children }) => {
   const {
     data: authStatus,
     isError,
+    isPending,
     error,
   } = useQuery({
     queryKey: ["authStatus"],
-    queryFn: () => {
+    queryFn: async () => {
+      await checkSubdomain({
+        subdomain: window.location.hostname.split(".")[0],
+        // subdomain: "proto-it-consultants",
+      });
+
       // Verify with the server
       return authAPI.checkAuth();
     },
@@ -62,5 +70,10 @@ export const AuthProvider = ({ children }) => {
     setSortingOptions,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {isPending && <LoadingBackdrop />}
+      {children}
+    </AuthContext.Provider>
+  );
 };

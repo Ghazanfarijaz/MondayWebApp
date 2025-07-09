@@ -1,5 +1,5 @@
 import { Group, Select } from "@mantine/core";
-import { ModalContent, ModalRoot } from "../../../components/Modal";
+import { ModalRoot } from "../../../components/Modal";
 import { LayoutGrid, List, Table } from "lucide-react";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import useUserPreferences from "../../../hooks/useUserPreferences";
@@ -49,10 +49,13 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
       onClose={onCloseModal}
       loadingOverlay={false}
     >
-      <ModalContent
-        heading="Item View Preference"
-        description="Select your preferred item view and sorting option. These preferences will be saved for future sessions."
-      />
+      <h2 className="font-bold md:text-[24px] text-[20px] text-black dark:text-white blue:text-white leading-none">
+        User Preferences
+      </h2>
+      <p className="text-gray-700 dark:text-gray-400 blue:text-gray-100">
+        Select your preferred <b>'Item View'</b> and <b>'Sorting Option'</b>.
+        These preferences will be saved for future sessions.
+      </p>
       <Select
         id="default-item-view-select"
         label="Item View"
@@ -100,7 +103,7 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
       />
       <button
         type="button"
-        className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+        className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit mt-3"
         onClick={() => {
           updatePreferences({
             itemView: selectedItemView,

@@ -2,6 +2,8 @@ import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { PasswordInput } from "@mantine/core";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
+import { userAPIs } from "../../../api/user";
+import { toast } from "sonner";
 
 const ChangePassword = () => {
   // Hooks
@@ -26,7 +28,20 @@ const ChangePassword = () => {
   });
 
   const changePassword = useMutation({
-    mutationFn: () => {},
+    mutationFn: () =>
+      userAPIs.changePassword({
+        oldPassword: changePasswordForm.values.currentPassword,
+        newPassword: changePasswordForm.values.newPassword,
+      }),
+
+    onSuccess: () => {
+      toast.success("Password changed successfully.");
+      changePasswordForm.reset();
+    },
+    onError: (error) => {
+      console.log("Change Password Error", error);
+      toast.error(error.message || "Failed to change password.");
+    },
   });
 
   return (
@@ -44,13 +59,14 @@ const ChangePassword = () => {
             placeholder="Enter your current password"
             {...changePasswordForm.getInputProps("currentPassword")}
             classNames={{
-              label:
-                "!text-black dark:!text-white !font-normal !text-[16px] !mb-2" +
-                (isBlueTheme ? " !text-white" : ""),
-              input:
-                "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !h-[40px] !border-none !bg-gray-100 dark:!bg-light-black" +
-                (isBlueTheme ? " !bg-[#2b2d50] !text-white" : ""),
+              label: isBlueTheme
+                ? " !text-white !font-normal !text-[14px] !mb-2"
+                : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+              input: isBlueTheme
+                ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
+                : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
             }}
+            disabled={changePassword.isPending}
           />
         </div>
         <PasswordInput
@@ -58,32 +74,35 @@ const ChangePassword = () => {
           placeholder="Enter your new password"
           {...changePasswordForm.getInputProps("newPassword")}
           classNames={{
-            label:
-              "!text-black dark:!text-white !font-normal !text-[16px] !mb-2" +
-              (isBlueTheme ? " !text-white" : ""),
-            input:
-              "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !h-[40px] !border-none !bg-gray-100 dark:!bg-light-black" +
-              (isBlueTheme ? " !bg-[#2b2d50] !text-white" : ""),
+            label: isBlueTheme
+              ? " !text-white !font-normal !text-[14px] !mb-2"
+              : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+            input: isBlueTheme
+              ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
+              : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
           }}
+          disabled={changePassword.isPending}
         />
         <PasswordInput
           label="Confirm Password"
           placeholder="Confirm your new password"
           {...changePasswordForm.getInputProps("confirmNewPassword")}
           classNames={{
-            label:
-              "!text-black dark:!text-white !font-normal !text-[16px] !mb-2" +
-              (isBlueTheme ? " !text-white" : ""),
-            input:
-              "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !h-[40px] !border-none !bg-gray-100 dark:!bg-light-black" +
-              (isBlueTheme ? " !bg-[#2b2d50] !text-white" : ""),
+            label: isBlueTheme
+              ? " !text-white !font-normal !text-[14px] !mb-2"
+              : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+            input: isBlueTheme
+              ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !h-[40px] !border-none"
+              : "!text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !p-[8px_10px] !rounded-lg !h-[40px] !border-none",
           }}
+          disabled={changePassword.isPending}
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+          className="px-4 py-2 bg-[#2A85FF] disabled:bg-gray-300 text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit disabled:cursor-not-allowed disabled:hover:scale-100"
+          disabled={changePassword.isPending}
         >
-          Update Password
+          {changePassword.isPending ? "Updating..." : "Update Password"}
         </button>
       </form>
     </div>

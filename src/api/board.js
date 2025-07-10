@@ -130,4 +130,29 @@ export const boardsAPI = {
       );
     }
   },
+
+  // Get Options for All Dropdowns
+  getDropDownOptions: async ({ boardId, columnIds }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/boards/getDropdownOptions/${boardId}`,
+        {
+          columnIds,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching dropdown options:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          "Failed to fetch dropdown options. Please try again."
+      );
+    }
+  },
 };

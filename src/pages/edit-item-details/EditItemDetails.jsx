@@ -6,13 +6,15 @@ import {
   Link as LinkIcon,
   ChevronLeft,
 } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { boardsAPI } from "../../api/board";
 import { toast } from "sonner";
 import LoadingBackdrop from "../../components/UIComponents/LoadingBackdrop";
 import EditItemDetailsSkeleton from "../../features/edit-item-details/components/EditItemDetailsSkeleton";
 import { DateInput } from "@mantine/dates";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
+import { Select } from "@mantine/core";
+import CustomAvatarSelect from "../../components/CustomAvatarSelect";
 
 const EditItemDetails = () => {
   const { id: itemId } = useParams();
@@ -27,32 +29,80 @@ const EditItemDetails = () => {
 
   const originalFilteredItemsRef = useRef(null);
 
-  // Fetch item details - Query
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ["itemDetails", itemId],
-    queryFn: () =>
-      boardsAPI.getItemDetails({
-        itemId: itemId,
-      }),
-  });
+  // Fetch item details and dropdown options using TanStack Query
+  const { itemDetails, DropDownOptions, isError, error, isPending } =
+    useQueries({
+      queries: [
+        {
+          queryKey: ["itemDetails", itemId],
+          queryFn: () =>
+            boardsAPI.getItemDetails({
+              itemId: itemId,
+            }),
+        },
+        {
+          queryKey: ["dropDownOptions"],
+          queryFn: () => {
+            const columnIds = {
+              status: [],
+              dropdown: [],
+              tags: [],
+              people: [],
+            };
+
+            filteredItems?.forEach((col) => {
+              switch (col.type) {
+                case "status":
+                  columnIds.status.push(col.id);
+                  break;
+                case "dropdown":
+                  columnIds.dropdown.push(col.id);
+                  break;
+                case "tags":
+                  columnIds.tags.push(col.id);
+                  break;
+                case "people":
+                  columnIds.people.push(col.id);
+                  break;
+                default:
+                  break;
+              }
+            });
+
+            return boardsAPI.getDropDownOptions({
+              boardId: "2019383616",
+              columnIds,
+            });
+          },
+          enabled: !!filteredItems.length,
+        },
+      ],
+
+      combine: (results) => {
+        return {
+          itemDetails: results[0].data,
+          DropDownOptions: results[1].data,
+          isPending: results.some((result) => result.isPending),
+          isError: results.some((result) => result.isError),
+          error: results.find((result) => result.isError)?.error,
+        };
+      },
+    });
 
   useEffect(() => {
     setFormattingData(true);
 
-    if (!data) {
+    if (!itemDetails) {
       setFormattingData(false);
       return setFilteredItems([]);
     }
 
     // Filter out the columns in which "isEditable" is true
     // and sort them to ensure "dropdown" and "file" types come last
-    const filteredData = data?.column_values
+    const filteredData = itemDetails?.column_values
       .filter(
-        (col) =>
-          col.isEditable &&
-          col.type !== "doc" &&
-          col.type !== "timeline" &&
-          col.type !== "people"
+        (col) => col.isEditable && col.type !== "doc" && col.type !== "timeline"
+        // col.type !== "people"
       )
       .sort((a, b) => {
         const lastTypes = ["dropdown", "file"];
@@ -70,7 +120,7 @@ const EditItemDetails = () => {
     originalFilteredItemsRef.current = JSON.parse(JSON.stringify(filteredData));
 
     setFormattingData(false);
-  }, [data]);
+  }, [itemDetails]);
 
   // Update selected item - Mutation
   const updateColumnsData = useMutation({
@@ -159,6 +209,8 @@ const EditItemDetails = () => {
     return navigate("/");
   }
 
+  console.log("filteredItems", filteredItems);
+
   return (
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       <div className="flex flex-col gap-4">
@@ -200,7 +252,7 @@ const EditItemDetails = () => {
         <>
           {/* Item Title */}
           <h1 className="text-3xl font-bold mb-8 text-black dark:text-white blue:text-white break-all">
-            {data.name}
+            {itemDetails.name}
           </h1>
 
           {/* Edit Details Form */}
@@ -295,9 +347,71 @@ const EditItemDetails = () => {
                     </div>
                   </div>
                 );
+              } else if (item.type === "status") {
+                return (
+                  <Select
+                    key={item.id}
+                    id={item.id}
+                    label={item.column.title}
+                    value={item.text || ""}
+                    placeholder="Select status"
+                    data={
+                      DropDownOptions?.find((opt) => opt.id === item.id)
+                        ?.options || []
+                    }
+                    onChange={(value) =>
+                      handleupdateItemValue({
+                        itemId: item.id,
+                        newValue: value,
+                      })
+                    }
+                    classNames={{
+                      label: isBlueTheme
+                        ? " !text-white !font-normal !text-[16px] !mb-2"
+                        : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
+                      input: isBlueTheme
+                        ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
+                    }}
+                  />
+                );
+              } else if (item.type === "people") {
+                const currentOptions =
+                  DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
+                  [];
+
+                // Find the selected people from the dropdown options
+                const separetedPeopleIds = item.persons_and_teams.map(
+                  (person) => person.id
+                );
+
+                const selectedPeople = currentOptions?.filter((opt) =>
+                  separetedPeopleIds.includes(opt.id)
+                );
+
+                return (
+                  <CustomAvatarSelect
+                    title={item.column.title}
+                    options={currentOptions}
+                    selected={selectedPeople}
+                    onChange={(newSelected) => {
+                      const updatedItems = filteredItems.map((i) => {
+                        if (i.id === item.id) {
+                          return {
+                            ...i,
+                            persons_and_teams: newSelected,
+                          };
+                        }
+                        return i;
+                      });
+                      setFilteredItems(updatedItems);
+                    }}
+                  />
+                );
               } else if (item.type === "date") {
                 return (
                   <DateInput
+                    key={item.id}
                     value={item.text ? new Date(item.text) : null}
                     onChange={(value) =>
                       handleupdateItemValue({
@@ -309,37 +423,42 @@ const EditItemDetails = () => {
                     placeholder="Date input"
                     valueFormat="YYYY-MM-DD"
                     classNames={{
-                      label:
-                        "!text-black dark:!text-white !font-normal !text-[16px] !mb-2" +
-                        (isBlueTheme ? " !text-white" : ""),
-                      input:
-                        "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !h-[40px] !border-none !bg-gray-100 dark:!bg-light-black" +
-                        (isBlueTheme ? " !bg-[#2b2d50] !text-white" : ""),
+                      label: isBlueTheme
+                        ? " !text-white !font-normal !text-[16px] !mb-2"
+                        : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
+                      input: isBlueTheme
+                        ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                     }}
                   />
                 );
               } else if (item.type === "dropdown") {
                 return (
-                  <div className="flex flex-col gap-2" key={item.id}>
-                    <label
-                      htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white"
-                    >
-                      {item.column.title}
-                    </label>
-                    <input
-                      id={item.id}
-                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white"
-                      placeholder="e.g. label 1, label 2, label 3"
-                      value={item.text}
-                      onChange={(e) =>
-                        handleupdateItemValue({
-                          itemId: item.id,
-                          newValue: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
+                  <Select
+                    key={item.id}
+                    id={item.id}
+                    label={item.column.title}
+                    value={item.text || ""}
+                    placeholder="Select option"
+                    data={
+                      DropDownOptions?.find((opt) => opt.id === item.id)
+                        ?.options || []
+                    }
+                    onChange={(value) =>
+                      handleupdateItemValue({
+                        itemId: item.id,
+                        newValue: value,
+                      })
+                    }
+                    classNames={{
+                      label: isBlueTheme
+                        ? " !text-white !font-normal !text-[16px] !mb-2"
+                        : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
+                      input: isBlueTheme
+                        ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
+                    }}
+                  />
                 );
               } else if (item.type === "email") {
                 return (

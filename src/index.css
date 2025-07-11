@@ -15,6 +15,9 @@ html.blue .blue\:text-gray-400 {
 html.blue .blue\:text-gray-100 {
   color: #a2a2a2;
 }
+html.blue .blue\:text-placeholder {
+  color: #adb5bd;
+}
 /* Hover text color for blue theme */
 html.blue .blue\:hover\:text-black:hover {
   color: #000;

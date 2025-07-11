@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 
 function useHtmlThemeClass() {
   const [theme, setTheme] = useState(() => {
-    if (typeof document !== "undefined") {
-      return document.documentElement.classList.contains("blue")
-        ? "blue"
-        : "default";
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "blue") {
+      return "blue";
+    } else {
+      return storedTheme;
     }
-    return "default";
   });
 
   useEffect(() => {

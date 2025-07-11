@@ -136,7 +136,20 @@ const EditItemDetails = () => {
         // Check if a new file was uploaded
         const fileUploaded = !!newCol.newlyUploadedFile;
 
-        return textChanged || fileUploaded;
+        // Check if the persons_and_teams were updated
+        let personsChanged;
+
+        if (
+          newCol.type === "people" &&
+          JSON.stringify(originalCol?.persons_and_teams) !==
+            JSON.stringify(newCol.persons_and_teams)
+        ) {
+          personsChanged = true;
+        } else {
+          personsChanged = false;
+        }
+
+        return textChanged || fileUploaded || personsChanged;
       });
 
       return boardsAPI.updateColumnValuesofItem({
@@ -209,7 +222,7 @@ const EditItemDetails = () => {
     return navigate("/");
   }
 
-  console.log("filteredItems", filteredItems);
+  // console.log("filteredItems", DropDownOptions);
 
   return (
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
@@ -399,7 +412,10 @@ const EditItemDetails = () => {
                         if (i.id === item.id) {
                           return {
                             ...i,
-                            persons_and_teams: newSelected,
+                            persons_and_teams: newSelected.map((user) => ({
+                              id: user.id,
+                              kind: "person",
+                            })),
                           };
                         }
                         return i;

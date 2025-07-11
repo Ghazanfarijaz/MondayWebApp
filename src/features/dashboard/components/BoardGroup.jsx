@@ -387,7 +387,7 @@ const BoardGroup = ({
               <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400 text-center">
                 No more items left to load.
                 <br />
-                You have fetched al the items of this board.
+                You have fetched all the items of this board.
               </p>
             ) : (
               <button

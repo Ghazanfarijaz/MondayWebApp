@@ -6,22 +6,28 @@ html.blue .blue\:bg-transparent {
   background-color: transparent;
   color: #fff;
 }
+
 html.blue .blue\:text-white {
   color: #fff;
 }
+
 html.blue .blue\:text-gray-400 {
   color: #6f767e;
 }
+
 html.blue .blue\:text-gray-100 {
   color: #a2a2a2;
 }
+
 html.blue .blue\:text-placeholder {
   color: #adb5bd;
 }
+
 /* Hover text color for blue theme */
 html.blue .blue\:hover\:text-black:hover {
   color: #000;
 }
+
 html.blue .blue\:hover\:text-white:hover {
   color: #fff;
 }
@@ -30,15 +36,19 @@ html.blue .blue\:hover\:text-white:hover {
 html.blue .blue\:border-blue {
   border-color: #797e93;
 }
+
 html.blue .blue\:border-b-blue {
   border-color: #797e93;
 }
+
 html.blue .blue\:border-r-blue {
   border-color: #797e93;
 }
+
 html.blue .blue\:border-l-light-blue {
   border-color: #2b2d50;
 }
+
 html.blue .blue\:border-white {
   border-color: #fff;
 }
@@ -48,7 +58,21 @@ html.blue .blue\:bg-light-blue {
   background-color: #2b2d50;
   color: white;
 }
+
 html.blue .blue\:bg-dark-blue {
   background-color: #191b34;
   color: white;
+}
+
+/* Mantine */
+.mantine-PinInput-root .mantine-PinInput-pinInput {
+  flex: 1;
+  height: 72px;
+  border-radius: 12px;
+}
+
+.mantine-PinInput-root .mantine-PinInput-input {
+  height: 72px;
+  border-radius: 12px;
+  background: #EFEFEF;
 }

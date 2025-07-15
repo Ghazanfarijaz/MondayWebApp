@@ -14,7 +14,7 @@ import EditItemDetailsSkeleton from "../../features/edit-item-details/components
 import { DateInput } from "@mantine/dates";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
 import { Select } from "@mantine/core";
-import CustomAvatarSelect from "../../components/CustomAvatarSelect";
+import CustomAvatarSelect from "../../features/edit-item-details/components/CustomAvatarSelect";
 import CustomTagsSelect from "../../features/edit-item-details/components/CustomTagsSelect";
 
 const EditItemDetails = () => {

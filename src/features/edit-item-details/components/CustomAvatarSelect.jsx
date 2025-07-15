@@ -6,7 +6,7 @@ import {
   ScrollArea,
   Tooltip,
 } from "@mantine/core";
-import useHtmlThemeClass from "../hooks/useHtmlThemeClass";
+import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
 
 const CustomAvatarSelect = ({ title, options, selected, onChange }) => {

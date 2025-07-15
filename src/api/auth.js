@@ -81,4 +81,26 @@ export const authAPI = {
       );
     }
   },
+
+  // Fetch User's Signup Permission
+  fetchUserSignUpPermission: async ({ slug }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/auth/check-signup-permission`,
+        {
+          params: {
+            slug,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error in checkUserSignUpPermission", error);
+      throw new Error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to check user signup permission."
+      );
+    }
+  },
 };

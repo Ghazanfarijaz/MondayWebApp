@@ -27,7 +27,7 @@ const Navbar = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userData");
 
-      navigate("/login", {
+      navigate("/auth/login", {
         replace: true,
       });
     } catch (error) {

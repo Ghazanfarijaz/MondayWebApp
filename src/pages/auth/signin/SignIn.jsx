@@ -2,43 +2,40 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo.png";
 import GoogleIcon from "../../../assets/icons/GoogleIcon";
 import { authAPI } from "../../../api/auth";
-import { Lock, Mail, CircleUser } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
 import { useForm } from "@mantine/form";
-import { TextInput, PasswordInput } from "@mantine/core";
+import { TextInput, PasswordInput, Skeleton } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Link } from 'react-router-dom'
+import { useSignUp } from "../../../contexts/SignUpContext";
+import { Link } from "react-router-dom";
 
-const SignupForm = () => {
+const SignIn = () => {
+  // Hooks
   const navigate = useNavigate();
+  const { isFetchingSignUpPermission, signUpMethod } = useSignUp();
 
-  const SignupForm = useForm({
+  const signInForm = useForm({
     initialValues: {
-      name: "",
       email: "",
       password: "",
     },
     validate: {
-      name: (value) =>
-        typeof value === "string" && value.trim().length > 0
-          ? null
-          : "Name is required",
       email: (value) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email address",
-      password: (value) =>
-        value.length >= 6 ? null : "Password must be at least 6 characters",
     },
   });
 
   const loginUser = useMutation({
     mutationFn: () =>
       authAPI.login({
-        email: SignupForm.values.email,
-        password: SignupForm.values.password,
+        email: signInForm.values.email,
+        password: signInForm.values.password,
         slug: window.location.hostname.split(".")[0],
         // slug: "proto-it-consultants",
       }),
     onSuccess: (data) => {
+      console.log(data);
       localStorage.setItem("userData", JSON.stringify(data.user));
       // Redirect to main page on success
       navigate("/", { replace: true });
@@ -54,31 +51,15 @@ const SignupForm = () => {
   return (
     <main className="font-medium w-[352px]">
       <img src={Logo} alt="Logo" className="object-contain w-[48px] h-[48px]" />
-      <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign up</h1>
+      <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign In</h1>
       <form
-        // onSubmit={SignupForm.onSubmit(loginUser.mutate)}
-        onSubmit={(e) => {
-          e.preventDefault();
-          navigate("/signup/otp");
-        }}
+        onSubmit={signInForm.onSubmit(loginUser.mutate)}
         className="mt-8 flex flex-col gap-4"
       >
         <TextInput
-          // label="Your Name"
-          variant="filled"
-          placeholder="Your Name"
-          {...SignupForm.getInputProps("name")}
-          leftSectionPointerEvents="none"
-          leftSection={<CircleUser size={20} className="text-gray-500" />}
-          classNames={{
-            input: "!h-[48px] !rounded-lg !ps-10",
-          }}
-        />
-        <TextInput
-          // label="Email"
           variant="filled"
           placeholder="Enter Your Email"
-          {...SignupForm.getInputProps("email")}
+          {...signInForm.getInputProps("email")}
           leftSectionPointerEvents="none"
           leftSection={<Mail size={20} className="text-gray-500" />}
           classNames={{
@@ -86,10 +67,9 @@ const SignupForm = () => {
           }}
         />
         <PasswordInput
-          // label="Password"
           variant="filled"
           placeholder="Enter Your Password"
-          {...SignupForm.getInputProps("password")}
+          {...signInForm.getInputProps("password")}
           leftSectionPointerEvents="none"
           leftSection={<Lock size={20} className="text-gray-500" />}
           classNames={{
@@ -102,27 +82,37 @@ const SignupForm = () => {
           className={`mt-4 text-white py-3 rounded-lg font-medium transition-colors bg-blue-600 hover:bg-blue-700 cursor-pointer disabled:bg-blue-400 disabled:cursor-not-allowed`}
           disabled={loginUser.isPending}
         >
-          {loginUser.isPending ? "Signing up..." : "Sign up"}
+          {loginUser.isPending ? "Signing in..." : "Sign in"}
         </button>
       </form>
-      {/* Google Signin */}
-      <div className="flex items-center mt-8 mb-5">
-        <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
-        <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
-        <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+      <div className="w-full mt-5 flex flex-col gap-4">
+        {/* Google Signin */}
+        <div className="flex items-center">
+          <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+          <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
+          <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+        </div>
+        <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold hover:bg-gray-100 text-[15px]">
+          <GoogleIcon className="size-6" />
+          Google
+        </button>
+        {/* Signup */}
+        {isFetchingSignUpPermission ? (
+          <Skeleton className="!w-full !h-[25px] !rounded-md" />
+        ) : (
+          (signUpMethod === "signup-with-admin-approval" ||
+            signUpMethod === "signup-without-admin-approval") && (
+            <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
+              Don&apos;t have an account?{" "}
+              <Link className="font-bold text-[#000929]" to="/signup">
+                Sign up
+              </Link>
+            </p>
+          )
+        )}
       </div>
-      <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold  hover:bg-gray-100 text-[15px]/[24px] rounded-[12px] mb-8">
-        <GoogleIcon className="size-6" />
-        Google
-      </button>
-      <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
-        Already have an account?{" "}
-        <Link className="font-bold text-[#000929]" to="/login">
-          Sign In
-        </Link>
-      </p>
     </main>
   );
 };
 
-export default SignupForm;
+export default SignIn;

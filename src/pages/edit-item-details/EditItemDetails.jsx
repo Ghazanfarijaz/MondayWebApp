@@ -15,6 +15,7 @@ import { DateInput } from "@mantine/dates";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
 import { Select } from "@mantine/core";
 import CustomAvatarSelect from "../../components/CustomAvatarSelect";
+import CustomTagsSelect from "../../features/edit-item-details/components/CustomTagsSelect";
 
 const EditItemDetails = () => {
   const { boardId, itemId } = useParams();
@@ -166,7 +167,7 @@ const EditItemDetails = () => {
       queryClient.invalidateQueries({
         queryKey: ["boardData"],
       });
-      navigate(`/item-details/${itemId}`);
+      navigate(`/item-details/${boardId}/${itemId}`);
     },
     onError: (error) => {
       toast.error("Error!", {
@@ -220,10 +221,8 @@ const EditItemDetails = () => {
     toast.error("Error fetching item details!", {
       description: error.message || "Please try again.",
     });
-    // return navigate("/");
+    return navigate(-1);
   }
-
-  // console.log("filteredItems", DropDownOptions);
 
   return (
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
@@ -389,6 +388,46 @@ const EditItemDetails = () => {
                     }}
                   />
                 );
+              } else if (item.type === "tags") {
+                const currentOptions =
+                  DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
+                  [];
+
+                // Create an Array of Tags from Item Text
+                const tags = item.text.split(",").map((tag) => tag.trim());
+
+                // Find the selected tags from the dropdown options
+                const selectedTags = currentOptions?.filter((opt) =>
+                  tags.includes(opt.name)
+                );
+
+                return (
+                  <CustomTagsSelect
+                    key={item.id}
+                    title={item.column.title}
+                    options={currentOptions}
+                    selectedOptions={selectedTags}
+                    onChange={(newSelected) => {
+                      // Create a string of selected tags
+                      const selectedTagsString = newSelected
+                        .map((user) => user.name)
+                        .join(", ");
+
+                      const updatedItems = filteredItems.map((i) => {
+                        if (i.id === item.id) {
+                          return {
+                            ...i,
+                            text: selectedTagsString,
+                            selectedTags: newSelected,
+                          };
+                        }
+                        return i;
+                      });
+
+                      setFilteredItems(updatedItems);
+                    }}
+                  />
+                );
               } else if (item.type === "people") {
                 const currentOptions =
                   DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
@@ -405,6 +444,7 @@ const EditItemDetails = () => {
 
                 return (
                   <CustomAvatarSelect
+                    key={item.id}
                     title={item.column.title}
                     options={currentOptions}
                     selected={selectedPeople}

@@ -6,7 +6,7 @@ import { PinInput, Group } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const OtpForm = () => {
+const SignupOTP = () => {
   const navigate = useNavigate();
 
   const form = useForm({
@@ -77,4 +77,4 @@ const OtpForm = () => {
   );
 };
 
-export default OtpForm;
+export default SignupOTP;

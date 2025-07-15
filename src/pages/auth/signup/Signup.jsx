@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import Logo from "../../../assets/Logo.png";
-import GoogleIcon from "../../../assets/icons/GoogleIcon";
-import { authAPI } from "../../../api/auth";
 import { Lock, Mail, CircleUser } from "lucide-react";
 import { useForm } from "@mantine/form";
 import { TextInput, PasswordInput } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Logo from "../../../assets/Logo.png";
+import GoogleIcon from "../../../assets/icons/GoogleIcon";
+import { authAPI } from "../../../api/auth";
 
-const SignupForm = () => {
+const Signup = () => {
   const navigate = useNavigate();
 
   const SignupForm = useForm({
@@ -111,13 +111,13 @@ const SignupForm = () => {
         <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
         <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
       </div>
-      <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold  hover:bg-gray-100 text-[15px]/[24px] rounded-[12px] mb-8">
+      <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold  hover:bg-gray-100 text-[15px]/[24px] mb-8">
         <GoogleIcon className="size-6" />
         Google
       </button>
       <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
         Already have an account?{" "}
-        <Link className="font-bold text-[#000929]" to="/login">
+        <Link className="font-bold text-[#000929]" to="/auth/login">
           Sign In
         </Link>
       </p>
@@ -125,4 +125,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default Signup;

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
-import SignIn from "./pages/SignIn";
+import SignIn from "./pages/auth/signin/SignIn";
 import EditItemDetails from "./pages/edit-item-details/EditItemDetails";
 import ViewItemDetails from "./pages/view-item-details/ViewItemDetails";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -9,6 +9,10 @@ import ErrorPage from "./pages/error/ErrorPage";
 import Settings from "./pages/settings/Settings";
 import ProfileSettings from "./pages/settings/profile-settings/ProfileSettings";
 import ChangePassword from "./pages/settings/change-password/ChangePassword";
+import Auth from "./pages/auth/Auth";
+import Signup from "./pages/auth/signup/Signup";
+import SignupOTP from "./pages/auth/otp/SignupOTP";
+import { SignUpProvider } from "./contexts/SignUpContext";
 
 export const router = createBrowserRouter([
   {
@@ -45,26 +49,40 @@ export const router = createBrowserRouter([
           },
         ],
       },
+    ],
+  },
+
+  // Auth Routes
+  {
+    path: "auth",
+    element: (
+      <SignUpProvider>
+        <Auth />
+      </SignUpProvider>
+    ),
+    children: [
       {
-        path: "*",
-        element: (
-          <ErrorPage errorCode={404} message="Page not found" fullScreen />
-        ),
+        path: "login",
+        element: <SignIn />,
+      },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+      {
+        path: "signup/otp",
+        element: <SignupOTP />,
       },
     ],
   },
   {
-    path: "login",
-    element: <SignIn page="login" />,
-  },{
-    path: "signup",
-    element: <SignIn page="signup" />,
-  },{
-    path: "signup/otp",
-    element: <SignIn page="otp" />,
-  },
-  {
     path: "error",
     element: <ErrorPage fullScreen />,
+  },
+
+  // Error Routes
+  {
+    path: "*",
+    element: <ErrorPage errorCode={404} message="Page not found" fullScreen />,
   },
 ]);

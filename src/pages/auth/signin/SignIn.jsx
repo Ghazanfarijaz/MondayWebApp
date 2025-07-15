@@ -1,16 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo.png";
-// import GoogleIcon from "../../../assets/icons/GoogleIcon";
+import GoogleIcon from "../../../assets/icons/GoogleIcon";
 import { authAPI } from "../../../api/auth";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "@mantine/form";
-import { TextInput, PasswordInput } from "@mantine/core";
+import { TextInput, PasswordInput, Skeleton } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-// import { Link } from "react-router-dom";
+import { useSignUp } from "../../../contexts/SignUpContext";
+import { Link } from "react-router-dom";
 
-const SigninForm = () => {
+const SignIn = () => {
+  // Hooks
   const navigate = useNavigate();
+  const { isFetchingSignUpPermission, signUpMethod } = useSignUp();
 
   const signInForm = useForm({
     initialValues: {
@@ -28,10 +31,11 @@ const SigninForm = () => {
       authAPI.login({
         email: signInForm.values.email,
         password: signInForm.values.password,
-        slug: window.location.hostname.split(".")[0],
-        // slug: "proto-it-consultants",
+        // slug: window.location.hostname.split(".")[0],
+        slug: "proto-it-consultants",
       }),
     onSuccess: (data) => {
+      console.log(data);
       localStorage.setItem("userData", JSON.stringify(data.user));
       // Redirect to main page on success
       navigate("/", { replace: true });
@@ -53,7 +57,6 @@ const SigninForm = () => {
         className="mt-8 flex flex-col gap-4"
       >
         <TextInput
-          // label="Email"
           variant="filled"
           placeholder="Enter Your Email"
           {...signInForm.getInputProps("email")}
@@ -64,7 +67,6 @@ const SigninForm = () => {
           }}
         />
         <PasswordInput
-          // label="Password"
           variant="filled"
           placeholder="Enter Your Password"
           {...signInForm.getInputProps("password")}
@@ -84,23 +86,31 @@ const SigninForm = () => {
         </button>
       </form>
       {/* Google Signin */}
-      {/* <div className="flex items-center mt-8 mb-5">
-        <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
-        <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
-        <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+      <div className="w-full mt-5 flex flex-col gap-4">
+        <div className="flex items-center">
+          <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+          <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
+          <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+        </div>
+        <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold hover:bg-gray-100 text-[15px]">
+          <GoogleIcon className="size-6" />
+          Google
+        </button>
+        {isFetchingSignUpPermission ? (
+          <Skeleton className="!w-full !h-[25px] !rounded-md" />
+        ) : (
+          signUpMethod !== "no-signup-allowed" && (
+            <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
+              Don&apos;t have an account?{" "}
+              <Link className="font-bold text-[#000929]" to="/signup">
+                Sign up
+              </Link>
+            </p>
+          )
+        )}
       </div>
-      <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold  hover:bg-gray-100 text-[15px]/[24px] mb-8">
-        <GoogleIcon className="size-6" />
-        Google
-      </button>
-      <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
-        Don’t have an account?{" "}
-        <Link className="font-bold text-[#000929]" to="/signup">
-          Sign up
-        </Link>
-      </p> */}
     </main>
   );
 };
 
-export default SigninForm;
+export default SignIn;

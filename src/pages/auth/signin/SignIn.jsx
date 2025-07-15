@@ -31,8 +31,8 @@ const SignIn = () => {
       authAPI.login({
         email: signInForm.values.email,
         password: signInForm.values.password,
-        // slug: window.location.hostname.split(".")[0],
-        slug: "proto-it-consultants",
+        slug: window.location.hostname.split(".")[0],
+        // slug: "proto-it-consultants",
       }),
     onSuccess: (data) => {
       console.log(data);

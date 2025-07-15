@@ -2,7 +2,12 @@ import { Popover, Checkbox, Group, ScrollArea } from "@mantine/core";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
 
-const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
+const CustomDropdownSelect = ({
+  title,
+  options,
+  selectedOptions,
+  onChange,
+}) => {
   // Hooks
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
@@ -11,9 +16,9 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
   const [filteredOptions, setFilteredOptions] = useState(options);
 
   const toggleSelection = (id) => {
-    const updatedSelected = selectedOptions.some((tag) => tag.id === id)
-      ? selectedOptions.filter((tag) => tag.id !== id)
-      : [...selectedOptions, options.find((tag) => tag.id === id)];
+    const updatedSelected = selectedOptions.some((option) => option.id === id)
+      ? selectedOptions.filter((option) => option.id !== id)
+      : [...selectedOptions, options.find((option) => option.id === id)];
 
     onChange(updatedSelected);
   };
@@ -42,16 +47,16 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
           <button type="button">
             {selectedOptions.length < 1 ? (
               <p className="text-placeholder dark:text-placebolder blue:text-placeholder w-full text-left text-[12px]">
-                Select Tags
+                Select Options
               </p>
             ) : (
               <div className="flex items-center gap-1">
-                {selectedOptions.slice(0, 3).map((tag) => (
+                {selectedOptions.slice(0, 3).map((option) => (
                   <div
-                    key={tag.id}
+                    key={option.id}
                     className="flex items-center justify-center p-[2px_6px] bg-gray-300 dark:bg-gray-100 blue:bg-gray-100 rounded-full text-black text-[12px]"
                   >
-                    #{tag.name}
+                    {option.name}
                   </div>
                 ))}
                 {selectedOptions.length > 3 && (
@@ -75,8 +80,8 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
                     setFilteredOptions(
-                      options.filter((tag) =>
-                        tag.name.toLowerCase().includes(searchTerm)
+                      options.filter((option) =>
+                        option.name.toLowerCase().includes(searchTerm)
                       )
                     );
                   }}
@@ -88,17 +93,19 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
                 </p>
               )}
 
-              {filteredOptions.map((tag) => {
-                const isSelected = selectedOptions.some((t) => t.id === tag.id);
+              {filteredOptions.map((option) => {
+                const isSelected = selectedOptions.some(
+                  (o) => o.id === option.id
+                );
 
                 return (
                   <Checkbox
-                    key={tag.id}
+                    key={option.id}
                     checked={isSelected}
                     size="xs"
-                    onChange={() => toggleSelection(tag.id)}
+                    onChange={() => toggleSelection(option.id)}
                     label={
-                      <p className="text-[14px] flex-1 w-full">#{tag.name}</p>
+                      <p className="text-[14px] flex-1 w-full">{option.name}</p>
                     }
                     classNames={{
                       root: `!p-[6px_10px] hover:!bg-gray-100 !rounded-md ${
@@ -116,4 +123,4 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
   );
 };
 
-export default CustomTagsSelect;
+export default CustomDropdownSelect;

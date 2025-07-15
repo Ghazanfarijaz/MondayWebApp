@@ -121,15 +121,13 @@ export const FeedbackModal = ({ opened, onClose }) => {
             }}
           />
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
           <Button
             unstyled
             type="submit"
-            className="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium h-[48px] rounded-lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium h-[48px] px-10 mt-8 rounded-lg w-fit"
           >
             Submit
           </Button>
-        </div>
       </form>
     </Modal>
   );

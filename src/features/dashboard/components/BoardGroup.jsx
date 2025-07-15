@@ -4,6 +4,7 @@ import ListItem from "./ListItem";
 import TableView from "./TableView";
 import { useNavigate } from "react-router-dom";
 import SortFilter from "../../../components/UIComponents/SortFilter";
+import SearchInput from "../../../components/UIComponents/SearchInput";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader, Skeleton } from "@mantine/core";
 import { useAuth } from "../../../contexts/AuthContext";
@@ -156,7 +157,8 @@ const BoardGroup = ({
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="flex justify-end">
+      <div className="flex gap-10 justify-between">
+        <SearchInput />
         {/* Filter Dropdown */}
         <SortFilter
           selectedOption={selectedSort}

@@ -65,8 +65,8 @@ export const FeedbackModal = ({ opened, onClose }) => {
           {...form.getInputProps("summary")}
           classNames={{
             input: `!h-[48px] !rounded-lg !ps-4 ${
-              isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
-            }  dark:bg-[#212121] w-full mt-3 outline-none`,
+              isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
+            }  dark:bg-[#212121] w-full mt-3 outline-none text-black dark:text-white`,
             label:
               "text-black dark:text-white blue:text-white font-medium text-[14px]",
           }}
@@ -82,8 +82,8 @@ export const FeedbackModal = ({ opened, onClose }) => {
           {...form.getInputProps("details")}
           classNames={{
             input: `!rounded-lg p-4 !ps-4 ${
-              isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
-            } dark:bg-[#212121]  w-full mt-3 outline-none`,
+              isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
+            } dark:bg-[#212121]  w-full mt-3 outline-none text-black dark:text-white`,
             label:
               "text-black dark:text-white blue:text-white font-medium text-[14px]",
           }}
@@ -99,8 +99,8 @@ export const FeedbackModal = ({ opened, onClose }) => {
             className="flex-1"
             classNames={{
               input: `!h-[48px] !rounded-lg !ps-4 ${
-                isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
-              } dark:bg-[#212121]  w-full mt-3 outline-none`,
+                isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
+              } dark:bg-[#212121]  w-full mt-3 outline-none text-black dark:text-white`,
               label:
                 "text-black dark:text-white blue:text-white font-medium text-[14px]",
             }}
@@ -114,8 +114,8 @@ export const FeedbackModal = ({ opened, onClose }) => {
             className="flex-1"
             classNames={{
               input: `!h-[48px] !rounded-lg !ps-4 ${
-                isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
-              } dark:bg-[#212121]  w-full mt-3 outline-none`,
+                isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
+              } dark:bg-[#212121]  w-full mt-3 outline-none text-black dark:text-white`,
               label:
                 "text-black dark:text-white blue:text-white font-medium text-[14px]",
             }}

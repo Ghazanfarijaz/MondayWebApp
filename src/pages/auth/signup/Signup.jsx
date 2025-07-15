@@ -4,7 +4,7 @@ import { TextInput, PasswordInput } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo.png";
-import GoogleIcon from "../../../assets/icons/GoogleIcon";
+import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { useSignUp } from "../../../contexts/SignUpContext";
 import SignupSkeleton from "../../../features/auth/components/SignupSkeleton";
 import { useEffect } from "react";
@@ -112,10 +112,7 @@ const Signup = () => {
                 </p>
                 <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
               </div>
-              <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold  hover:bg-gray-100 text-[15px]">
-                <GoogleIcon className="size-6" />
-                Google
-              </button>
+              <GoogleButton />
             </div>
             {/* Already have an account */}
             <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">

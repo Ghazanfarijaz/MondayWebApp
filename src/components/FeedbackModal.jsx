@@ -1,7 +1,10 @@
 import { Modal, TextInput, Textarea, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import useHtmlThemeClass from "../hooks/useHtmlThemeClass";
 
 export const FeedbackModal = ({ opened, onClose }) => {
+  const theme = useHtmlThemeClass();
+  const isBlueTheme = theme === "blue";
   const form = useForm({
     initialValues: {
       summary: "",
@@ -40,7 +43,7 @@ export const FeedbackModal = ({ opened, onClose }) => {
           "feedback-modal-header dark:bg-black blue:bg-dark-blue blue:border-l-light-blue",
         body: "feedback-modal-body dark:bg-black blue:bg-dark-blue blue:border-l-light-blue",
         close:
-          "text-black dark:text-white blue:text-white hover:bg-transparent",
+          "text-black dark:text-white blue:text-white",
       }}
     >
       <h2 className="font-bold mb-2 md:text-[24px] text-[20px] text-black dark:text-white blue:text-white leading-none">
@@ -61,8 +64,9 @@ export const FeedbackModal = ({ opened, onClose }) => {
           label="Summary"
           {...form.getInputProps("summary")}
           classNames={{
-            input:
-              "!h-[48px] !rounded-lg !ps-4 bg-[#F4F4F4] dark:bg-[#212121] blue:bg-[#31324E] w-full mt-3 outline-none",
+            input: `!h-[48px] !rounded-lg !ps-4 ${
+              isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
+            }  dark:bg-[#212121] w-full mt-3 outline-none`,
             label:
               "text-black dark:text-white blue:text-white font-medium text-[14px]",
           }}
@@ -77,8 +81,9 @@ export const FeedbackModal = ({ opened, onClose }) => {
           minRows={4}
           {...form.getInputProps("details")}
           classNames={{
-            input:
-              "!rounded-lg p-4 !ps-4 bg-[#F4F4F4] dark:bg-[#212121] blue:bg-[#31324E] w-full mt-3 outline-none",
+            input: `!rounded-lg p-4 !ps-4 ${
+              isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
+            } dark:bg-[#212121]  w-full mt-3 outline-none`,
             label:
               "text-black dark:text-white blue:text-white font-medium text-[14px]",
           }}
@@ -93,8 +98,9 @@ export const FeedbackModal = ({ opened, onClose }) => {
             {...form.getInputProps("name")}
             className="flex-1"
             classNames={{
-              input:
-                "!h-[48px] !rounded-lg !ps-4 bg-[#F4F4F4] dark:bg-[#212121] blue:bg-[#31324E] w-full mt-3 outline-none",
+              input: `!h-[48px] !rounded-lg !ps-4 ${
+                isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
+              } dark:bg-[#212121]  w-full mt-3 outline-none`,
               label:
                 "text-black dark:text-white blue:text-white font-medium text-[14px]",
             }}
@@ -107,8 +113,9 @@ export const FeedbackModal = ({ opened, onClose }) => {
             {...form.getInputProps("email")}
             className="flex-1"
             classNames={{
-              input:
-                "!h-[48px] !rounded-lg !ps-4 bg-[#F4F4F4] dark:bg-[#212121] blue:bg-[#31324E] w-full mt-3 outline-none",
+              input: `!h-[48px] !rounded-lg !ps-4 ${
+                isBlueTheme ? "bg-[#31324E]" : "bg-[#F4F4F4]"
+              } dark:bg-[#212121]  w-full mt-3 outline-none`,
               label:
                 "text-black dark:text-white blue:text-white font-medium text-[14px]",
             }}

@@ -85,8 +85,8 @@ const SignIn = () => {
           {loginUser.isPending ? "Signing in..." : "Sign in"}
         </button>
       </form>
-      {/* Google Signin */}
       <div className="w-full mt-5 flex flex-col gap-4">
+        {/* Google Signin */}
         <div className="flex items-center">
           <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
           <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
@@ -96,10 +96,12 @@ const SignIn = () => {
           <GoogleIcon className="size-6" />
           Google
         </button>
+        {/* Signup */}
         {isFetchingSignUpPermission ? (
           <Skeleton className="!w-full !h-[25px] !rounded-md" />
         ) : (
-          signUpMethod !== "no-signup-allowed" && (
+          (signUpMethod === "signup-with-admin-approval" ||
+            signUpMethod === "signup-without-admin-approval") && (
             <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
               Don&apos;t have an account?{" "}
               <Link className="font-bold text-[#000929]" to="/signup">

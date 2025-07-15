@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo.png";
-import { GoogleButton } from "./GoogleButton";
+import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { authAPI } from "../../../api/auth";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "@mantine/form";
@@ -32,7 +32,7 @@ const SignIn = () => {
         email: signInForm.values.email,
         password: signInForm.values.password,
         slug: window.location.hostname.split(".")[0],
-        // slug: "proto-it-consultants",
+        // slug: "eurotas-lucie",
       }),
     onSuccess: (data) => {
       console.log(data);

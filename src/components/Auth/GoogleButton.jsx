@@ -1,6 +1,6 @@
 // GoogleButton.jsx
 import { useGoogleLogin } from "@react-oauth/google";
-import GoogleIcon from "../../../assets/icons/GoogleIcon";
+import GoogleIcon from "../../assets/icons/GoogleIcon";
 
 export const GoogleButton = () => {
   const login = useGoogleLogin({

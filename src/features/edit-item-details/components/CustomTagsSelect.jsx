@@ -11,9 +11,9 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
   const [filteredOptions, setFilteredOptions] = useState(options);
 
   const toggleSelection = (id) => {
-    const updatedSelected = selectedOptions.some((user) => user.id === id)
-      ? selectedOptions.filter((user) => user.id !== id)
-      : [...selectedOptions, options.find((user) => user.id === id)];
+    const updatedSelected = selectedOptions.some((tag) => tag.id === id)
+      ? selectedOptions.filter((tag) => tag.id !== id)
+      : [...selectedOptions, options.find((tag) => tag.id === id)];
 
     onChange(updatedSelected);
   };
@@ -75,8 +75,8 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
                     setFilteredOptions(
-                      options.filter((user) =>
-                        user.name.toLowerCase().includes(searchTerm)
+                      options.filter((tag) =>
+                        tag.name.toLowerCase().includes(searchTerm)
                       )
                     );
                   }}
@@ -88,19 +88,17 @@ const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
                 </p>
               )}
 
-              {filteredOptions.map((user) => {
-                const isSelected = selectedOptions.some(
-                  (u) => u.id === user.id
-                );
+              {filteredOptions.map((tag) => {
+                const isSelected = selectedOptions.some((t) => t.id === tag.id);
 
                 return (
                   <Checkbox
-                    key={user.id}
+                    key={tag.id}
                     checked={isSelected}
                     size="xs"
-                    onChange={() => toggleSelection(user.id)}
+                    onChange={() => toggleSelection(tag.id)}
                     label={
-                      <p className="text-[14px] flex-1 w-full">#{user.name}</p>
+                      <p className="text-[14px] flex-1 w-full">#{tag.name}</p>
                     }
                     classNames={{
                       root: `!p-[6px_10px] hover:!bg-gray-100 !rounded-md ${

@@ -16,6 +16,7 @@ import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
 import { Select } from "@mantine/core";
 import CustomAvatarSelect from "../../features/edit-item-details/components/CustomAvatarSelect";
 import CustomTagsSelect from "../../features/edit-item-details/components/CustomTagsSelect";
+import CustomDropdownSelect from "../../features/edit-item-details/components/CustomDropdownSelect";
 
 const EditItemDetails = () => {
   const { boardId, itemId } = useParams();
@@ -410,7 +411,7 @@ const EditItemDetails = () => {
                     onChange={(newSelected) => {
                       // Create a string of selected tags
                       const selectedTagsString = newSelected
-                        .map((user) => user.name)
+                        .map((tag) => tag.name)
                         .join(", ");
 
                       const updatedItems = filteredItems.map((i) => {
@@ -425,6 +426,39 @@ const EditItemDetails = () => {
                       });
 
                       setFilteredItems(updatedItems);
+                    }}
+                  />
+                );
+              } else if (item.type === "dropdown") {
+                const currentOptions =
+                  DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
+                  [];
+
+                // Create an Array of Tags from Item Text
+                const options = item?.text?.split(",").map((tag) => tag.trim());
+
+                // Find the selected tags from the dropdown options
+                const selectedOptions =
+                  currentOptions?.filter((opt) =>
+                    options?.includes(opt.name)
+                  ) || [];
+
+                return (
+                  <CustomDropdownSelect
+                    key={item.id}
+                    title={item.column.title}
+                    options={currentOptions}
+                    selectedOptions={selectedOptions}
+                    onChange={(newSelected) => {
+                      // Create a string of selected tags
+                      const selectedOptionsString = newSelected
+                        .map((option) => option.name)
+                        .join(", ");
+
+                      handleupdateItemValue({
+                        itemId: item.id,
+                        newValue: selectedOptionsString,
+                      });
                     }}
                   />
                 );
@@ -479,34 +513,6 @@ const EditItemDetails = () => {
                     label={item.column.title}
                     placeholder="Date input"
                     valueFormat="YYYY-MM-DD"
-                    classNames={{
-                      label: isBlueTheme
-                        ? " !text-white !font-normal !text-[16px] !mb-2"
-                        : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
-                      input: isBlueTheme
-                        ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
-                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
-                    }}
-                  />
-                );
-              } else if (item.type === "dropdown") {
-                return (
-                  <Select
-                    key={item.id}
-                    id={item.id}
-                    label={item.column.title}
-                    value={item.text || ""}
-                    placeholder="Select option"
-                    data={
-                      DropDownOptions?.find((opt) => opt.id === item.id)
-                        ?.options || []
-                    }
-                    onChange={(value) =>
-                      handleupdateItemValue({
-                        itemId: item.id,
-                        newValue: value,
-                      })
-                    }
                     classNames={{
                       label: isBlueTheme
                         ? " !text-white !font-normal !text-[16px] !mb-2"

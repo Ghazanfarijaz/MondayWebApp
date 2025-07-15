@@ -2,6 +2,10 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+body {
+  font-family: "Inter", sans-serif !important;
+}
+
 html.blue .blue\:bg-transparent {
   background-color: transparent;
   color: #fff;
@@ -74,5 +78,5 @@ html.blue .blue\:bg-dark-blue {
 .mantine-PinInput-root .mantine-PinInput-input {
   height: 72px;
   border-radius: 12px;
-  background: #EFEFEF;
+  background: #efefef;
 }

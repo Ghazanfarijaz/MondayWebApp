@@ -17,7 +17,7 @@ import { Select } from "@mantine/core";
 import CustomAvatarSelect from "../../components/CustomAvatarSelect";
 
 const EditItemDetails = () => {
-  const { id: itemId } = useParams();
+  const { boardId, itemId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const theme = useHtmlThemeClass();
@@ -70,7 +70,7 @@ const EditItemDetails = () => {
             });
 
             return boardsAPI.getDropDownOptions({
-              boardId: "2019383616",
+              boardId: boardId,
               columnIds,
             });
           },
@@ -216,10 +216,11 @@ const EditItemDetails = () => {
   };
 
   if (isError) {
+    console.error("Error fetching item details:", error);
     toast.error("Error fetching item details!", {
       description: error.message || "Please try again.",
     });
-    return navigate("/");
+    // return navigate("/");
   }
 
   // console.log("filteredItems", DropDownOptions);
@@ -228,7 +229,7 @@ const EditItemDetails = () => {
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       <div className="flex flex-col gap-4">
         <Link
-          to={`/item-details/${itemId}`}
+          to={`/item-details/${boardId}/${itemId}`}
           className="text-gray-600 dark:text-gray-400 blue:text-gray-100 font-medium flex items-center gap-1"
         >
           <ChevronLeft size={20} />
@@ -241,11 +242,11 @@ const EditItemDetails = () => {
             to="/"
             className="hover:underline text-gray-500 dark:text-white blue:text-white"
           >
-            Board 1
+            Dashboard
           </Link>{" "}
           /{" "}
           <Link
-            to={`/item-details/${itemId}`}
+            to={`/item-details/${boardId}/${itemId}`}
             className="hover:underline text-gray-500 dark:text-white blue:text-white"
           >
             Item Details
@@ -380,10 +381,10 @@ const EditItemDetails = () => {
                     }
                     classNames={{
                       label: isBlueTheme
-                        ? " !text-white !font-normal !text-[16px] !mb-2"
+                        ? "!text-white !font-normal !text-[16px] !mb-2"
                         : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
                       input: isBlueTheme
-                        ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                        ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                         : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                     }}
                   />

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader } from "@mantine/core";
 
-const TableView = ({ item }) => {
+const TableView = ({ item, boardId }) => {
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
 
@@ -17,7 +17,7 @@ const TableView = ({ item }) => {
   return (
     <div
       className="lg:hidden bg-white rounded-lg shadow-sm p-4 mb-3 border border-gray-100 hover:bg-gray-50 cursor-pointer"
-      onClick={() => navigate(`/mainpage/item-details/${item.id}`)}
+      onClick={() => navigate(`/item-details/${boardId}/${item.id}`)}
     >
       {columnValues.slice(0, 5).map((columnValue) => (
         <div

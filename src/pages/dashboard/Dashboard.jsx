@@ -97,6 +97,7 @@ const Dashboard = () => {
                 fetchNextPage();
               }
             }}
+            boardId={data?.pages[0]?.data?.customization?.boardId}
           />
         )}
       </div>

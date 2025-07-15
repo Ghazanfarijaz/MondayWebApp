@@ -10,15 +10,15 @@ import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
 
 const ViewItemDetails = () => {
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
-  const { id } = useParams();
+  const { itemId } = useParams();
   const navigate = useNavigate();
 
   // Fetch item details - Query
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["itemDetails", id],
+    queryKey: ["itemDetails", itemId],
     queryFn: () =>
       boardsAPI.getItemDetails({
-        itemId: id,
+        itemId: itemId,
       }),
   });
 
@@ -46,7 +46,7 @@ const ViewItemDetails = () => {
             to="/"
             className="hover:underline text-gray-500 dark:text-white blue:text-white"
           >
-            Board 1
+            Dashboard
           </Link>{" "}
           /{" "}
           <span className="text-[#BDBDBD] dark:text-[#A2A2A2] blue:text-gray-100">

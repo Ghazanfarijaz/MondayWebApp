@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     toast.error("Error!", {
       description: error.message || "Authentication Failed!",
     });
-    return navigate("/login", { replace: true });
+    return navigate("/auth/login", { replace: true });
   }
 
   const logout = async () => {

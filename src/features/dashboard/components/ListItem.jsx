@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader } from "@mantine/core";
 
-const ListItem = ({ item }) => {
+const ListItem = ({ item, boardId }) => {
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
 
   return (
     <div
-      onClick={() => navigate(`/item-details/${item.id}`)}
+      onClick={() => navigate(`/item-details/${boardId}/${item.id}`)}
       className="grid grid-cols-6 gap-4 p-4 bg-white dark:bg-black blue:bg-dark-blue rounded-lg border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue cursor-pointer shadow-sm transition-colors duration-200"
     >
       {/* Title Column */}

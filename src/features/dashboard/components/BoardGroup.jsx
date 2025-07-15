@@ -15,6 +15,7 @@ const BoardGroup = ({
   noMoreItemsLeft,
   isFetchingNextPage,
   onClickLoadMore,
+  boardId,
 }) => {
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
@@ -185,7 +186,7 @@ const BoardGroup = ({
                 </div>
                 <div className="w-full flex flex-col gap-2">
                   {items?.map((item) => (
-                    <ListItem key={item.id} item={item} />
+                    <ListItem key={item.id} item={item} boardId={boardId} />
                   ))}
                 </div>
               </div>
@@ -235,7 +236,7 @@ const BoardGroup = ({
                           key={item.id}
                           className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
                           onClick={() => {
-                            navigate(`/item-details/${item.id}`);
+                            navigate(`/item-details/${boardId}/${item.id}`);
                           }}
                         >
                           <td className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium">
@@ -332,7 +333,7 @@ const BoardGroup = ({
                   </table>
 
                   {items?.map((item) => (
-                    <TableView key={item.id} item={item} />
+                    <TableView key={item.id} item={item} boardId={boardId} />
                   ))}
                   <div className="w-full flex flex-col gap-3">
                     {isFetchingNextPage &&
@@ -360,7 +361,7 @@ const BoardGroup = ({
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {items?.map((item) => (
-                        <CardItem key={item.id} item={item} />
+                        <CardItem key={item.id} item={item} boardId={boardId} />
                       ))}
 
                       {isFetchingNextPage &&

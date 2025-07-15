@@ -28,11 +28,11 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "item-details/:id",
+        path: "item-details/:boardId/:itemId",
         element: <ViewItemDetails />,
       },
       {
-        path: "item-details/:id/edit-details",
+        path: "item-details/:boardId/:itemId/edit-details",
         element: <EditItemDetails />,
       },
       {

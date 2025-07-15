@@ -46,8 +46,8 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
         >
           <button type="button">
             {selected.length < 1 ? (
-              <p className="text-placeholder dark:text-placebolder blue:text-placeholder w-full text-left text-sm">
-                Select {title}
+              <p className="text-placeholder dark:text-placebolder blue:text-placeholder w-full text-left text-[12px]">
+                Select Person
               </p>
             ) : (
               <Avatar.Group>
@@ -67,7 +67,7 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
         <Popover.Dropdown>
           <ScrollArea h={200} scrollbarSize={2}>
             <div className="space-y-1 relative">
-              <div className="p-2 sticky top-0 bg-white dark:bg-light-black z-10">
+              <div className="p-2 sticky top-0 bg-white z-10">
                 <input
                   type="text"
                   placeholder={`Search People by name...`}

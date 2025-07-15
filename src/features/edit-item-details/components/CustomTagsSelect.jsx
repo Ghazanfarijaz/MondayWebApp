@@ -1,24 +1,19 @@
-import {
-  Popover,
-  Checkbox,
-  Avatar,
-  Group,
-  ScrollArea,
-  Tooltip,
-} from "@mantine/core";
-import useHtmlThemeClass from "../hooks/useHtmlThemeClass";
+import { Popover, Checkbox, Group, ScrollArea } from "@mantine/core";
+import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
 
-const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
+const CustomTagsSelect = ({ title, options, selectedOptions, onChange }) => {
+  // Hooks
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
 
+  // Local State
   const [filteredOptions, setFilteredOptions] = useState(options);
 
   const toggleSelection = (id) => {
-    const updatedSelected = selected.some((user) => user.id === id)
-      ? selected.filter((user) => user.id !== id)
-      : [...selected, options.find((user) => user.id === id)];
+    const updatedSelected = selectedOptions.some((user) => user.id === id)
+      ? selectedOptions.filter((user) => user.id !== id)
+      : [...selectedOptions, options.find((user) => user.id === id)];
 
     onChange(updatedSelected);
   };
@@ -45,21 +40,26 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
           }
         >
           <button type="button">
-            {selected.length < 1 ? (
+            {selectedOptions.length < 1 ? (
               <p className="text-placeholder dark:text-placebolder blue:text-placeholder w-full text-left text-[12px]">
-                Select Person
+                Select Tags
               </p>
             ) : (
-              <Avatar.Group>
-                {selected.slice(0, 3).map((user) => (
-                  <Tooltip key={user.id} label={user.name} withArrow>
-                    <Avatar src={user.photo_small} size={24} />
-                  </Tooltip>
+              <div className="flex items-center gap-1">
+                {selectedOptions.slice(0, 3).map((tag) => (
+                  <div
+                    key={tag.id}
+                    className="flex items-center justify-center p-[2px_6px] bg-gray-300 dark:bg-gray-100 blue:bg-gray-100 rounded-full text-black text-[12px]"
+                  >
+                    #{tag.name}
+                  </div>
                 ))}
-                {selected.length > 3 && (
-                  <Avatar size={24}>+{selected.length - 3}</Avatar>
+                {selectedOptions.length > 3 && (
+                  <div className="flex items-center justify-center p-[2px_6px] bg-gray-300 dark:bg-gray-100 blue:bg-gray-100 rounded-full text-black text-[12px]">
+                    +{selectedOptions.length - 3}
+                  </div>
                 )}
-              </Avatar.Group>
+              </div>
             )}
           </button>
         </Popover.Target>
@@ -89,7 +89,9 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
               )}
 
               {filteredOptions.map((user) => {
-                const isSelected = selected.some((u) => u.id === user.id);
+                const isSelected = selectedOptions.some(
+                  (u) => u.id === user.id
+                );
 
                 return (
                   <Checkbox
@@ -98,10 +100,7 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
                     size="xs"
                     onChange={() => toggleSelection(user.id)}
                     label={
-                      <Group spacing="xs">
-                        <Avatar src={user.photo_small} size={20} />
-                        <p className="text-[14px] flex-1 w-full">{user.name}</p>
-                      </Group>
+                      <p className="text-[14px] flex-1 w-full">#{user.name}</p>
                     }
                     classNames={{
                       root: `!p-[6px_10px] hover:!bg-gray-100 !rounded-md ${
@@ -119,4 +118,4 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
   );
 };
 
-export default CustomAvatarSelect;
+export default CustomTagsSelect;

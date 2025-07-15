@@ -76,6 +76,14 @@ export const boardsAPI = {
           JSON.stringify(col.persons_and_teams || [])
         );
       }
+
+      // If Column Type is tags, then append "selectedTags"
+      if (col.type === "tags") {
+        formData.append(
+          `columnValues[${col.id}][selectedTags]`,
+          JSON.stringify(col.selectedTags || [])
+        );
+      }
     });
 
     try {

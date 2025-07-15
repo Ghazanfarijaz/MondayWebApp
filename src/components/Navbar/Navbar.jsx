@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { Cog, KeyRound, LogOut, Palette, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
+import FeedbackIcon from "../../assets/icons/FeedbackIcon";
 import { Menu } from "@mantine/core";
 import { toast } from "sonner";
 import { useAuth } from "./../../contexts/AuthContext";
 import PreferencesModal from "../../features/settings/components/PreferencesModal";
+import { useDisclosure } from "@mantine/hooks";
+import { FeedbackModal } from "../FeedbackModal";
 
 const Navbar = () => {
+  const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -41,6 +45,7 @@ const Navbar = () => {
 
   return (
     <>
+      <FeedbackModal opened={opened} onClose={close} />
       <PreferencesModal
         isModalOpen={openPreferencesModal}
         onCloseModal={() => setOpenPreferencesModal(false)}
@@ -54,9 +59,9 @@ const Navbar = () => {
             className="object-contain w-[48px] h-[48px]"
           />
         </Link>
-
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">
+          <FeedbackIcon onClick={open} className="cursor-pointer text-[#6F767E] size-8" />
           <Menu shadow="md" width={180} position="bottom-end" withArrow>
             <Menu.Target className="cursor-pointer">
               {user?.profilePicture ? (

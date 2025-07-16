@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo.png";
-import GoogleIcon from "../../../assets/icons/GoogleIcon";
+import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { authAPI } from "../../../api/auth";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "@mantine/form";
@@ -32,7 +32,7 @@ const SignIn = () => {
         email: signInForm.values.email,
         password: signInForm.values.password,
         slug: window.location.hostname.split(".")[0],
-        // slug: "proto-it-consultants",
+        // slug: "eurotas-lucie",
       }),
     onSuccess: (data) => {
       console.log(data);
@@ -52,7 +52,7 @@ const SignIn = () => {
     <main className="font-medium w-[352px]">
       <img src={Logo} alt="Logo" className="object-contain w-[48px] h-[48px]" />
       <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign In</h1>
-      <form
+      <form 
         onSubmit={signInForm.onSubmit(loginUser.mutate)}
         className="mt-8 flex flex-col gap-4"
       >
@@ -92,10 +92,7 @@ const SignIn = () => {
           <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">OR</p>
           <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
         </div>
-        <button className="flex items-center gap-2 justify-center w-full bg-[#FCFCFC] border-2 border-[#EFEFEF] rounded-lg py-3 text-[#1A1D1F] font-bold hover:bg-gray-100 text-[15px]">
-          <GoogleIcon className="size-6" />
-          Google
-        </button>
+        <GoogleButton />
         {/* Signup */}
         {isFetchingSignUpPermission ? (
           <Skeleton className="!w-full !h-[25px] !rounded-md" />

@@ -4,6 +4,7 @@ import ListItem from "./ListItem";
 import TableView from "./TableView";
 import { useNavigate } from "react-router-dom";
 import SortFilter from "../../../components/UIComponents/SortFilter";
+import SearchInput from "../../../components/UIComponents/SearchInput";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Loader, Skeleton } from "@mantine/core";
 import { useAuth } from "../../../contexts/AuthContext";
@@ -156,7 +157,8 @@ const BoardGroup = ({
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="flex justify-end">
+      <div className="flex gap-10 justify-between">
+        <SearchInput />
         {/* Filter Dropdown */}
         <SortFilter
           selectedOption={selectedSort}
@@ -169,7 +171,7 @@ const BoardGroup = ({
         />
       </div>
 
-      <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm h-full max-h-[calc(100dvh-455px)] md:max-h-[calc(100dvh-275px)] overflow-auto w-full">
+      <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto w-full">
         {itemsData.length < 1 ? (
           <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
             Couldn't find any items in this Board.
@@ -210,43 +212,41 @@ const BoardGroup = ({
                   </h2>
                 </div>
                 <div className="w-full lg:border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
-                  <table className="hidden lg:table w-full table-auto border-collapse">
-                    <thead>
-                      <tr className="bg-gray-200 dark:bg-[#222] blue:bg-light-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
-                        <th className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
+                  <div className="w-full lg:border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
+                    <div className="hidden lg:block w-full">
+                      {/* Header Row */}
+                      <div className="grid grid-cols-6 bg-gray-200 dark:bg-[#222] blue:bg-light-blue border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue">
+                        <div className="py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm">
                           Name
-                        </th>
-
+                        </div>
                         {items[0].column_values
                           .slice(0, 5)
                           .map((item, index) => (
-                            <th
+                            <div
                               key={index}
-                              className="text-left py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"
+                              className="py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"
                             >
                               {item.column.title}
-                            </th>
+                            </div>
                           ))}
-                      </tr>
-                    </thead>
+                      </div>
 
-                    <tbody className="table-row-group">
+                      {/* Data Rows */}
                       {items.map((item) => (
-                        <tr
+                        <div
                           key={item.id}
-                          className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
+                          className="grid grid-cols-6 border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
                           onClick={() => {
                             navigate(`/item-details/${boardId}/${item.id}`);
                           }}
                         >
-                          <td className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium">
+                          <div className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium">
                             {item.name || "Untitled Item"}
-                          </td>
-
+                          </div>
                           {item?.column_values
                             .slice(0, 5)
                             .map((columnValue) => (
-                              <td key={columnValue.id} className="py-3 px-4">
+                              <div key={columnValue.id} className="py-3 px-4">
                                 {columnValue.type === "status" ? (
                                   <span
                                     className="px-3 py-1 text-xs rounded-full font-medium whitespace-nowrap"
@@ -276,7 +276,7 @@ const BoardGroup = ({
                                         N/A
                                       </p>
                                     ) : (
-                                      columnValue.persons_and_teams?.map(
+                                      columnValue.persons_and_teams.map(
                                         (person) => (
                                           <img
                                             key={person.id}
@@ -313,24 +313,25 @@ const BoardGroup = ({
                                       : columnValue.text || "N/A"}
                                   </span>
                                 )}
-                              </td>
+                              </div>
                             ))}
-                        </tr>
+                        </div>
                       ))}
 
+                      {/* Loading Skeletons */}
                       {isFetchingNextPage &&
                         Array.from({ length: 2 }).map((_, index) => (
-                          <tr
+                          <div
                             key={index}
-                            className="border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
+                            className="grid grid-cols-6 border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue"
                           >
-                            <td colSpan={6}>
+                            <div className="col-span-6">
                               <Skeleton width="100%" height={48} />
-                            </td>
-                          </tr>
+                            </div>
+                          </div>
                         ))}
-                    </tbody>
-                  </table>
+                    </div>
+                  </div>
 
                   {items?.map((item) => (
                     <TableView key={item.id} item={item} boardId={boardId} />

@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     queryFn: async () => {
       await checkSubdomain({
         subdomain: window.location.hostname.split(".")[0],
-        // subdomain: "proto-it-consultants",
+        // subdomain: "eurotas-lucie",
       });
 
       // Verify with the server

@@ -171,7 +171,7 @@ const BoardGroup = ({
         />
       </div>
 
-      <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm h-full max-h-[calc(100dvh-455px)] md:max-h-[calc(100dvh-275px)] overflow-auto w-full">
+      <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto w-full">
         {itemsData.length < 1 ? (
           <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
             Couldn't find any items in this Board.

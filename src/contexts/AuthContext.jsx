@@ -3,7 +3,7 @@ import { authAPI } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import LoadingBackdrop from "../components/UIComponents/LoadingBackdrop";
+import LoadingBackdrop from "../components/ui/LoadingBackdrop";
 import { checkSubdomain } from "../api/subdomain";
 
 // Create context
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     queryFn: async () => {
       await checkSubdomain({
         subdomain: window.location.hostname.split(".")[0],
-        // subdomain: "eurotas-lucie",
+        // subdomain: "proto-it-consultants",
       });
 
       // Verify with the server

@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { SquarePen } from "lucide-react";
 import { userAPIs } from "../../../api/user";
 import { toast } from "sonner";
-import LoadingBackdrop from "./../../../components/UIComponents/LoadingBackdrop";
+import LoadingBackdrop from "./../../../components/ui/LoadingBackdrop";
 const ProfileSettings = () => {
   // Hooks
   const { user } = useAuth();

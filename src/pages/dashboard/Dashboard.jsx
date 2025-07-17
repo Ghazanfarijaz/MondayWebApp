@@ -6,8 +6,8 @@ import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkel
 import { toast } from "sonner";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
-import SearchInput from "../../components/UIComponents/SearchInput";
-import SortFilter from "../../components/UIComponents/SortFilter";
+import SearchInput from "../../components/ui/SearchInput";
+import SortFilter from "../../components/ui/SortFilter";
 
 const Dashboard = () => {
   // Hooks

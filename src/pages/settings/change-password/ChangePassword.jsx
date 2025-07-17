@@ -4,7 +4,7 @@ import { PasswordInput } from "@mantine/core";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { userAPIs } from "../../../api/user";
 import { toast } from "sonner";
-import LoadingBackdrop from "../../../components/UIComponents/LoadingBackdrop";
+import LoadingBackdrop from "../../../components/ui/LoadingBackdrop";
 
 const ChangePassword = () => {
   // Hooks

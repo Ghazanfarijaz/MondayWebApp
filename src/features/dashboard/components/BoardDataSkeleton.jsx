@@ -81,23 +81,16 @@ const TableSkeleton = () => {
 
 const BoardDataSkeleton = ({ type }) => {
   return (
-    <div className="w-full flex flex-col gap-4">
-      <div className="flex justify-end">
-        <div className="bg-white dark:bg-black blue:bg-dark-blue w-fit p-2 rounded-md">
-          <Skeleton height={32} width={90} radius={2} />
-        </div>
-      </div>
-      <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm">
-        {type === "card" ? (
-          <CardSkeleton />
-        ) : type === "list" ? (
-          <ListSkeleton />
-        ) : type === "table" ? (
-          <TableSkeleton />
-        ) : (
-          <div className="text-center text-gray-500">Loading...</div>
-        )}
-      </div>
+    <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm">
+      {type === "card" ? (
+        <CardSkeleton />
+      ) : type === "list" ? (
+        <ListSkeleton />
+      ) : type === "table" ? (
+        <TableSkeleton />
+      ) : (
+        <div className="text-center text-gray-500">Loading...</div>
+      )}
     </div>
   );
 };

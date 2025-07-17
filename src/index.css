@@ -67,31 +67,3 @@ html.blue .blue\:bg-dark-blue {
   background-color: #191b34;
   color: white;
 }
-
-/* Mantine */
-.mantine-PinInput-root .mantine-PinInput-pinInput {
-  flex: 1;
-  height: 72px;
-  border-radius: 12px;
-}
-
-.mantine-PinInput-root .mantine-PinInput-input {
-  height: 72px;
-  border-radius: 12px;
-  background: #efefef;
-}
-
-/* Mantine Feedback Modal */
-.feedback-modal-content.mantine-Modal-content {
-  min-width: 65vw;
-  border-radius: 12px;
-}
-
-.mantine-Modal-header.feedback-modal-header {
-  padding: 32px 24px 0;
-  min-height: unset;
-}
-
-.feedback-modal-body.mantine-Modal-body {
-  padding: 0 24px 32px;
-}

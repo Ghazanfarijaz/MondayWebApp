@@ -9,7 +9,7 @@ import {
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { boardsAPI } from "../../api/board";
 import { toast } from "sonner";
-import LoadingBackdrop from "../../components/UIComponents/LoadingBackdrop";
+import LoadingBackdrop from "../../components/ui/LoadingBackdrop";
 import EditItemDetailsSkeleton from "../../features/edit-item-details/components/EditItemDetailsSkeleton";
 import { DateInput } from "@mantine/dates";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";

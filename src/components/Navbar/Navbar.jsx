@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useAuth } from "./../../contexts/AuthContext";
 import PreferencesModal from "../../features/settings/components/PreferencesModal";
 import { useDisclosure } from "@mantine/hooks";
-import { FeedbackModal } from "../FeedbackModal";
+import { FeedbackModal } from "./../ui/FeedbackModal/FeedbackModal";
 
 const Navbar = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -61,7 +61,10 @@ const Navbar = () => {
         </Link>
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">
-          <FeedbackIcon onClick={open} className="cursor-pointer text-[#6F767E] size-8" />
+          <FeedbackIcon
+            onClick={open}
+            className="cursor-pointer text-[#6F767E] size-8"
+          />
           <Menu shadow="md" width={180} position="bottom-end" withArrow>
             <Menu.Target className="cursor-pointer">
               {user?.profilePicture ? (

@@ -14,6 +14,8 @@ import "./FeedbackModal.css";
 export const FeedbackModal = ({ opened, onClose }) => {
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
+
+  // Feedback Form - Form
   const form = useForm({
     initialValues: {
       summary: "",
@@ -32,12 +34,12 @@ export const FeedbackModal = ({ opened, onClose }) => {
     },
   });
 
-  const handleSubmit = (values) => {
-    console.log("Feedback form submitted:", values);
-    onClose(); // optionally close modal after submit
-  };
-
-  const submitFeedback = useMutation({});
+  // Submit Feedback - Mutation
+  const submitFeedback = useMutation({
+    mutationFn: () => {
+      console.log("Submitting feedback:", form.values);
+    },
+  });
 
   return (
     <Modal
@@ -78,9 +80,8 @@ export const FeedbackModal = ({ opened, onClose }) => {
         <p className="text-black mb-8 dark:text-white blue:text-white font-normal text-[16px]">
           Your feedback helps us improve and serve you better.
         </p>
-
         <form
-          onSubmit={form.onSubmit(handleSubmit)}
+          onSubmit={form.onSubmit(submitFeedback.mutate)}
           className="flex flex-col gap-4"
         >
           <TextInput
@@ -90,8 +91,10 @@ export const FeedbackModal = ({ opened, onClose }) => {
             {...form.getInputProps("summary")}
             classNames={{
               input: `!h-[48px] !rounded-lg ${
-                isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
-              } dark:bg-[#212121] w-full mt-2 outline-none text-black dark:text-white`,
+                isBlueTheme
+                  ? "!bg-[#31324E] !text-white"
+                  : "bg-[#F4F4F4] text-black dark:bg-[#212121] dark:text-white"
+              }`,
               label:
                 "text-black dark:text-white blue:text-white font-medium text-[14px]",
             }}
@@ -107,8 +110,10 @@ export const FeedbackModal = ({ opened, onClose }) => {
             {...form.getInputProps("details")}
             classNames={{
               input: `!h-[48px] !rounded-lg ${
-                isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
-              } dark:bg-[#212121] w-full mt-2 outline-none text-black dark:text-white`,
+                isBlueTheme
+                  ? "!bg-[#31324E] !text-white"
+                  : "bg-[#F4F4F4] text-black dark:bg-[#212121] dark:text-white"
+              }`,
               label:
                 "text-black dark:text-white blue:text-white font-medium text-[14px]",
             }}
@@ -123,8 +128,10 @@ export const FeedbackModal = ({ opened, onClose }) => {
               className="flex-1"
               classNames={{
                 input: `!h-[48px] !rounded-lg ${
-                  isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
-                } dark:bg-[#212121] w-full mt-2 outline-none text-black dark:text-white`,
+                  isBlueTheme
+                    ? "!bg-[#31324E] !text-white"
+                    : "bg-[#F4F4F4] text-black dark:bg-[#212121] dark:text-white"
+                }`,
                 label:
                   "text-black dark:text-white blue:text-white font-medium text-[14px]",
               }}
@@ -137,8 +144,10 @@ export const FeedbackModal = ({ opened, onClose }) => {
               className="flex-1"
               classNames={{
                 input: `!h-[48px] !rounded-lg ${
-                  isBlueTheme ? "bg-[#31324E] text-white" : "bg-[#F4F4F4]"
-                } dark:bg-[#212121] w-full mt-2 outline-none text-black dark:text-white`,
+                  isBlueTheme
+                    ? "!bg-[#31324E] !text-white"
+                    : "bg-[#F4F4F4] text-black dark:bg-[#212121] dark:text-white"
+                }`,
                 label:
                   "text-black dark:text-white blue:text-white font-medium text-[14px]",
               }}

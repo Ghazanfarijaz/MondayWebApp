@@ -1,0 +1,21 @@
+.mantine-PinInput-root .mantine-PinInput-pinInput {
+  flex: 1;
+  height: 72px;
+  border-radius: 12px;
+}
+
+.mantine-PinInput-root .mantine-PinInput-input {
+  height: 72px;
+  border-radius: 12px;
+  background: #efefef;
+}
+
+/* Mantine Feedback Modal */
+.feedback-modal-content.mantine-Modal-content {
+  min-width: 65vw;
+  border-radius: 12px;
+}
+
+.mantine-Modal-header.feedback-modal-header {
+  min-height: unset;
+}

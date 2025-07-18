@@ -28,6 +28,7 @@ const EditItemDetails = () => {
   // Local States
   const [formattingData, setFormattingData] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [dropdownOptions, setDropdownOptions] = useState([]);
 
   const originalFilteredItemsRef = useRef(null);
 
@@ -123,6 +124,13 @@ const EditItemDetails = () => {
 
     setFormattingData(false);
   }, [itemDetails]);
+
+  // Update Local State of Dropdown Options
+  useEffect(() => {
+    if (DropDownOptions) {
+      setDropdownOptions(DropDownOptions);
+    }
+  }, [DropDownOptions]);
 
   // Update selected item - Mutation
   const updateColumnsData = useMutation({
@@ -431,7 +439,7 @@ const EditItemDetails = () => {
                 );
               } else if (item.type === "dropdown") {
                 const currentOptions =
-                  DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
+                  dropdownOptions?.find((opt) => opt.id === item.id)?.options ||
                   [];
 
                 // Create an Array of Tags from Item Text
@@ -459,6 +467,20 @@ const EditItemDetails = () => {
                         itemId: item.id,
                         newValue: selectedOptionsString,
                       });
+                    }}
+                    onSaveNewColumnValue={(newColumnValue) => {
+                      // Update the Current Options
+                      const updatedItems = dropdownOptions.map((opt) => {
+                        if (opt.id === item.id) {
+                          return {
+                            ...opt,
+                            options: [...opt.options, newColumnValue],
+                          };
+                        }
+                        return opt;
+                      });
+
+                      setDropdownOptions(updatedItems);
                     }}
                   />
                 );

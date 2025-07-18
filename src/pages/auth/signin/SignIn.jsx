@@ -35,7 +35,6 @@ const SignIn = () => {
         // slug: "eurotas-lucie",
       }),
     onSuccess: (data) => {
-      console.log(data);
       localStorage.setItem("userData", JSON.stringify(data.user));
       // Redirect to main page on success
       navigate("/", { replace: true });

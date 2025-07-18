@@ -57,7 +57,7 @@ const Navbar = () => {
             <img
               src={Logo}
               alt="Logo"
-              className="object-contain w-[48px] h-[48px]"
+              className="object-contain w-[48px] h-[48px] rounded-lg"
             />
             <div>
               <h3 className="font-bold text-xl text-red-700 font-serif">
@@ -78,7 +78,7 @@ const Navbar = () => {
             onClick={open}
             className="cursor-pointer text-[#6F767E] size-8"
           />
-          <Menu shadow="md" width={180} position="bottom-end" withArrow>
+          <Menu shadow="md" width={190} position="bottom-end" withArrow>
             <Menu.Target className="cursor-pointer">
               {user?.profilePicture ? (
                 <img

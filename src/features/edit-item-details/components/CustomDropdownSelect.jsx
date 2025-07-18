@@ -1,28 +1,38 @@
 import { Popover, Checkbox, Group, ScrollArea } from "@mantine/core";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
-import { useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
-import { LabelModal } from "./LabelModal";
+import { NewColumnValueModal } from "./NewColumnValueModal";
 import { useDisclosure, useClickOutside } from "@mantine/hooks";
+import { useAuth } from "./../../../contexts/AuthContext";
 
 const CustomDropdownSelect = ({
   title,
   options,
   selectedOptions,
   onChange,
+  onSaveNewColumnValue,
 }) => {
-    const [opened, { open, close }] = useDisclosure(false);
-    const [isPopoverOpen, { open: openPopover, close: closePopover }] =
-      useDisclosure(false);
-      const dropdownRef = useClickOutside(() => {
-        if (isPopoverOpen) closePopover();
-      });
-  // Hooks
+  // Use Auth Hook to check if we want to allow craeting new column values
+  const { user } = useAuth();
+
+  // Hook to manage state of the modal
+  // For Creating new Column Value
+  const [opened, { open, close }] = useDisclosure(false);
+
+  // Hook to manage state of the popover containing options list
+  const [isPopoverOpen, { open: openPopover, close: closePopover }] =
+    useDisclosure(false);
+  const dropdownRef = useClickOutside(() => {
+    if (isPopoverOpen) closePopover();
+  });
+
+  // Theme Hooks for blue theme
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
 
   // Local State
-  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [filteredOptions, setFilteredOptions] = useState([]);
 
   const toggleSelection = (id) => {
     const updatedSelected = selectedOptions.some((option) => option.id === id)
@@ -32,9 +42,23 @@ const CustomDropdownSelect = ({
     onChange(updatedSelected);
   };
 
+  useEffect(() => {
+    setFilteredOptions(options);
+  }, [options]);
+
   return (
     <>
-      <LabelModal opened={opened} onClose={close} />
+      <NewColumnValueModal
+        opened={opened}
+        onClose={close}
+        onSaveValue={(newLabel) => {
+          onSaveNewColumnValue({
+            id: options.length + 1,
+            name: newLabel,
+          });
+          close();
+        }}
+      />
       <Group gap="8px" className="!flex-col !w-full !items-start">
         <p className="text-black dark:text-white blue:text-white font-normal text-[16px]">
           {title}
@@ -130,18 +154,22 @@ const CustomDropdownSelect = ({
                     />
                   );
                 })}
-                <button className="p-2 hover:bg-gray-100 flex gap-1 items-center">
-                  <Plus className="w-4 h-4" />
-                  <p
+                {/* Add New Label - Button */}
+                {user?.allowNewValueCreation === "true" && (
+                  <button
+                    type="button"
+                    className="p-[6px_10px] flex gap-1 items-center text-[#2a85ff]"
                     onClick={() => {
+                      // Open Modal for creating a new label
                       open();
+                      // Close Current Popover
                       closePopover();
                     }}
-                    className="underline underline-offset-4"
                   >
-                    Add a Label
-                  </p>
-                </button>
+                    <Plus className="w-4 h-4" />
+                    <p className="text-[14px]">Add New Label</p>
+                  </button>
+                )}
               </div>
             </ScrollArea>
           </Popover.Dropdown>

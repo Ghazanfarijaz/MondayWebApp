@@ -36,18 +36,22 @@ const Signup = () => {
   useEffect(() => {
     if (
       !isFetchingSignUpPermission &&
-      (signUpMethod !== "signup-with-admin-approval" ||
-        signUpMethod === "signup-without-admin-approval")
+      signUpMethod !== "signup-with-admin-approval" &&
+      signUpMethod !== "signup-without-admin-approval"
     ) {
       console.error("Sign up not allowed");
+      // console.log(signUpMethod);
       navigate("/auth/login", { replace: true });
     }
   }, [isFetchingSignUpPermission, signUpMethod, navigate]);
-  
 
   return (
     <main className="font-medium w-[352px]">
-      <img src={Logo} alt="Logo" className="object-contain w-[100px] h-[100px]" />
+      <img
+        src={Logo}
+        alt="Logo"
+        className="object-contain w-[100px] h-[100px]"
+      />
       <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign up</h1>
 
       {isFetchingSignUpPermission ? (

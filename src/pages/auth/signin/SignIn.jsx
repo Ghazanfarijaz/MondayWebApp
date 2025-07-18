@@ -31,8 +31,8 @@ const SignIn = () => {
       authAPI.login({
         email: signInForm.values.email,
         password: signInForm.values.password,
-        slug: window.location.hostname.split(".")[0],
-        // slug: "eurotas-lucie",
+        // slug: window.location.hostname.split(".")[0],
+        slug: "eurotas-lucie",
       }),
     onSuccess: (data) => {
       localStorage.setItem("userData", JSON.stringify(data.user));
@@ -49,9 +49,13 @@ const SignIn = () => {
 
   return (
     <main className="font-medium w-[352px]">
-      <img src={Logo} alt="Logo" className="object-contain w-[100px] h-[100px]" />
+      <img
+        src={Logo}
+        alt="Logo"
+        className="object-contain w-[100px] h-[100px]"
+      />
       <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign In</h1>
-      <form 
+      <form
         onSubmit={signInForm.onSubmit(loginUser.mutate)}
         className="mt-8 flex flex-col gap-4"
       >
@@ -100,7 +104,7 @@ const SignIn = () => {
             signUpMethod === "signup-without-admin-approval") && (
             <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
               Don&apos;t have an account?{" "}
-              <Link className="font-bold text-[#000929]" to="/signup">
+              <Link className="font-bold text-[#000929]" to="/auth/signup">
                 Sign up
               </Link>
             </p>

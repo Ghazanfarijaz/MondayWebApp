@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Logo from "../../../assets/Logo.png";
+import Logo from "../../../assets/mainlogo.jpg";
 import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { authAPI } from "../../../api/auth";
 import { Lock, Mail } from "lucide-react";
@@ -49,7 +49,7 @@ const SignIn = () => {
 
   return (
     <main className="font-medium w-[352px]">
-      <img src={Logo} alt="Logo" className="object-contain w-[48px] h-[48px]" />
+      <img src={Logo} alt="Logo" className="object-contain w-[100px] h-[100px]" />
       <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign In</h1>
       <form 
         onSubmit={signInForm.onSubmit(loginUser.mutate)}

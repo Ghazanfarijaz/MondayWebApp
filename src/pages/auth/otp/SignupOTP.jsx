@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Logo from "../../../assets/Logo.png";
+import Logo from "../../../assets/mainlogo.jpg";
 import { useForm } from "@mantine/form";
 import { PinInput } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
@@ -36,7 +36,7 @@ const SignupOTP = () => {
 
   return (
     <main className="w-[352px] flex flex-col items-center gap-8">
-      <img src={Logo} alt="Logo" className="object-contain w-[48px] h-[48px]" />
+      <img src={Logo} alt="Logo" className="object-contain w-[100px] h-[100px]" />
 
       {isFetchingSignUpPermission ? (
         <OTPSkeleton />

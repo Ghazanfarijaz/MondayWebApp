@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Cog, KeyRound, LogOut, Palette, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/logo.jpg";
 import FeedbackIcon from "../../assets/icons/FeedbackIcon";
 import { Menu } from "@mantine/core";
 import { toast } from "sonner";
@@ -53,11 +53,24 @@ const Navbar = () => {
 
       <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue border-l border-l-[#eaeaea] dark:border-l-light-black blue:border-l-light-blue px-6 sm:px-6 lg:px-8 relative z-50">
         <Link to="/">
-          <img
-            src={Logo}
-            alt="Logo"
-            className="object-contain w-[48px] h-[48px]"
-          />
+          <div className="flex items-center gap-2">
+            <img
+              src={Logo}
+              alt="Logo"
+              className="object-contain w-[48px] h-[48px]"
+            />
+            <div>
+              <h3 className="font-bold text-xl text-red-700 font-serif">
+                Lucie{" "}
+                <span className="inline-block scale-y-110 origin-bottom">
+                  UP
+                </span>
+              </h3>
+              <p className="text-blue-400 text-[14px] font-serif">
+                External Users Portal
+              </p>
+            </div>
+          </div>
         </Link>
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">

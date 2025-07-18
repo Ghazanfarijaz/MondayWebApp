@@ -56,4 +56,24 @@ export const userAPIs = {
       );
     }
   },
+
+  // Send Feedback
+  sendFeedback: async ({ summary, details, name, email }) => {
+    try {
+      const response = await axiosInstance.post(`/api/feedback/send-feedback`, {
+        summary,
+        details,
+        name,
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Send Feedback error:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to send feedback."
+      );
+    }
+  },
 };

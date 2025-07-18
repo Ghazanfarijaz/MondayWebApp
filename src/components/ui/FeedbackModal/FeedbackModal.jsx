@@ -10,6 +10,8 @@ import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { CROSS_ICON } from "../../../assets/icons/CrossIcon";
 import { useMutation } from "@tanstack/react-query";
 import "./FeedbackModal.css";
+import { userAPIs } from "../../../api/user";
+import { toast } from "sonner";
 
 export const FeedbackModal = ({ opened, onClose }) => {
   const theme = useHtmlThemeClass();
@@ -36,9 +38,22 @@ export const FeedbackModal = ({ opened, onClose }) => {
 
   // Submit Feedback - Mutation
   const submitFeedback = useMutation({
-    mutationFn: () => {
-      console.log("Submitting feedback:", form.values);
+    mutationFn: () =>
+      userAPIs.sendFeedback({
+        summary: form.values.summary,
+        details: form.values.details,
+        name: form.values.name,
+        email: form.values.email,
+      }),
+    onSuccess: () => {
+      toast.success("Success!", { description: "Feedback sent successfully" });
+      form.reset();
+      onClose();
     },
+    onError: (error) =>
+      toast.error("Error!", {
+        description: error.message || "Failed to send feedback",
+      }),
   });
 
   return (

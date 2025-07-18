@@ -22,17 +22,12 @@ export const FeedbackModal = ({ opened, onClose }) => {
     initialValues: {
       summary: "",
       details: "",
-      name: "",
-      email: "",
     },
     validate: {
       summary: (value) =>
         value.trim().length > 0 ? null : "Summary is required",
       details: (value) =>
         value.trim().length > 0 ? null : "Details are required",
-      name: (value) => (value.trim().length > 0 ? null : "Name is required"),
-      email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Invalid email address",
     },
   });
 
@@ -42,8 +37,7 @@ export const FeedbackModal = ({ opened, onClose }) => {
       userAPIs.sendFeedback({
         summary: form.values.summary,
         details: form.values.details,
-        name: form.values.name,
-        email: form.values.email,
+        // name and email are removed, now expected from backend token
       }),
     onSuccess: () => {
       toast.success("Success!", { description: "Feedback sent successfully" });
@@ -134,40 +128,6 @@ export const FeedbackModal = ({ opened, onClose }) => {
             }}
           />
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <TextInput
-              variant="filled"
-              placeholder="Your Name"
-              label="Name"
-              {...form.getInputProps("name")}
-              className="flex-1"
-              classNames={{
-                input: `!h-[48px] !rounded-lg ${
-                  isBlueTheme
-                    ? "!bg-[#31324E] !text-white"
-                    : "bg-[#F4F4F4] text-black dark:bg-[#212121] dark:text-white"
-                }`,
-                label:
-                  "text-black dark:text-white blue:text-white font-medium text-[14px]",
-              }}
-            />
-            <TextInput
-              variant="filled"
-              placeholder="Your Email"
-              label="Email"
-              {...form.getInputProps("email")}
-              className="flex-1"
-              classNames={{
-                input: `!h-[48px] !rounded-lg ${
-                  isBlueTheme
-                    ? "!bg-[#31324E] !text-white"
-                    : "bg-[#F4F4F4] text-black dark:bg-[#212121] dark:text-white"
-                }`,
-                label:
-                  "text-black dark:text-white blue:text-white font-medium text-[14px]",
-              }}
-            />
-          </div>
           <Button
             unstyled
             type="submit"

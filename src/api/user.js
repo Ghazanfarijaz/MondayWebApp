@@ -21,8 +21,8 @@ export const userAPIs = {
       console.error("Change Password error:", error);
       throw new Error(
         error.response?.data?.message ||
-          error.message ||
-          "Failed to change password."
+        error.message ||
+        "Failed to change password."
       );
     }
   },
@@ -51,8 +51,8 @@ export const userAPIs = {
       console.error("Update Profile error:", error);
       throw new Error(
         error.response?.data?.message ||
-          error.message ||
-          "Failed to update profile."
+        error.message ||
+        "Failed to update profile."
       );
     }
   },
@@ -65,14 +65,18 @@ export const userAPIs = {
         details,
         name,
         email,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
       });
       return response.data;
     } catch (error) {
       console.error("Send Feedback error:", error);
       throw new Error(
         error.response?.data?.message ||
-          error.message ||
-          "Failed to send feedback."
+        error.message ||
+        "Failed to send feedback."
       );
     }
   },

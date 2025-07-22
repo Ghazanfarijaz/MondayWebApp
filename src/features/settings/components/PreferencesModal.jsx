@@ -2,9 +2,9 @@ import { Group, Select } from "@mantine/core";
 import { ModalRoot } from "../../../components/Modal";
 import { LayoutGrid, List, Table } from "lucide-react";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
-import useUserPreferences from "../../../hooks/useUserPreferences";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
+import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
 
 const icons = {
   card: <LayoutGrid size={20} />,

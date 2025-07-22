@@ -4,7 +4,9 @@ const convertDateFormate = ({ date }) => {
   if (isNaN(parsedDate)) return null;
 
   // Get saved format from localStorage or fallback
-  const format = localStorage.getItem("preferredDateFormat") || "DD-MM-YYYY";
+  const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
+
+  const format = userPreferences?.dateFormat || "YYYY-MM-DD";
 
   const day = String(parsedDate.getDate()).padStart(2, "0");
   const month = String(parsedDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed

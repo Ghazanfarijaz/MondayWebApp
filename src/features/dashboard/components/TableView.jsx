@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
-import { Loader } from "@mantine/core";
+import { Avatar, Loader, Tooltip } from "@mantine/core";
 
 const TableView = ({ item, boardId }) => {
   const navigate = useNavigate();
@@ -46,18 +46,32 @@ const TableView = ({ item, boardId }) => {
                   N/A
                 </p>
               ) : (
-                columnValue.persons_and_teams?.map((person) => (
-                  <img
-                    key={person.id}
-                    className="w-6 h-6 rounded-full object-cover border-2 border-white"
-                    src={
-                      USER_PHOTO_THUMBS.users.find(
+                <Avatar.Group>
+                  {columnValue?.persons_and_teams
+                    ?.slice(0, 3)
+                    ?.map((person) => {
+                      const currentUser = USER_PHOTO_THUMBS?.users?.find(
                         (user) => user.id === person.id
-                      )?.photo_thumb
-                    }
-                    alt={`Person ${person.id}`}
-                  />
-                ))
+                      );
+                      return (
+                        <Tooltip
+                          key={person.id}
+                          label={currentUser?.name}
+                          withArrow
+                        >
+                          <Avatar
+                            src={currentUser?.photo_thumb || ""}
+                            size="sm"
+                          />
+                        </Tooltip>
+                      );
+                    })}
+                  {columnValue?.persons_and_teams?.length > 3 && (
+                    <Avatar size="sm">
+                      +{columnValue.persons_and_teams.length - 3}
+                    </Avatar>
+                  )}
+                </Avatar.Group>
               )}
             </div>
           ) : columnValue.type === "file" ? (

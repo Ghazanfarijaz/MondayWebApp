@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Loader } from "@mantine/core";
+import { Avatar, Loader, Tooltip } from "@mantine/core";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 
 const CardItem = ({ item, boardId }) => {
@@ -57,18 +57,32 @@ const CardItem = ({ item, boardId }) => {
                     N/A
                   </p>
                 ) : (
-                  columnValue.persons_and_teams?.map((person, index) => (
-                    <img
-                      key={person.id}
-                      className="w-6 h-6 rounded-full object-cover border-2 border-white"
-                      src={
-                        USER_PHOTO_THUMBS.users.find(
+                  <Avatar.Group>
+                    {columnValue?.persons_and_teams
+                      ?.slice(0, 3)
+                      ?.map((person) => {
+                        const currentUser = USER_PHOTO_THUMBS?.users?.find(
                           (user) => user.id === person.id
-                        )?.photo_thumb
-                      }
-                      alt="Person 1"
-                    />
-                  ))
+                        );
+                        return (
+                          <Tooltip
+                            key={person.id}
+                            label={currentUser?.name}
+                            withArrow
+                          >
+                            <Avatar
+                              src={currentUser?.photo_thumb || ""}
+                              size="sm"
+                            />
+                          </Tooltip>
+                        );
+                      })}
+                    {columnValue?.persons_and_teams?.length > 3 && (
+                      <Avatar size="sm">
+                        +{columnValue.persons_and_teams.length - 3}
+                      </Avatar>
+                    )}
+                  </Avatar.Group>
                 )}
               </div>
             </div>

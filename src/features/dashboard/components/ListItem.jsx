@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
-import { Loader } from "@mantine/core";
+import { Avatar, Loader, Tooltip } from "@mantine/core";
 
 const ListItem = ({ item, boardId }) => {
   const navigate = useNavigate();
@@ -46,30 +46,32 @@ const ListItem = ({ item, boardId }) => {
                   N/A
                 </p>
               ) : (
-                columnValue.persons_and_teams?.slice(0, 3).map((person) => {
-                  const imageURL = USER_PHOTO_THUMBS.users?.find(
-                    (user) => user.id === person.id
-                  )?.photo_thumb;
-
-                  return (
-                    <img
-                      key={person.id}
-                      className="w-6 h-6 rounded-full object-cover border-2 border-white"
-                      src={imageURL}
-                      alt={`Person ${person.id}`}
-                      onError={(e) => {
-                        e.target.src = "/default-avatar.png";
-                      }}
-                    />
-                  );
-                })
-              )}
-              {columnValue.persons_and_teams?.length > 3 && (
-                <div className="w-6 h-6 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center">
-                  <span className="text-xs text-gray-600">
-                    +{columnValue.persons_and_teams.length - 3}
-                  </span>
-                </div>
+                <Avatar.Group>
+                  {columnValue?.persons_and_teams
+                    ?.slice(0, 3)
+                    ?.map((person) => {
+                      const currentUser = USER_PHOTO_THUMBS?.users?.find(
+                        (user) => user.id === person.id
+                      );
+                      return (
+                        <Tooltip
+                          key={person.id}
+                          label={currentUser?.name}
+                          withArrow
+                        >
+                          <Avatar
+                            src={currentUser?.photo_thumb || ""}
+                            size="sm"
+                          />
+                        </Tooltip>
+                      );
+                    })}
+                  {columnValue?.persons_and_teams?.length > 3 && (
+                    <Avatar size="sm">
+                      +{columnValue.persons_and_teams.length - 3}
+                    </Avatar>
+                  )}
+                </Avatar.Group>
               )}
             </div>
           ) : columnValue.type === "file" ? (

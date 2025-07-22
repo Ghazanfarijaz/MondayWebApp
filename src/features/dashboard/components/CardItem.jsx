@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Avatar, Loader, Tooltip } from "@mantine/core";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
+import convertDateFormate from "../../../utils/convertDateFormat";
+import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
 
 const CardItem = ({ item, boardId }) => {
+  // Hooks
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
+  const { preferences } = useUserPreferences();
 
   return (
     <div
@@ -104,6 +108,21 @@ const CardItem = ({ item, boardId }) => {
                   {columnValue?.files[0]?.asset?.name},...
                 </span>
               )}
+            </div>
+          ) : columnValue.type === "date" ? (
+            <div
+              key={columnValue.id}
+              className="flex justify-between items-center gap-2"
+            >
+              <span className="text-sm text-gray-600 dark:text-[#6F767E] blue:text-gray-400">
+                {columnValue.column.title}
+              </span>
+              <span className="text-sm text-gray-600 dark:text-white blue:text-white text-right">
+                {convertDateFormate({
+                  date: columnValue.text,
+                  format: preferences.dateFormat,
+                })}
+              </span>
             </div>
           ) : (
             <div

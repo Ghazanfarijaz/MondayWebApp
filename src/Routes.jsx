@@ -13,13 +13,16 @@ import Auth from "./pages/auth/Auth";
 import Signup from "./pages/auth/signup/Signup";
 import SignupOTP from "./pages/auth/otp/SignupOTP";
 import { SignUpProvider } from "./contexts/SignUpContext";
+import { UserPreferencesProvider } from "./contexts/UserPreferencesContext";
 
 export const router = createBrowserRouter([
   {
     path: "",
     element: (
       <AuthProvider>
-        <App />
+        <UserPreferencesProvider>
+          <App />
+        </UserPreferencesProvider>
       </AuthProvider>
     ),
     children: [

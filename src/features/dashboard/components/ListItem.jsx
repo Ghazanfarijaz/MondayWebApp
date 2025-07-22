@@ -88,7 +88,7 @@ const ListItem = ({ item, boardId }) => {
             <span className="text-sm text-gray-600 dark:text-white blue:text-white text-right">
               {convertDateFormate({
                 date: columnValue.text,
-                format: preferences.dateFormat,
+                format: preferences?.dateFormat || "YYYY-MM-DD",
               })}
             </span>
           ) : (

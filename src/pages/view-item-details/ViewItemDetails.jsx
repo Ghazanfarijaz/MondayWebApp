@@ -192,7 +192,7 @@ const ViewItemDetails = () => {
                     <p className="text-gray-700 dark:text-white blue:text-white whitespace-pre-line">
                       {convertDateFormate({
                         date: columnValue.text,
-                        format: preferences.dateFormat,
+                        format: preferences?.dateFormat || "YYYY-MM-DD",
                       })}
                     </p>
                   </div>

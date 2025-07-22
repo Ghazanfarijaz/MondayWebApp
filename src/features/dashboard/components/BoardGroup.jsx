@@ -162,7 +162,8 @@ const BoardGroup = ({
                               <span className="text-gray-700 dark:text-white blue:text-white block">
                                 {convertDateFormate({
                                   date: columnValue.text,
-                                  format: preferences.dateFormat,
+                                  format:
+                                    preferences?.dateFormat || "YYYY-MM-DD",
                                 })}
                               </span>
                             ) : (

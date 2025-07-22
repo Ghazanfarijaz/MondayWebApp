@@ -88,7 +88,7 @@ const TableView = ({ item, boardId }) => {
             <span className="text-sm">
               {convertDateFormate({
                 date: columnValue.text,
-                format: preferences.dateFormat,
+                format: preferences?.dateFormat || "YYYY-MM-DD",
               })}
             </span>
           ) : (

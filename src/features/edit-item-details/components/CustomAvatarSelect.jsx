@@ -25,7 +25,7 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
 
   return (
     <Group gap="8px" className="!flex-col !w-full !items-start">
-      <p className="text-black dark:text-white blue:text-white font-normal text-[16px]">
+      <p className="text-black dark:text-white blue:text-white font-normal text-[14px]">
         {title}
       </p>
       <Popover

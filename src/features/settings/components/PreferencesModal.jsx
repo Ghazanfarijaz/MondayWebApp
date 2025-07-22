@@ -33,6 +33,7 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
   // Local States
   const [selectedItemView, setSelectedItemView] = useState("card");
   const [sortPreference, setSortPreference] = useState("default");
+  const [dateFormat, setDateFormat] = useState("YYYY-MM-DD");
 
   // Sync state when preferences load from localStorage
   useEffect(() => {
@@ -40,6 +41,8 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
       setSelectedItemView(preferences?.itemView || "card");
     if (preferences?.sortPreference)
       setSortPreference(preferences?.sortPreference || "default");
+    if (preferences?.dateFormat)
+      setDateFormat(preferences?.dateFormat || "YYYY-MM-DD");
   }, [preferences]);
 
   return (
@@ -101,6 +104,30 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
         value={sortPreference}
         onChange={(value) => setSortPreference(value)}
       />
+      <Select
+        id="default-date-format"
+        label="Date Format"
+        data={[
+          { value: "DD-MM-YYYY", label: "DD-MM-YYYY" },
+          { value: "MM-DD-YYYY", label: "MM-DD-YYYY" },
+          { value: "YYYY-MM-DD", label: "YYYY-MM-DD" },
+        ]}
+        placeholder="Select Date Format"
+        classNames={{
+          input: isBlueTheme
+            ? " !bg-[#191B34] !text-white !border-none !h-[42px] !rounded-lg !p-[8px_10px]"
+            : "!text-black !bg-gray-100 !border-none !h-[42px] !rounded-lg !p-[8px_10px]",
+          dropdown: isBlueTheme
+            ? "!bg-[#191B34] !text-white !border-[#2B2D50] !rounded-lg !outline-none"
+            : "bg-white !rounded-lg !outline-none",
+          option: isBlueTheme
+            ? "hover:!bg-[#2B2D50] !text-white"
+            : "hover:!bg-gray-100 !text-black",
+        }}
+        allowDeselect={false}
+        value={dateFormat}
+        onChange={(value) => setDateFormat(value)}
+      />
       <button
         type="button"
         className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit mt-3"
@@ -108,6 +135,7 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
           updatePreferences({
             itemView: selectedItemView,
             sortPreference: sortPreference,
+            dateFormat: dateFormat,
           });
           onCloseModal();
         }}

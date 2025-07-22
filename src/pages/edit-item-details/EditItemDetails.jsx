@@ -13,7 +13,7 @@ import LoadingBackdrop from "../../components/ui/LoadingBackdrop";
 import EditItemDetailsSkeleton from "../../features/edit-item-details/components/EditItemDetailsSkeleton";
 import { DateInput } from "@mantine/dates";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
-import { Select } from "@mantine/core";
+import { NumberInput, Select } from "@mantine/core";
 import CustomAvatarSelect from "../../features/edit-item-details/components/CustomAvatarSelect";
 import CustomTagsSelect from "../../features/edit-item-details/components/CustomTagsSelect";
 import CustomDropdownSelect from "../../features/edit-item-details/components/CustomDropdownSelect";
@@ -389,8 +389,8 @@ const EditItemDetails = () => {
                     }
                     classNames={{
                       label: isBlueTheme
-                        ? "!text-white !font-normal !text-[16px] !mb-2"
-                        : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
+                        ? "!text-white !font-normal !text-[14px] !mb-2"
+                        : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
                       input: isBlueTheme
                         ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                         : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
@@ -537,8 +537,8 @@ const EditItemDetails = () => {
                     valueFormat="YYYY-MM-DD"
                     classNames={{
                       label: isBlueTheme
-                        ? " !text-white !font-normal !text-[16px] !mb-2"
-                        : "!text-black dark:!text-white !font-normal !text-[16px] !mb-2",
+                        ? " !text-white !font-normal !text-[14px] !mb-2"
+                        : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
                       input: isBlueTheme
                         ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                         : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
@@ -550,7 +550,7 @@ const EditItemDetails = () => {
                   <div className="flex flex-col gap-2" key={item.id}>
                     <label
                       htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white"
+                      className="text-black dark:text-white blue:text-white text-[14px]"
                     >
                       {item.column.title}
                     </label>
@@ -569,12 +569,35 @@ const EditItemDetails = () => {
                     />
                   </div>
                 );
+              } else if (item.type === "numbers") {
+                return (
+                  <NumberInput
+                    key={item.id}
+                    label={item.column.title}
+                    placeholder={"Enter " + item.column.title}
+                    value={item.text}
+                    onChange={(value) =>
+                      handleupdateItemValue({
+                        itemId: item.id,
+                        newValue: value,
+                      })
+                    }
+                    classNames={{
+                      label: isBlueTheme
+                        ? "!text-white !font-normal !text-[14px] !mb-2"
+                        : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+                      input: isBlueTheme
+                        ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
+                    }}
+                  />
+                );
               } else {
                 return (
                   <div className="flex flex-col gap-2" key={item.id}>
                     <label
                       htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white"
+                      className="text-black dark:text-white blue:text-white text-[14px]"
                     >
                       {item.column.title}
                     </label>

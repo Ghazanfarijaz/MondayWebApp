@@ -2,10 +2,14 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Avatar, Loader, Tooltip } from "@mantine/core";
+import convertDateFormate from "../../../utils/convertDateFormat";
+import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
 
 const TableView = ({ item, boardId }) => {
+  // Hooks
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
+  const { preferences } = useUserPreferences();
 
   if (!item || !item.column_values) return <div>No item data available</div>;
 
@@ -79,6 +83,13 @@ const TableView = ({ item, boardId }) => {
               {columnValue?.files[0]?.asset
                 ? columnValue?.files[0]?.asset?.name + ",..."
                 : "N/A"}
+            </span>
+          ) : columnValue.type === "date" ? (
+            <span className="text-sm">
+              {convertDateFormate({
+                date: columnValue.text,
+                format: preferences.dateFormat,
+              })}
             </span>
           ) : (
             <span className="text-sm">

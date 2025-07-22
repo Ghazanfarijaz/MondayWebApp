@@ -8,6 +8,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
 import SearchInput from "../../components/ui/SearchInput";
 import SortFilter from "../../components/ui/SortFilter";
+import AssignToFilter from "../../features/dashboard/components/AssignToFilter";
 
 const Dashboard = () => {
   // Hooks
@@ -26,6 +27,9 @@ const Dashboard = () => {
     value: "default",
     label: "Default",
   });
+
+  // Assign To Filter
+  const [assignToFilter, setAssignToFilter] = useState("");
 
   // Fetch Board Data - Query
   const {
@@ -240,10 +244,16 @@ const Dashboard = () => {
       >
         <div className="w-full flex flex-col gap-4">
           <div className="flex flex-col md:flex-row gap-10 justify-between">
-            <SearchInput
-              searchQuery={searchQuery}
-              onChange={(value) => setSearchQuery(value)}
-            />
+            <div className="flex items-center gap-2">
+              <SearchInput
+                searchQuery={searchQuery}
+                onChange={(value) => setSearchQuery(value)}
+              />
+              <AssignToFilter
+                value={assignToFilter}
+                onChange={(value) => setAssignToFilter(value)}
+              />
+            </div>
             {/* Filter Dropdown */}
             <SortFilter
               selectedOption={selectedSort}

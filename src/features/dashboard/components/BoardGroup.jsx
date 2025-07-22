@@ -4,6 +4,8 @@ import TableView from "./TableView";
 import { useNavigate } from "react-router-dom";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Avatar, Loader, Skeleton, Tooltip } from "@mantine/core";
+import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
+import convertDateFormate from "../../../utils/convertDateFormat";
 
 const BoardGroup = ({
   viewMode,
@@ -13,8 +15,10 @@ const BoardGroup = ({
   onClickLoadMore,
   boardId,
 }) => {
+  // Hooks
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
+  const { preferences } = useUserPreferences();
 
   return (
     <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto w-full">
@@ -153,6 +157,13 @@ const BoardGroup = ({
                                 {columnValue?.files[0]?.asset
                                   ? columnValue?.files[0]?.asset?.name + ",..."
                                   : "N/A"}
+                              </span>
+                            ) : columnValue.type === "date" ? (
+                              <span className="text-gray-700 dark:text-white blue:text-white block">
+                                {convertDateFormate({
+                                  date: columnValue.text,
+                                  format: preferences.dateFormat,
+                                })}
                               </span>
                             ) : (
                               <span className="text-gray-700 dark:text-white blue:text-white block">

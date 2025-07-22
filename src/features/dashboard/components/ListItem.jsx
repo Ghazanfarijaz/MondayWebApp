@@ -2,10 +2,14 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Avatar, Loader, Tooltip } from "@mantine/core";
+import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
+import convertDateFormate from "../../../utils/convertDateFormat";
 
 const ListItem = ({ item, boardId }) => {
+  // Hooks
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
+  const { preferences } = useUserPreferences();
 
   return (
     <div
@@ -79,6 +83,13 @@ const ListItem = ({ item, boardId }) => {
               {columnValue?.files[0]?.asset
                 ? columnValue?.files[0]?.asset?.name + ",..."
                 : "N/A"}
+            </span>
+          ) : columnValue.type === "date" ? (
+            <span className="text-sm text-gray-600 dark:text-white blue:text-white text-right">
+              {convertDateFormate({
+                date: columnValue.text,
+                format: preferences.dateFormat,
+              })}
             </span>
           ) : (
             <span className="text-sm text-gray-600 dark:text-white blue:text-white truncate max-w-full">

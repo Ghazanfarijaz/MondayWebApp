@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+// context/UserPreferencesContext.js
+import { createContext, useContext, useState, useEffect } from "react";
 
-function useUserPreferences() {
+const UserPreferencesContext = createContext();
+
+export const UserPreferencesProvider = ({ children }) => {
   const [preferences, setPreferences] = useState({
     itemView: "card", // Default view
     sortPreference: "default", // Default sort preference
+    dateFormat: "YYYY-MM-DD", // Default date format
   });
 
   useEffect(() => {
@@ -22,7 +26,11 @@ function useUserPreferences() {
     localStorage.setItem("userPreferences", JSON.stringify(updatedPreferences));
   };
 
-  return { preferences, updatePreferences };
-}
+  return (
+    <UserPreferencesContext.Provider value={{ preferences, updatePreferences }}>
+      {children}
+    </UserPreferencesContext.Provider>
+  );
+};
 
-export default useUserPreferences;
+export const useUserPreferences = () => useContext(UserPreferencesContext);

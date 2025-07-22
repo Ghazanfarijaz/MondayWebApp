@@ -239,7 +239,7 @@ const Dashboard = () => {
         className="w-full flex-1 overflow-hidden md:pr-8 pr-4"
       >
         <div className="w-full flex flex-col gap-4">
-          <div className="flex gap-10 justify-between">
+          <div className="flex flex-col md:flex-row gap-10 justify-between">
             <SearchInput
               searchQuery={searchQuery}
               onChange={(value) => setSearchQuery(value)}

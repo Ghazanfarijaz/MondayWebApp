@@ -7,11 +7,14 @@ import { toast } from "sonner";
 import ItemDetailsSkeleton from "../../features/view-item-details/components/ItemDetailsSkeleton";
 import { Avatar, Loader, Tooltip } from "@mantine/core";
 import useUsersPhotoThumbs from "../../hooks/useUsersPhotoThumbs";
+import { useUserPreferences } from "../../contexts/UserPreferencesContext";
+import convertDateFormate from "../../utils/convertDateFormat";
 
 const ViewItemDetails = () => {
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
   const { itemId } = useParams();
   const navigate = useNavigate();
+  const { preferences } = useUserPreferences();
 
   // Fetch item details - Query
   const { data, isPending, isError, error } = useQuery({
@@ -175,6 +178,23 @@ const ViewItemDetails = () => {
                             </div>
                           ))}
                     </div>
+                  </div>
+                );
+              } else if (columnValue.type === "date") {
+                return (
+                  <div
+                    key={columnValue.id}
+                    className="grid grid-cols-[150px_1fr] gap-[32px] items-start mb-4"
+                  >
+                    <span className="text-gray-500 dark:text-[#6F767E] blue:text-gray-400">
+                      {columnValue.column.title}
+                    </span>
+                    <p className="text-gray-700 dark:text-white blue:text-white whitespace-pre-line">
+                      {convertDateFormate({
+                        date: columnValue.text,
+                        format: preferences.dateFormat,
+                      })}
+                    </p>
                   </div>
                 );
               } else {

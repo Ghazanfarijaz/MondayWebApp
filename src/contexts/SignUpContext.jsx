@@ -24,6 +24,8 @@ export const SignUpProvider = ({ children }) => {
 
   const value = {
     signUpMethod: data?.signupMethod,
+    userLogo: data?.logo,
+    userDescription: data?.description,
     isFetchingSignUpPermission: isPending,
   };
 

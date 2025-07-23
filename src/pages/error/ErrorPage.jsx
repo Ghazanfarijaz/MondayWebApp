@@ -1,5 +1,4 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Logo from "../../assets/Logo.png";
 
 const ErrorPage = ({
   error,
@@ -91,7 +90,7 @@ const ErrorPage = ({
         {/* Error Code */}
         <div className="mb-6 relative">
           <span
-            className={`text-9xl font-bold ${selectedColor.text} opacity-20 absolute -top-4 left-1/2 transform -translate-x-1/2`}
+            className={`text-9xl font-bold ${selectedColor.text} opacity-20 absolute -top-8 left-1/2 transform -translate-x-1/2`}
           >
             {displayCode}
           </span>
@@ -100,15 +99,6 @@ const ErrorPage = ({
           >
             {displayCode}
           </span>
-        </div>
-
-        {/* Logo */}
-        <div className="mb-6 flex justify-center">
-          <img
-            src={Logo}
-            alt="Logo"
-            className="w-20 h-20 opacity-90 hover:opacity-100 transition-opacity duration-300"
-          />
         </div>
 
         {/* Title */}

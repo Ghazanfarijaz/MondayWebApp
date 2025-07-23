@@ -25,8 +25,8 @@ const SignupOTP = () => {
 
   useEffect(() => {
     if (
-      signUpMethod !== "signup-with-admin-approval" ||
-      signUpMethod === "signup-without-admin-approval"
+      signUpMethod !== "signup-with-admin-approval" &&
+      signUpMethod !== "signup-without-admin-approval"
     ) {
       console.error("Sign up not allowed");
       navigate("/auth/login", { replace: true });

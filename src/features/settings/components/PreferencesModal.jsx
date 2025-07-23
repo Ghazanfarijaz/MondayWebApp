@@ -109,6 +109,7 @@ const PreferencesModal = ({ isModalOpen, onCloseModal, type }) => {
         label="Date Format"
         data={[
           { value: "DD-MM-YYYY", label: "DD-MM-YYYY" },
+          { value: "DD-MMM-YYYY", label: "DD-MMM-YYYY" },
           { value: "MM-DD-YYYY", label: "MM-DD-YYYY" },
           { value: "YYYY-MM-DD", label: "YYYY-MM-DD" },
         ]}

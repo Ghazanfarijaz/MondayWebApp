@@ -129,7 +129,18 @@ const BoardGroup = ({
                                         return (
                                           <Tooltip
                                             key={person.id}
-                                            label={currentUser?.name}
+                                            label={
+                                              <div className="text-[14px]">
+                                                <p>{currentUser?.name}</p>
+                                                <p>{currentUser?.email}</p>
+                                              </div>
+                                            }
+                                            multiline
+                                            maw={200}
+                                            transitionProps={{
+                                              duration: 500,
+                                              timingFunction: "ease-in-out",
+                                            }}
                                             withArrow
                                           >
                                             <Avatar

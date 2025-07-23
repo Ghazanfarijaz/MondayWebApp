@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { authAPI } from "../api/auth";
+import LoadingBackdrop from "./../components/ui/LoadingBackdrop";
 
 // Create context
 const SignUpContext = createContext(null);
@@ -12,8 +13,8 @@ export const SignUpProvider = ({ children }) => {
     queryKey: ["signupPermission"],
     queryFn: async () =>
       authAPI.fetchUserSignUpPermission({
-        // slug: window.location.hostname.split(".")[0],
-        slug: "proto-it-consultants",
+        slug: window.location.hostname.split(".")[0],
+        // slug: "eurotas-lucie",
       }),
   });
 
@@ -25,6 +26,10 @@ export const SignUpProvider = ({ children }) => {
     signUpMethod: data?.signupMethod,
     isFetchingSignUpPermission: isPending,
   };
+
+  if (isPending) {
+    return <LoadingBackdrop />;
+  }
 
   return (
     <SignUpContext.Provider value={value}>{children}</SignUpContext.Provider>

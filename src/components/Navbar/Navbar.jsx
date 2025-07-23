@@ -60,14 +60,15 @@ const Navbar = () => {
               className="object-contain w-[48px] h-[48px] rounded-lg"
             />
             <div>
-              <h3 className="font-bold text-xl text-red-700 font-serif">
+              <h3 className="font-bold text-xl text-[#f04967] font-serif">
                 Lucie{" "}
                 <span className="inline-block scale-y-110 origin-bottom">
                   UP
                 </span>
               </h3>
-              <p className="text-blue-400 text-[14px] font-serif">
-                External Users Portal
+              <p className="text-[#2c5da0] text-[10px] font-serif">
+                External <span className="text-[#f04967]">U</span>sers{" "}
+                <span className="text-[#f04967]">P</span>ortal
               </p>
             </div>
           </div>

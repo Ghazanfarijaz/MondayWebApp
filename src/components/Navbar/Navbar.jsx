@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Cog, KeyRound, LogOut, Palette, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.jpg";
+import Logo from "../../assets/logo-icon.jpeg";
 import FeedbackIcon from "../../assets/icons/FeedbackIcon";
 import { Menu } from "@mantine/core";
 import { toast } from "sonner";

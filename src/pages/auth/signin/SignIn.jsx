@@ -4,7 +4,7 @@ import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { authAPI } from "../../../api/auth";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "@mantine/form";
-import { TextInput, PasswordInput, Skeleton } from "@mantine/core";
+import { TextInput, PasswordInput } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSignUp } from "../../../contexts/SignUpContext";
@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 const SignIn = () => {
   // Hooks
   const navigate = useNavigate();
-  const { isFetchingSignUpPermission, signUpMethod } = useSignUp();
+  const { signUpMethod } = useSignUp();
 
   const signInForm = useForm({
     initialValues: {
@@ -97,18 +97,14 @@ const SignIn = () => {
         </div>
         <GoogleButton />
         {/* Signup */}
-        {isFetchingSignUpPermission ? (
-          <Skeleton className="!w-full !h-[25px] !rounded-md" />
-        ) : (
-          (signUpMethod === "signup-with-admin-approval" ||
-            signUpMethod === "signup-without-admin-approval") && (
-            <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
-              Don&apos;t have an account?{" "}
-              <Link className="font-bold text-[#000929]" to="/auth/signup">
-                Sign up
-              </Link>
-            </p>
-          )
+        {(signUpMethod === "signup-with-admin-approval" ||
+          signUpMethod === "signup-without-admin-approval") && (
+          <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
+            Don&apos;t have an account?{" "}
+            <Link className="font-bold text-[#000929]" to="/auth/signup">
+              Sign up
+            </Link>
+          </p>
         )}
       </div>
     </main>

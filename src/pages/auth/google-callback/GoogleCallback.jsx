@@ -8,18 +8,16 @@ import { authAPI } from "./../../../api/auth";
 const GoogleCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const code = searchParams.get("code");
-  const state = searchParams.get("state");
+  const token = searchParams.get("token");
 
   // Mutation To Login
   const loginUser = useMutation({
-    mutationFn: ({ code, state }) =>
+    mutationFn: ({ token }) =>
       authAPI.googleSignIn({
         slug: "eurotas-lucie",
-        code,
-        redirect_uri: atob(state),
+        token,
       }),
-    enabled: !!code && !!state,
+    enabled: !!token,
     onSuccess: (data) => {
       localStorage.setItem("accessToken", data.data.accessToken);
       localStorage.setItem("userData", JSON.stringify(data.data.user));
@@ -37,13 +35,12 @@ const GoogleCallback = () => {
   });
 
   useEffect(() => {
-    if (code && state)
+    if (token)
       loginUser.mutate({
-        code,
-        state,
+        token,
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, state]);
+  }, [token]);
 
   if (loginUser.isPending) return <LoadingBackdrop />;
 };

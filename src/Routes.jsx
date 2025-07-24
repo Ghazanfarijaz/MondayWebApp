@@ -11,7 +11,7 @@ import ProfileSettings from "./pages/settings/profile-settings/ProfileSettings";
 import ChangePassword from "./pages/settings/change-password/ChangePassword";
 import Auth from "./pages/auth/Auth";
 import Signup from "./pages/auth/signup/Signup";
-import SignupOTP from "./pages/auth/otp/SignupOTP";
+// import SignupOTP from "./pages/auth/otp/SignupOTP";
 import { SignUpProvider } from "./contexts/SignUpContext";
 import { UserPreferencesProvider } from "./contexts/UserPreferencesContext";
 import GoogleCallback from "./pages/auth/google-callback/GoogleCallback";
@@ -73,10 +73,10 @@ export const router = createBrowserRouter([
         path: "signup",
         element: <Signup />,
       },
-      {
-        path: "signup/otp",
-        element: <SignupOTP />,
-      },
+      // {
+      //   path: "signup/otp",
+      //   element: <SignupOTP />,
+      // },
     ],
   },
   {

@@ -30,12 +30,13 @@ const Signup = () => {
       email: (value) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email address",
       // Password Must be 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character
-      password: (value) =>
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-          value
-        )
+      password: (value) => {
+        const passwordRegex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+        return passwordRegex.test(value)
           ? null
-          : "Password must be 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number, and one special character",
+          : "Password must be at least 8 characters, contain uppercase, lowercase, number and special character";
+      },
     },
   });
 
@@ -104,7 +105,8 @@ const Signup = () => {
             leftSectionPointerEvents="none"
             leftSection={<CircleUser size={20} className="text-gray-500" />}
             classNames={{
-              input: "!h-[48px] !rounded-lg !ps-10",
+              label: "!text-gray-500 !text-sm !mb-2",
+              input: "!h-[42px] !rounded-lg !ps-10",
             }}
             disabled={signup.isPending}
           />
@@ -116,7 +118,8 @@ const Signup = () => {
             leftSectionPointerEvents="none"
             leftSection={<Mail size={20} className="text-gray-500" />}
             classNames={{
-              input: "!h-[48px] !rounded-lg !ps-10",
+              label: "!text-gray-500 !text-sm !mb-2",
+              input: "!h-[42px] !rounded-lg !ps-10",
             }}
             disabled={signup.isPending}
           />
@@ -128,7 +131,8 @@ const Signup = () => {
             leftSectionPointerEvents="none"
             leftSection={<Lock size={20} className="text-gray-500" />}
             classNames={{
-              input: "!h-[48px] !rounded-lg !ps-10",
+              label: "!text-gray-500 !text-sm !mb-2",
+              input: "!h-[42px] !rounded-lg !ps-10",
             }}
             disabled={signup.isPending}
           />

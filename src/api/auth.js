@@ -27,6 +27,28 @@ export const authAPI = {
     }
   },
 
+  // Login and SignUp with Google
+  googleSignIn: async ({ slug, code, redirect_uri }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/auth/signin-with-google`,
+        {
+          slug,
+          code,
+          redirect_uri,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Google Sign-in error:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          error.message ||
+          "Login failed. Please try again."
+      );
+    }
+  },
+
   // Refresh token
   refreshToken: async () => {
     try {

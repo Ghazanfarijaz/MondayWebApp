@@ -27,6 +27,34 @@ export const authAPI = {
     }
   },
 
+  // Signup User
+  signUp: async ({ name, email, password, slug }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/auth/signup?slug=${slug}`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
+
+      return {
+        success: response.data.success,
+        message: response.data.message,
+        user: response.data.data.user,
+        accessToken: response.data.data.accessToken,
+      };
+    } catch (error) {
+      console.error("Signup error:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          error.message ||
+          "Signup failed. Please try again."
+      );
+    }
+  },
+
   // Login and SignUp with Google
   googleSignIn: async ({ slug, token }) => {
     try {

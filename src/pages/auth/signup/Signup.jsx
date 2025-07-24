@@ -8,12 +8,15 @@ import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { useSignUp } from "../../../contexts/SignUpContext";
 // import SignupSkeleton from "../../../features/auth/components/SignupSkeleton";
 import { useEffect } from "react";
+import { authAPI } from "../../../api/auth";
+import { toast } from "sonner";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { signUpMethod } = useSignUp();
 
-  const SignupForm = useForm({
+  // Signup form
+  const signupForm = useForm({
     initialValues: {
       name: "",
       email: "",
@@ -26,12 +29,47 @@ const Signup = () => {
           : "Name is required",
       email: (value) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email address",
+      // Password Must be 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character
       password: (value) =>
-        value.length >= 6 ? null : "Password must be at least 6 characters",
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+          value
+        )
+          ? null
+          : "Password must be 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number, and one special character",
     },
   });
 
-  const signup = useMutation({});
+  // Signup user - Mutation
+  const signup = useMutation({
+    mutationFn: () =>
+      authAPI.signUp({
+        name: signupForm.values.name,
+        email: signupForm.values.email,
+        password: signupForm.values.password,
+        slug: window.location.hostname.split(".")[0],
+        // slug: "eurotas-lucie",
+      }),
+    onSuccess: (data) => {
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userData", JSON.stringify(data.user));
+
+      // Redirect to main page on success
+      navigate("/", { replace: true });
+    },
+    onError: (error) => {
+      toast.error("Signup failed!", {
+        description: error.message || "Please try again.",
+      });
+
+      if (
+        error?.message ===
+        "Account Created Successfully! You will be able to login after Admin's approval!"
+      ) {
+        navigate("/auth/login", { replace: true });
+      }
+      console.error("Signup error:", error);
+    },
+  });
 
   useEffect(() => {
     if (
@@ -54,7 +92,7 @@ const Signup = () => {
       <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign up</h1>
 
       <form
-        onSubmit={SignupForm.onSubmit(signup.mutate)}
+        onSubmit={signupForm.onSubmit(signup.mutate)}
         className="mt-8 flex flex-col gap-8"
       >
         <div className="flex flex-col gap-4">
@@ -62,34 +100,37 @@ const Signup = () => {
             // label="Your Name"
             variant="filled"
             placeholder="Your Name"
-            {...SignupForm.getInputProps("name")}
+            {...signupForm.getInputProps("name")}
             leftSectionPointerEvents="none"
             leftSection={<CircleUser size={20} className="text-gray-500" />}
             classNames={{
               input: "!h-[48px] !rounded-lg !ps-10",
             }}
+            disabled={signup.isPending}
           />
           <TextInput
             // label="Email"
             variant="filled"
             placeholder="Enter Your Email"
-            {...SignupForm.getInputProps("email")}
+            {...signupForm.getInputProps("email")}
             leftSectionPointerEvents="none"
             leftSection={<Mail size={20} className="text-gray-500" />}
             classNames={{
               input: "!h-[48px] !rounded-lg !ps-10",
             }}
+            disabled={signup.isPending}
           />
           <PasswordInput
             // label="Password"
             variant="filled"
             placeholder="Enter Your Password"
-            {...SignupForm.getInputProps("password")}
+            {...signupForm.getInputProps("password")}
             leftSectionPointerEvents="none"
             leftSection={<Lock size={20} className="text-gray-500" />}
             classNames={{
               input: "!h-[48px] !rounded-lg !ps-10",
             }}
+            disabled={signup.isPending}
           />
         </div>
 

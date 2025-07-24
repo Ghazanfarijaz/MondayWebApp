@@ -28,14 +28,13 @@ export const authAPI = {
   },
 
   // Login and SignUp with Google
-  googleSignIn: async ({ slug, code, redirect_uri }) => {
+  googleSignIn: async ({ slug, token }) => {
     try {
       const response = await axiosInstance.post(
         `/api/auth/signin-with-google`,
         {
           slug,
-          code,
-          redirect_uri,
+          access_token: token,
         }
       );
       return response.data;

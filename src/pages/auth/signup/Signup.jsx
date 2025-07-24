@@ -104,7 +104,8 @@ const Signup = () => {
             leftSectionPointerEvents="none"
             leftSection={<CircleUser size={20} className="text-gray-500" />}
             classNames={{
-              input: "!h-[48px] !rounded-lg !ps-10",
+              label: "!text-gray-500 !text-sm !mb-2",
+              input: "!h-[42px] !rounded-lg !ps-10",
             }}
             disabled={signup.isPending}
           />
@@ -116,7 +117,8 @@ const Signup = () => {
             leftSectionPointerEvents="none"
             leftSection={<Mail size={20} className="text-gray-500" />}
             classNames={{
-              input: "!h-[48px] !rounded-lg !ps-10",
+              label: "!text-gray-500 !text-sm !mb-2",
+              input: "!h-[42px] !rounded-lg !ps-10",
             }}
             disabled={signup.isPending}
           />
@@ -128,7 +130,8 @@ const Signup = () => {
             leftSectionPointerEvents="none"
             leftSection={<Lock size={20} className="text-gray-500" />}
             classNames={{
-              input: "!h-[48px] !rounded-lg !ps-10",
+              label: "!text-gray-500 !text-sm !mb-2",
+              input: "!h-[42px] !rounded-lg !ps-10",
             }}
             disabled={signup.isPending}
           />

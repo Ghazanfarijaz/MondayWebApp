@@ -30,12 +30,13 @@ const Signup = () => {
       email: (value) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email address",
       // Password Must be 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character
-      password: (value) =>
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-          value
-        )
+      password: (value) => {
+        const passwordRegex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+        return passwordRegex.test(value)
           ? null
-          : "Password must be 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number, and one special character",
+          : "Password must be at least 8 characters, contain uppercase, lowercase, number and special character";
+      },
     },
   });
 

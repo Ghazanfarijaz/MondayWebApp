@@ -5,7 +5,7 @@ export const GoogleButton = () => {
     const redirectUri = encodeURIComponent(
       window.location.origin + "/callback"
     );
-    window.location.href = `http://localhost:5173?redirect=${redirectUri}`;
+    window.location.href = `https://auth.lucieup.com?redirect=${redirectUri}`;
   };
 
   return (

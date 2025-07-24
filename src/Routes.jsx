@@ -14,6 +14,7 @@ import Signup from "./pages/auth/signup/Signup";
 import SignupOTP from "./pages/auth/otp/SignupOTP";
 import { SignUpProvider } from "./contexts/SignUpContext";
 import { UserPreferencesProvider } from "./contexts/UserPreferencesContext";
+import GoogleCallback from "./pages/auth/google-callback/GoogleCallback";
 
 export const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ export const router = createBrowserRouter([
         element: <SignupOTP />,
       },
     ],
+  },
+  {
+    path: "callback",
+    element: <GoogleCallback />,
   },
   {
     path: "error",

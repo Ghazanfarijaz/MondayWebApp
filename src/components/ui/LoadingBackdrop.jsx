@@ -5,7 +5,7 @@ const LoadingBackdrop = () => {
     <div
       className={`h-screen w-screen fixed top-0 left-0 z-[1300] flex justify-center items-center bg-white/30 backdrop-blur-sm`}
     >
-      <Loader color="#2A85FF" size="lg" type="bars" />
+      <Loader color="#2A85FF" size="md" type="bars" />
     </div>
   );
 };

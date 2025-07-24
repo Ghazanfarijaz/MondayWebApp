@@ -14,7 +14,8 @@ const GoogleCallback = () => {
   const loginUser = useMutation({
     mutationFn: ({ token }) =>
       authAPI.googleSignIn({
-        slug: "eurotas-lucie",
+        slug: window.location.hostname.split(".")[0],
+        // slug: "eurotas-lucie",
         token,
       }),
     enabled: !!token,

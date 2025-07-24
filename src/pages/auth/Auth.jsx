@@ -14,7 +14,9 @@ const Auth = () => {
         {/* <SigninImage /> */}
         <div className="h-full w-full bg-gradient-to-tr from-[#2c5da0] to-[#ec4964] rounded-3xl flex flex-col items-center justify-center gap-8 relative p-8">
           <img src={userLogo} alt="user-logo" className="w-32 rounded-lg" />
-          <h2 className="text-xl mt-4 text-gray-200">{userDescription}</h2>
+          <h2 className="text-xl mt-4 text-gray-200 text-center">
+            {userDescription}
+          </h2>
           <div className="absolute bottom-8 right-8 flex items-center justify-center p-[8px_16px] rounded-full bg-white border border-gray-200 shadow-sm">
             <p className="text-[14px]">
               Empowered by <b>Eurotas</b>

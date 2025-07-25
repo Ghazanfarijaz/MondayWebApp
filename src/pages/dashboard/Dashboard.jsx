@@ -210,10 +210,13 @@ const Dashboard = () => {
 
   return (
     <div className="md:ps-8 md:py-8 py-4 ps-4 bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6 md:pr-8 pr-4">
+        {/* Board Name */}
         <h1 className="text-sm md:text-2xl font-bold text-black dark:text-white blue:text-white">
           {data?.pages[0]?.data?.customization?.boardName || ""}
         </h1>
+        {/* View Mode */}
         <div className="flex space-x-3 md:space-x-3 bg-white dark:bg-[#2C2C2C] blue:bg-dark-blue p-2 rounded-full px-4 py-2">
           {["card", "list", "table"].map((mode) => {
             const Icon =
@@ -243,18 +246,21 @@ const Dashboard = () => {
         className="w-full flex-1 overflow-hidden md:pr-8 pr-4"
       >
         <div className="w-full flex flex-col gap-4">
+          {/* Filters */}
           <div className="flex flex-col md:flex-row gap-10 justify-between">
             <div className="flex items-center gap-2">
+              {/* Search Input */}
               <SearchInput
                 searchQuery={searchQuery}
                 onChange={(value) => setSearchQuery(value)}
               />
+              {/* Assign To Filter */}
               <AssignToFilter
                 value={assignToFilter}
                 onChange={(value) => setAssignToFilter(value)}
               />
             </div>
-            {/* Filter Dropdown */}
+            {/* Sort Filter Dropdown */}
             <SortFilter
               selectedOption={selectedSort}
               setSelectedOption={setSelectedSort}

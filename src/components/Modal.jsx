@@ -37,9 +37,12 @@ export const ModalRoot = ({
         timingFunction: "linear",
       }}
       size="lg"
-      radius="md"
+      radius="lg"
       withCloseButton={false}
       padding={0}
+      classNames={{
+        content: "!bg-transparent",
+      }}
     >
       <div className="w-full relative p-[32px_24px] bg-white dark:bg-light-black blue:bg-light-blue rounded-md">
         <LoadingOverlay

@@ -148,6 +148,61 @@ export const boardsAPI = {
     }
   },
 
+  // Create New Item
+  addNewItem: async ({ boardId, groupId, itemName, columnValues }) => {
+    try {
+      const formData = new FormData();
+
+      columnValues.forEach((col) => {
+        formData.append(`columnValues[${col.columnId}][id]`, col.columnId);
+        formData.append(`columnValues[${col.columnId}][type]`, col.columnType);
+        formData.append(`columnValues[${col.columnId}][text]`, col.text || "");
+
+        // If there's a file, append it
+        if (col.newlyUploadedFile) {
+          formData.append(
+            `columnValues[${col.columnId}][newlyUploadedFile]`,
+            col.newlyUploadedFile
+          );
+        }
+
+        // If there are persons_and_teams, append them
+        if (col.columnType === "people") {
+          formData.append(
+            `columnValues[${col.columnId}][persons_and_teams]`,
+            JSON.stringify(col.persons_and_teams || [])
+          );
+        }
+
+        // If Column Type is tags, then append "selectedTags"
+        if (col.columnType === "tags") {
+          formData.append(
+            `columnValues[${col.columnId}][selectedTags]`,
+            JSON.stringify(col.selectedTags || [])
+          );
+        }
+      });
+
+      const response = await axiosInstance.post(
+        `/api/boards/create-new-item/${boardId}/${groupId}?itemName=${itemName}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error adding new item:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          "Failed to add new item. Please try again."
+      );
+    }
+  },
+
   // Get Options for All Dropdowns
   getDropDownOptions: async ({ boardId, columnIds }) => {
     try {
@@ -169,6 +224,24 @@ export const boardsAPI = {
       throw new Error(
         error.response?.data?.message ||
           "Failed to fetch dropdown options. Please try again."
+      );
+    }
+  },
+
+  // Get the editable Columns Data
+  getEditableColumns: async () => {
+    try {
+      const response = await axiosInstance.get(`/api/boards/editableColumns`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching editable columns:", error);
+      throw new Error(
+        error.response?.data?.message ||
+          "Failed to fetch editable columns. Please try again."
       );
     }
   },

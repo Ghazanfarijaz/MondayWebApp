@@ -15,6 +15,8 @@ export const NewColumnValueModal = ({ opened, onClose, onSaveValue }) => {
     newValueForm.validate();
     if (newValueForm.isValid()) {
       onSaveValue(newValueForm.values.label);
+      // reset form
+      newValueForm.reset();
     }
   };
 

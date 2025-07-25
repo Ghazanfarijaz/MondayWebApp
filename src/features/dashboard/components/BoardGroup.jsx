@@ -41,6 +41,7 @@ const BoardGroup = ({
           })
         }
         groupsData={openSelectModalData.groupsData}
+        boardId={boardId}
       />
       {/* Main Content */}
       <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm w-full h-full max-h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto">

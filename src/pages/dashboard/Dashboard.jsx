@@ -20,13 +20,24 @@ const Dashboard = () => {
 
   // Search Query
   const [searchQuery, setSearchQuery] = useState(null);
+  // State to contains Items Data
+  // In grouped format
   const [groupedData, setGroupedData] = useState({});
+  // Filtered grouped data
   const [filteredData, setFilteredData] = useState({});
+
+  // Sort Options Created based on the columns fetched
   const [sortOptions, setSortOptions] = useState([]);
+
+  // Selected Sort
   const [selectedSort, setSelectedSort] = useState({
     value: "default",
     label: "Default",
   });
+
+  // State to contains groups data
+  // Group Name and Id
+  const [groupsData, setGroupsData] = useState([]);
 
   // Assign To Filter
   const [assignToFilter, setAssignToFilter] = useState("");
@@ -60,6 +71,9 @@ const Dashboard = () => {
     // Grouping data by group Title
     const groupedData = itemsData.reduce((acc, item) => {
       const groupTitle = item.group?.title || "No Group";
+      const groupId = item.group?.id || null;
+      setGroupsData((prev) => [...prev, { label: groupTitle, value: groupId }]);
+
       if (!acc[groupTitle]) {
         acc[groupTitle] = [];
       }
@@ -288,6 +302,7 @@ const Dashboard = () => {
                 }
               }}
               boardId={data?.pages[0]?.data?.customization?.boardId}
+              groupsData={groupsData}
             />
           )}
         </div>

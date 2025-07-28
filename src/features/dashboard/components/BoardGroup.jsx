@@ -70,7 +70,13 @@ const BoardGroup = ({
             </button>
           </div>
         )}
-        <div className="h-full max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)] overflow-auto">
+        <div
+          className={`h-full ${
+            user?.allowUsersToCreateNewItems === "true"
+              ? "max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)]"
+              : "max-h-[calc(100dvh-284px)] md:max-h-[calc(100dvh-323px)]"
+          }  overflow-auto`}
+        >
           {Object.entries(filteredData).length < 1 ? (
             <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
               Couldn't find any items in this Board.

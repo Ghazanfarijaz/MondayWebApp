@@ -3,7 +3,6 @@ import { useForm } from "@mantine/form";
 import { TextInput, PasswordInput } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../../assets/mainlogo.jpg";
 import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { useSignUp } from "../../../contexts/SignUpContext";
 // import SignupSkeleton from "../../../features/auth/components/SignupSkeleton";
@@ -84,13 +83,8 @@ const Signup = () => {
   }, [signUpMethod, navigate]);
 
   return (
-    <main className="font-medium w-[352px]">
-      <img
-        src={Logo}
-        alt="Logo"
-        className="object-contain w-[100px] h-[100px]"
-      />
-      <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign up</h1>
+    <main className="font-medium">
+      <h1 className="mt-6 text-3xl font-semibold text-slate-900">Sign up</h1>
 
       <form
         onSubmit={signupForm.onSubmit(signup.mutate)}

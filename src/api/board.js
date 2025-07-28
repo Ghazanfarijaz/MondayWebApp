@@ -1,11 +1,12 @@
 import { axiosInstance } from "../utils/axiosInstance";
 
 export const boardsAPI = {
-  getItems: async ({ cursor = null, searchQuery }) => {
+  getItems: async ({ cursor = null, searchQuery, filterByEmail }) => {
     try {
       const params = {};
       if (cursor) params.cursor = cursor;
       params.compareValue = searchQuery;
+      params.filterByEmail = filterByEmail;
 
       const response = await axiosInstance.get(`/api/boards/getAllItems`, {
         params,

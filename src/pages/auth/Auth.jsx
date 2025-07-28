@@ -18,27 +18,23 @@ const Auth = () => {
         </div>
       </div>
       {/* Image Section - With right padding */}
-      <div className="hidden lg:flex items-center justify-center p-12 h-full max-h-screen">
+      <div className="hidden lg:flex items-center justify-center p-12 h-full max-h-screen relative">
         {/* <SigninImage /> */}
         <div
-          className={`h-full ${
-            window.location.pathname.split("/")[2] === "signup"
-              ? "max-h-[635.53px]"
-              : "max-h-[609.53px]"
-          } w-full bg-gray-200/70 rounded-3xl flex flex-col justify-between gap-4 p-4`}
+          className={`h-full max-h-[609.53px] w-full flex flex-col gap-2 justify-between`}
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 bg-gray-200/70 border border-gray-300 rounded-3xl p-4">
             <img
               src={userLogo}
               alt="user-logo"
               className="w-[95px] h-auto rounded-lg object-contain"
             />
-            <p className="text-lg text-gray-500 line-clamp-[14]">
+            <p className="text-lg text-gray-500 line-clamp-[15]">
               {userDescription}
             </p>
           </div>
-          <div className="mt-4 flex items-center justify-end w-full">
-            <p className="text-[14px] p-[8px_16px] rounded-full bg-gray-300 border border-gray-300">
+          <div className="flex items-center justify-end w-full">
+            <p className="text-[14px] p-[8px_16px] rounded-full bg-gray-200/70 border border-gray-300">
               A Eurotas Solution
             </p>
           </div>

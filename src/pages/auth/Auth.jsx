@@ -25,7 +25,7 @@ const Auth = () => {
             window.location.pathname.split("/")[2] === "signup"
               ? "max-h-[635.53px]"
               : "max-h-[609.53px]"
-          } w-full bg-gray-200/70 rounded-3xl flex flex-col justify-between gap-8 p-4`}
+          } w-full bg-gray-200/70 rounded-3xl flex flex-col justify-between gap-4 p-4`}
         >
           <div className="flex flex-col gap-4">
             <img
@@ -33,7 +33,7 @@ const Auth = () => {
               alt="user-logo"
               className="w-[95px] h-auto rounded-lg object-contain"
             />
-            <p className="text-lg text-gray-500 line-clamp-4">
+            <p className="text-lg text-gray-500 line-clamp-[14]">
               {userDescription}
             </p>
           </div>

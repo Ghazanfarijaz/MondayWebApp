@@ -57,17 +57,21 @@ const Signup = () => {
       navigate("/", { replace: true });
     },
     onError: (error) => {
-      toast.error("Signup failed!", {
-        description: error.message || "Please try again.",
-      });
-
       if (
         error?.message ===
         "Account Created Successfully! You will be able to login after Admin's approval!"
       ) {
+        toast.success("Success!", {
+          description:
+            error.message ||
+            "You will be able to login after Admin's approval!",
+        });
         navigate("/auth/login", { replace: true });
+      } else {
+        toast.error("Signup failed!", {
+          description: error.message || "Please try again.",
+        });
       }
-      console.error("Signup error:", error);
     },
   });
 

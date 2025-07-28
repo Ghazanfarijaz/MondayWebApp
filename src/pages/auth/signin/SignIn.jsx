@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import Logo from "../../../assets/mainlogo.jpg";
 import { GoogleButton } from "../../../components/Auth/GoogleButton";
 import { authAPI } from "../../../api/auth";
 import { Lock, Mail } from "lucide-react";
@@ -48,13 +47,8 @@ const SignIn = () => {
   });
 
   return (
-    <main className="font-medium w-[352px]">
-      <img
-        src={Logo}
-        alt="Logo"
-        className="object-contain w-[100px] h-[100px]"
-      />
-      <h1 className="mt-8 text-4xl font-semibold text-slate-900">Sign In</h1>
+    <main className="font-medium">
+      <h1 className="mt-6 text-3xl font-semibold text-slate-900">Sign In</h1>
       <form
         onSubmit={signInForm.onSubmit(loginUser.mutate)}
         className="mt-8 flex flex-col gap-4"
@@ -90,18 +84,20 @@ const SignIn = () => {
       </form>
       {(signUpMethod === "signup-with-admin-approval" ||
         signUpMethod === "signup-without-admin-approval") && (
-        <div className="w-full mt-5 flex flex-col gap-4">
+        <div className="w-full mt-5 flex flex-col gap-8">
           {/* Google Signin */}
-          <div className="flex items-center">
-            <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
-            <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">
-              OR
-            </p>
-            <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+          <div className="w-full mt-5 flex flex-col gap-5">
+            <div className="flex items-center">
+              <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+              <p className="font-bold text-[20px]/[150%] px-4 text-[#5E5E5E]">
+                OR
+              </p>
+              <hr className="flex-1 border-b-1 border-[#D6D6D6]" />
+            </div>
+            <GoogleButton />
           </div>
-          <GoogleButton />
-          {/* Signup */}
 
+          {/* Signup */}
           <p className="text-center text-[#808494] text-[14px]/[140%] font-medium">
             Don&apos;t have an account?{" "}
             <Link className="font-bold text-[#000929]" to="/auth/signup">

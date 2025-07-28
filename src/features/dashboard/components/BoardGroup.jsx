@@ -8,6 +8,7 @@ import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
 import convertDateFormate from "../../../utils/convertDateFormat";
 import { useState } from "react";
 import SelectItemGroupModal from "../../../features/add-new-item/components/SelectItemGroupModal";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const BoardGroup = ({
   viewMode,
@@ -22,6 +23,7 @@ const BoardGroup = ({
   const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
   const { preferences } = useUserPreferences();
+  const { user } = useAuth();
 
   // Local State to manage View Mode
   const [openSelectModalData, setOpenSelectModalData] = useState({
@@ -45,28 +47,36 @@ const BoardGroup = ({
       />
       {/* Main Content */}
       <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm w-full h-full max-h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto">
-        <div className="w-full flex justify-end pb-4">
-          <button
-            type="button"
-            className="px-4 py-2 bg-[#2A85FF] text-white rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
-            onClick={() => {
-              // Remove Duplicate Options from groupsData which have same value
-              const uniqueGroups = Array.from(
-                new Map(
-                  groupsData.map((group) => [group.value, group])
-                ).values()
-              );
+        {user?.allowUsersToCreateNewItems === "true" && (
+          <div className="w-full flex justify-end pb-4">
+            <button
+              type="button"
+              className="px-4 py-2 bg-[#2A85FF] text-white rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+              onClick={() => {
+                // Remove Duplicate Options from groupsData which have same value
+                const uniqueGroups = Array.from(
+                  new Map(
+                    groupsData.map((group) => [group.value, group])
+                  ).values()
+                );
 
-              setOpenSelectModalData({
-                opened: true,
-                groupsData: uniqueGroups,
-              });
-            }}
-          >
-            Add New Item
-          </button>
-        </div>
-        <div className="h-full max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)] overflow-auto">
+                setOpenSelectModalData({
+                  opened: true,
+                  groupsData: uniqueGroups,
+                });
+              }}
+            >
+              Add New Item
+            </button>
+          </div>
+        )}
+        <div
+          className={`h-full ${
+            user?.allowUsersToCreateNewItems === "true"
+              ? "max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)]"
+              : "max-h-[calc(100dvh-284px)] md:max-h-[calc(100dvh-323px)]"
+          }  overflow-auto`}
+        >
           {Object.entries(filteredData).length < 1 ? (
             <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
               Couldn't find any items in this Board.

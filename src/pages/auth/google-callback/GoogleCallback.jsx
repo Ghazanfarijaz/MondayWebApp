@@ -28,10 +28,22 @@ const GoogleCallback = () => {
       });
     },
     onError: (error) => {
-      toast.error("Error!", {
-        description: error.message || "Login failed. Please try again.",
-      });
-      navigate("/auth/login", { replace: true });
+      if (
+        error?.message ===
+        "Account Created Successfully! You will be able to login after Admin's approval!"
+      ) {
+        toast.success("Success!", {
+          description:
+            error.message ||
+            "You will be able to login after Admin's approval!",
+        });
+        navigate("/auth/login", { replace: true });
+      } else {
+        toast.error("Error!", {
+          description: error.message || "Login failed. Please try again.",
+        });
+        navigate("/auth/login", { replace: true });
+      }
     },
   });
 

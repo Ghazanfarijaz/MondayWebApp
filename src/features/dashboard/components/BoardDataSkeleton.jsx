@@ -3,7 +3,10 @@ import { Skeleton } from "@mantine/core";
 const CardSkeleton = () => {
   return (
     <div className="flex flex-col gap-6">
-      <Skeleton height={35} width={90} radius={2} />
+      <div className="flex items-center justify-between">
+        <Skeleton height={35} width={90} radius={2} />
+        <Skeleton height={35} width={140} radius={8} />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {Array.from({ length: 3 }).map((_, index) => (
           <Skeleton key={index} width="100%" height={250} radius={12} />
@@ -16,7 +19,10 @@ const CardSkeleton = () => {
 const ListSkeleton = () => {
   return (
     <div className="flex flex-col gap-6">
-      <Skeleton height={35} width={90} radius={2} />
+      <div className="flex items-center justify-between">
+        <Skeleton height={35} width={90} radius={2} />
+        <Skeleton height={35} width={140} radius={8} />
+      </div>
       <div className="flex flex-col gap-2">
         {Array.from({ length: 3 }).map((_, index) => (
           <Skeleton key={index} width="100%" height={60} radius={6} />
@@ -29,7 +35,10 @@ const ListSkeleton = () => {
 const TableSkeleton = () => {
   return (
     <div className="flex flex-col gap-6">
-      <Skeleton height={35} width={90} radius={2} />
+      <div className="flex items-center justify-between">
+        <Skeleton height={35} width={90} radius={2} />
+        <Skeleton height={35} width={140} radius={8} />
+      </div>
       <div className="w-full border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
         <div className="hidden md:block">
           <table className="w-full border-collapse">

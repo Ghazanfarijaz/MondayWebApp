@@ -4,7 +4,7 @@ import reportWebVitals from "./reportWebVitals";
 import { router } from "./Routes";
 import { RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Sonner Toast
 import { Toaster } from "sonner";
@@ -20,7 +20,6 @@ const theme = createTheme({
 // REACT_APP_GOOGLE_CLIENT_ID from .env file
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
-
 // React Query setup
 const queryClient = new QueryClient();
 
@@ -32,13 +31,7 @@ root.render(
         <RouterProvider router={router} />
       </QueryClientProvider>
 
-      <Toaster
-        style={{
-          fontFamily: "Plus Jakarta Sans",
-        }}
-        duration={3000}
-        richColors={true}
-      />
+      <Toaster duration={3000} richColors={true} />
     </MantineProvider>
   </GoogleOAuthProvider>
 );

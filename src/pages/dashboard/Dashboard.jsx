@@ -9,10 +9,11 @@ import { useAuth } from "../../contexts/AuthContext";
 import SearchInput from "../../components/ui/SearchInput";
 import SortFilter from "../../components/ui/SortFilter";
 import AssignToFilter from "../../features/dashboard/components/AssignToFilter";
+import { Skeleton } from "@mantine/core";
 
 const Dashboard = () => {
   // Hooks
-  const { setSortingOptions } = useAuth();
+  const { user, setSortingOptions } = useAuth();
 
   // Local States
   // View Mode
@@ -40,7 +41,7 @@ const Dashboard = () => {
   const [groupsData, setGroupsData] = useState([]);
 
   // Assign To Filter
-  const [assignToFilter, setAssignToFilter] = useState("");
+  const [filterByEmail, setFilterByEmail] = useState(false);
 
   // Fetch Board Data - Query
   const {
@@ -52,10 +53,14 @@ const Dashboard = () => {
     isError,
     error,
   } = useInfiniteQuery({
-    queryKey: ["boardData", searchQuery], // depend on search
+    queryKey: ["boardData", searchQuery, filterByEmail],
     queryFn: ({ pageParam }) => {
       const { cursor = null } = pageParam || {};
-      return boardsAPI.getItems({ cursor, searchQuery });
+      return boardsAPI.getItems({
+        cursor,
+        searchQuery,
+        filterByEmail: filterByEmail,
+      });
     },
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage?.data?.cursor;
@@ -228,7 +233,11 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-6 md:pr-8 pr-4">
         {/* Board Name */}
         <h1 className="text-sm md:text-2xl font-bold text-black dark:text-white blue:text-white">
-          {data?.pages[0]?.data?.customization?.boardName || ""}
+          {isPending ? (
+            <Skeleton w={120} height={32} radius={4} />
+          ) : (
+            data?.pages[0]?.data?.customization?.boardName || ""
+          )}
         </h1>
         {/* View Mode */}
         <div className="flex space-x-3 md:space-x-3 bg-white dark:bg-[#2C2C2C] blue:bg-dark-blue p-2 rounded-full px-4 py-2">
@@ -269,10 +278,12 @@ const Dashboard = () => {
                 onChange={(value) => setSearchQuery(value)}
               />
               {/* Assign To Filter */}
-              <AssignToFilter
-                value={assignToFilter}
-                onChange={(value) => setAssignToFilter(value)}
-              />
+              {user?.filterItemsByEmail === "false" && (
+                <AssignToFilter
+                  value={filterByEmail}
+                  onChange={(value) => setFilterByEmail(value)}
+                />
+              )}
             </div>
             {/* Sort Filter Dropdown */}
             <SortFilter

@@ -42,9 +42,9 @@ const AssignToFilter = ({ value, onChange }) => {
         <Menu.Item closeMenuOnClick={false}>
           <Checkbox
             label="Show only assigned to me"
-            checked={value === "assigned-to-me"}
+            checked={value === true}
             value={value}
-            onChange={() => onChange("assigned-to-me")}
+            onChange={(e) => onChange(e.target.checked)}
             classNames={{
               label: isBlueTheme
                 ? "!text-white"

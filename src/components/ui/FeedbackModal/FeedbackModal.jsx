@@ -74,7 +74,7 @@ export const FeedbackModal = ({ opened, onClose }) => {
       withCloseButton={false}
       padding={0}
     >
-      <div className="w-full relative p-[32px_24px]">
+      <div className="w-full relative p-[24px_24px]">
         <LoadingOverlay
           visible={submitFeedback.isPending}
           zIndex={1000}
@@ -136,6 +136,10 @@ export const FeedbackModal = ({ opened, onClose }) => {
             Submit
           </Button>
         </form>
+
+        <p className="absolute bottom-6 right-6 text-[12px] text-gray-500 dark:text-gray-300 blue:text-gray-100 italic">
+          A Eurotas Solution
+        </p>
       </div>
     </Modal>
   );

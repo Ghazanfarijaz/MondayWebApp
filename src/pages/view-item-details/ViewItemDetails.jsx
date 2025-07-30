@@ -197,6 +197,36 @@ const ViewItemDetails = () => {
                     </p>
                   </div>
                 );
+              } else if (columnValue.type === "phone") {
+                return (
+                  <div
+                    key={columnValue.id}
+                    className="grid grid-cols-[150px_1fr] gap-[32px] items-start mb-4"
+                  >
+                    <span className="text-gray-500 dark:text-[#6F767E] blue:text-gray-400">
+                      {columnValue.column.title}
+                    </span>
+                    <p className="text-gray-700 dark:text-white blue:text-white whitespace-pre-line">
+                      {/* Show phone number with country code */}
+                      {/* Formate: +1 (123) 456-7890 */}
+                      {columnValue?.text
+                        ? (() => {
+                            const digits = columnValue?.text.replace(/\D/g, "");
+
+                            // Guessing country code length: try 1 to 3 digits
+                            const local = digits.slice(-10);
+                            const countryCode = digits.slice(0, -10);
+
+                            const area = local.slice(0, 3);
+                            const prefix = local.slice(3, 6);
+                            const line = local.slice(6, 10);
+
+                            return `+${countryCode} ${area} (${prefix}) ${line}`;
+                          })()
+                        : "N/A"}
+                    </p>
+                  </div>
+                );
               } else {
                 return (
                   <div

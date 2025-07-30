@@ -108,7 +108,7 @@ const EditItemDetails = () => {
         // col.type !== "people"
       )
       .sort((a, b) => {
-        const lastTypes = ["dropdown", "file"];
+        const lastTypes = ["file"];
         const aIsLast = lastTypes.includes(a.type);
         const bIsLast = lastTypes.includes(b.type);
 

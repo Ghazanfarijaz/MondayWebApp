@@ -108,7 +108,7 @@ const EditItemDetails = () => {
         // col.type !== "people"
       )
       .sort((a, b) => {
-        const lastTypes = ["dropdown", "file"];
+        const lastTypes = ["file"];
         const aIsLast = lastTypes.includes(a.type);
         const bIsLast = lastTypes.includes(b.type);
 
@@ -592,6 +592,29 @@ const EditItemDetails = () => {
                     }}
                   />
                 );
+              } else if (item.type === "phone") {
+                return (
+                  <div className="flex flex-col gap-2" key={item.id}>
+                    <label
+                      htmlFor={item.id}
+                      className="text-black dark:text-white blue:text-white text-[14px]"
+                    >
+                      {item.column.title}
+                    </label>
+                    <input
+                      id={item.id}
+                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px]"
+                      placeholder="+1 (123) 456 7890"
+                      value={item.text}
+                      onChange={(e) =>
+                        handleupdateItemValue({
+                          itemId: item.id,
+                          newValue: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                );
               } else {
                 return (
                   <div className="flex flex-col gap-2" key={item.id}>
@@ -603,7 +626,7 @@ const EditItemDetails = () => {
                     </label>
                     <input
                       id={item.id}
-                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white"
+                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px]"
                       placeholder="Enter value here..."
                       value={item.text}
                       onChange={(e) =>

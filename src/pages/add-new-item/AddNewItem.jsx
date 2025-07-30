@@ -455,6 +455,29 @@ const AddNewItem = () => {
                     />
                   </div>
                 );
+              } else if (item.columnType === "phone") {
+                return (
+                  <div className="flex flex-col gap-2" key={item.columnId}>
+                    <label
+                      htmlFor={item.columnId}
+                      className="text-black dark:text-white blue:text-white text-[14px]"
+                    >
+                      {item?.columnName}
+                    </label>
+                    <input
+                      id={item.columnId}
+                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px] placeholder:text-[#adb5bd] placeholder:font-normal"
+                      placeholder="+1 (123) 456 7890"
+                      value={item.text || ""}
+                      onChange={(e) =>
+                        handleupdateItemValue({
+                          itemId: item.columnId,
+                          newValue: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                );
               } else {
                 return (
                   <div className="flex flex-col gap-2" key={item.columnId}>

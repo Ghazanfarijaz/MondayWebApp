@@ -79,10 +79,10 @@ const Dashboard = () => {
       const groupId = item.group?.id || null;
       setGroupsData((prev) => [...prev, { label: groupTitle, value: groupId }]);
 
-      if (!acc[groupTitle]) {
-        acc[groupTitle] = [];
+      if (!acc[groupId]) {
+        acc[groupId] = [];
       }
-      acc[groupTitle].push(item);
+      acc[groupId].push(item);
       return acc;
     }, {});
 

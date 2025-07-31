@@ -23,6 +23,9 @@ const TableView = ({ item, boardId }) => {
       className="lg:hidden bg-white rounded-lg shadow-sm p-4 mb-3 border border-gray-100 hover:bg-gray-50 cursor-pointer"
       onClick={() => navigate(`/item-details/${boardId}/${item.id}`)}
     >
+      <h3 className="text-gray-700 dark:text-white blue:text-white font-medium truncate mb-2">
+        {item.name || "Untitled Item"}
+      </h3>
       {columnValues.slice(0, 5).map((columnValue) => (
         <div
           key={columnValue.id}

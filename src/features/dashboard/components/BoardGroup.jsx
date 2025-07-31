@@ -83,14 +83,14 @@ const BoardGroup = ({
             </p>
           ) : viewMode === "list" ? (
             <div className="w-full flex flex-col gap-6">
-              {Object.entries(filteredData).map(([groupTitle, items]) => (
-                <div key={groupTitle} className="flex flex-col gap-4">
+              {Object.entries(filteredData).map(([groupId, items]) => (
+                <div key={groupId} className="flex flex-col gap-4">
                   <div className="flex items-center">
                     <div
                       className={`w-4 h-8 rounded-[4px] bg-purple-300`}
                     ></div>
                     <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
-                      {groupTitle}
+                      {items[0]?.group?.title || "Group"}
                     </h2>
                   </div>
                   <div className="w-full flex flex-col gap-2">
@@ -110,14 +110,14 @@ const BoardGroup = ({
             </div>
           ) : viewMode === "table" ? (
             <div className="w-full flex flex-col gap-6">
-              {Object.entries(filteredData).map(([groupTitle, items]) => (
-                <div key={groupTitle} className="flex flex-col gap-4">
+              {Object.entries(filteredData).map(([groupId, items]) => (
+                <div key={groupId} className="flex flex-col gap-4">
                   <div className="flex items-center">
                     <div
                       className={`w-4 h-8 rounded-[4px] bg-purple-300`}
                     ></div>
                     <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
-                      {groupTitle}
+                      {items[0]?.group?.title || "Group"}
                     </h2>
                   </div>
                   <div className="w-full lg:border border-gray-200 dark:border-[#4E4E4E] blue:border-blue rounded-md overflow-hidden">
@@ -296,15 +296,15 @@ const BoardGroup = ({
           ) : (
             <div className="flex flex-col gap-6">
               {Object.entries(filteredData).map(
-                ([groupTitle, items], groupIndex, groupArray) => {
+                ([groupId, items], groupIndex, groupArray) => {
                   return (
-                    <div key={groupTitle} className="flex flex-col gap-4">
+                    <div key={groupId} className="flex flex-col gap-4">
                       <div className="flex items-center">
                         <div
                           className={`w-4 h-8 rounded-[4px] bg-purple-300`}
                         ></div>
                         <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
-                          {groupTitle}
+                          {items[0]?.group?.title || "Group"}
                         </h2>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

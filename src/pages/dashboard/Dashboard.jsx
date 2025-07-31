@@ -314,6 +314,7 @@ const Dashboard = () => {
               }}
               boardId={data?.pages[0]?.data?.customization?.boardId}
               groupsData={groupsData}
+              totalItemsCount={data?.pages[0]?.data?.total_items}
             />
           )}
         </div>

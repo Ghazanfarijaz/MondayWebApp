@@ -18,6 +18,7 @@ const BoardGroup = ({
   onClickLoadMore,
   boardId,
   groupsData,
+  totalItemsCount,
 }) => {
   // Hooks
   const navigate = useNavigate();
@@ -47,8 +48,11 @@ const BoardGroup = ({
       />
       {/* Main Content */}
       <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm w-full h-full max-h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto">
-        {user?.allowUsersToCreateNewItems === "true" && (
-          <div className="w-full flex justify-end pb-4">
+        <div className="w-full flex justify-between pb-4">
+          <p className="font-medium text-gray-400 dark:text-gray-400 blue:text-gray-400 h-[40.8px]">
+            Items Count (Total): {totalItemsCount}
+          </p>
+          {user?.allowUsersToCreateNewItems === "true" && (
             <button
               type="button"
               className="px-4 py-2 bg-[#2A85FF] text-white rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
@@ -68,14 +72,10 @@ const BoardGroup = ({
             >
               Add New Item
             </button>
-          </div>
-        )}
+          )}
+        </div>
         <div
-          className={`h-full ${
-            user?.allowUsersToCreateNewItems === "true"
-              ? "max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)]"
-              : "max-h-[calc(100dvh-284px)] md:max-h-[calc(100dvh-323px)]"
-          }  overflow-auto`}
+          className={`h-full max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)] overflow-auto`}
         >
           {Object.entries(filteredData).length < 1 ? (
             <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">

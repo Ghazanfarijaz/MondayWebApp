@@ -20,6 +20,7 @@ export const boardsAPI = {
         data: {
           cursor: response.data.data.result.cursor,
           items: response.data.data.result.items,
+          total_items: response.data.data.result.items_count,
           customization: response.data.data.customization,
         },
       };

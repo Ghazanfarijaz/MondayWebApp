@@ -53,6 +53,8 @@ const EditItemDetails = () => {
               people: [],
             };
 
+            if (filteredItems.length === 0) return [];
+
             filteredItems?.forEach((col) => {
               switch (col.type) {
                 case "status":
@@ -80,14 +82,17 @@ const EditItemDetails = () => {
           enabled: !!filteredItems.length,
         },
       ],
-
       combine: (results) => {
+        const enabledResults = results.filter(
+          (result) => result.fetchStatus !== "idle"
+        );
+
         return {
           itemDetails: results[0].data,
           DropDownOptions: results[1].data,
-          isPending: results.some((result) => result.isPending),
-          isError: results.some((result) => result.isError),
-          error: results.find((result) => result.isError)?.error,
+          isPending: enabledResults.some((result) => result.isPending),
+          isError: enabledResults.some((result) => result.isError),
+          error: enabledResults.find((result) => result.isError)?.error,
         };
       },
     });
@@ -168,7 +173,9 @@ const EditItemDetails = () => {
       });
     },
     onSuccess: () => {
-      toast.success("Item details updated successfully!");
+      toast.success("Success!", {
+        description: "Item details updated successfully.",
+      });
       const id = "";
       queryClient.invalidateQueries({
         queryKey: ["itemDetails", id],
@@ -289,362 +296,372 @@ const EditItemDetails = () => {
             }}
             className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow-sm grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-8"
           >
-            {filteredItems.map((item) => {
-              if (item.type === "file") {
-                return (
-                  <div className="flex flex-col gap-2" key={item.id}>
-                    <p className="text-black dark:text-white blue:text-white">
-                      {item.column.title}
-                    </p>
-                    <label
-                      htmlFor={item.id}
-                      className={`text-black dark:text-white blue:text-white bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg cursor-pointer border border-dashed ${
-                        item.newlyUploadedFile
-                          ? "border-green-500"
-                          : "border-gray-400"
-                      } hover:bg-gray-200 transition-colors flex items-center justify-center text-[12px] h-[40.75px]`}
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        const file = e.dataTransfer.files?.[0];
-                        if (file) {
-                          handleUploadFile({
-                            itemId: item.id,
-                            file: file,
-                          });
-                        }
-                      }}
-                    >
-                      {item.newlyUploadedFile ? (
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-5 text-black dark:text-white blue:text-white" />
-                          <span>{item.newlyUploadedFile.name}</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <CloudUpload className="w-5 text-black dark:text-white blue:text-white" />
-                          <span>Drop file here or click to upload</span>
-                        </div>
-                      )}
-                    </label>
-                    <input
-                      id={item.id}
-                      type="file"
-                      hidden
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          handleUploadFile({
-                            itemId: item.id,
-                            file: file,
-                          });
-                        }
-                      }}
-                    />
-                    <span className="text-xs text-gray-500">
-                      (Max File size: 5MB)
-                    </span>
-                    <div className="flex flex-col gap-1">
-                      <p className="text-black dark:text-white blue:text-white font-semibold">
-                        Previous Files:
-                      </p>
-                      {item?.files?.length < 1
-                        ? "No file uploaded"
-                        : item?.files?.map((file, index) => (
-                            <div className="flex items-center" key={index}>
-                              {item.text && (
-                                <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
-                              )}
-                              <div className="text-[12px]">
-                                <Link
-                                  to={file.asset.public_url}
-                                  className="text-black dark:text-white blue:text-white font-semibold hover:underline"
-                                >
-                                  {/* Get the last name after last / */}
-                                  {file.asset.name}
-                                </Link>
-                              </div>
+            {filteredItems?.length < 1 ? (
+              <p className="text-gray-400 blue:text-gray-400">
+                No fields to edit!
+              </p>
+            ) : (
+              <>
+                {filteredItems.map((item) => {
+                  if (item.type === "file") {
+                    return (
+                      <div className="flex flex-col gap-2" key={item.id}>
+                        <p className="text-black dark:text-white blue:text-white">
+                          {item.column.title}
+                        </p>
+                        <label
+                          htmlFor={item.id}
+                          className={`text-black dark:text-white blue:text-white bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg cursor-pointer border border-dashed ${
+                            item.newlyUploadedFile
+                              ? "border-green-500"
+                              : "border-gray-400"
+                          } hover:bg-gray-200 transition-colors flex items-center justify-center text-[12px] h-[40.75px]`}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const file = e.dataTransfer.files?.[0];
+                            if (file) {
+                              handleUploadFile({
+                                itemId: item.id,
+                                file: file,
+                              });
+                            }
+                          }}
+                        >
+                          {item.newlyUploadedFile ? (
+                            <div className="flex items-center gap-2">
+                              <FileText className="w-5 text-black dark:text-white blue:text-white" />
+                              <span>{item.newlyUploadedFile.name}</span>
                             </div>
-                          ))}
-                    </div>
-                  </div>
-                );
-              } else if (item.type === "status") {
-                return (
-                  <Select
-                    key={item.id}
-                    id={item.id}
-                    label={item.column.title}
-                    value={item.text || ""}
-                    placeholder="Select status"
-                    data={
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <CloudUpload className="w-5 text-black dark:text-white blue:text-white" />
+                              <span>Drop file here or click to upload</span>
+                            </div>
+                          )}
+                        </label>
+                        <input
+                          id={item.id}
+                          type="file"
+                          hidden
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleUploadFile({
+                                itemId: item.id,
+                                file: file,
+                              });
+                            }
+                          }}
+                        />
+                        <span className="text-xs text-gray-500">
+                          (Max File size: 5MB)
+                        </span>
+                        <div className="flex flex-col gap-1">
+                          <p className="text-black dark:text-white blue:text-white font-semibold">
+                            Previous Files:
+                          </p>
+                          {item?.files?.length < 1
+                            ? "No file uploaded"
+                            : item?.files?.map((file, index) => (
+                                <div className="flex items-center" key={index}>
+                                  {item.text && (
+                                    <LinkIcon className="text-black dark:text-white blue:text-white h-[12px]" />
+                                  )}
+                                  <div className="text-[12px]">
+                                    <Link
+                                      to={file.asset.public_url}
+                                      className="text-black dark:text-white blue:text-white font-semibold hover:underline"
+                                    >
+                                      {/* Get the last name after last / */}
+                                      {file.asset.name}
+                                    </Link>
+                                  </div>
+                                </div>
+                              ))}
+                        </div>
+                      </div>
+                    );
+                  } else if (item.type === "status") {
+                    return (
+                      <Select
+                        key={item.id}
+                        id={item.id}
+                        label={item.column.title}
+                        value={item.text || ""}
+                        placeholder="Select status"
+                        data={
+                          DropDownOptions?.find((opt) => opt.id === item.id)
+                            ?.options || []
+                        }
+                        onChange={(value) =>
+                          handleupdateItemValue({
+                            itemId: item.id,
+                            newValue: value,
+                          })
+                        }
+                        classNames={{
+                          label: isBlueTheme
+                            ? "!text-white !font-normal !text-[14px] !mb-2"
+                            : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+                          input: isBlueTheme
+                            ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                            : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
+                        }}
+                      />
+                    );
+                  } else if (item.type === "tags") {
+                    const currentOptions =
                       DropDownOptions?.find((opt) => opt.id === item.id)
-                        ?.options || []
-                    }
-                    onChange={(value) =>
-                      handleupdateItemValue({
-                        itemId: item.id,
-                        newValue: value,
-                      })
-                    }
-                    classNames={{
-                      label: isBlueTheme
-                        ? "!text-white !font-normal !text-[14px] !mb-2"
-                        : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
-                      input: isBlueTheme
-                        ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
-                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
-                    }}
-                  />
-                );
-              } else if (item.type === "tags") {
-                const currentOptions =
-                  DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
-                  [];
+                        ?.options || [];
 
-                // Create an Array of Tags from Item Text
-                const tags = item.text.split(",").map((tag) => tag.trim());
+                    // Create an Array of Tags from Item Text
+                    const tags = item.text.split(",").map((tag) => tag.trim());
 
-                // Find the selected tags from the dropdown options
-                const selectedTags = currentOptions?.filter((opt) =>
-                  tags.includes(opt.name)
-                );
+                    // Find the selected tags from the dropdown options
+                    const selectedTags = currentOptions?.filter((opt) =>
+                      tags.includes(opt.name)
+                    );
 
-                return (
-                  <CustomTagsSelect
-                    key={item.id}
-                    title={item.column.title}
-                    options={currentOptions}
-                    selectedOptions={selectedTags}
-                    onChange={(newSelected) => {
-                      // Create a string of selected tags
-                      const selectedTagsString = newSelected
-                        .map((tag) => tag.name)
-                        .join(", ");
+                    return (
+                      <CustomTagsSelect
+                        key={item.id}
+                        title={item.column.title}
+                        options={currentOptions}
+                        selectedOptions={selectedTags}
+                        onChange={(newSelected) => {
+                          // Create a string of selected tags
+                          const selectedTagsString = newSelected
+                            .map((tag) => tag.name)
+                            .join(", ");
 
-                      const updatedItems = filteredItems.map((i) => {
-                        if (i.id === item.id) {
-                          return {
-                            ...i,
-                            text: selectedTagsString,
-                            selectedTags: newSelected,
-                          };
+                          const updatedItems = filteredItems.map((i) => {
+                            if (i.id === item.id) {
+                              return {
+                                ...i,
+                                text: selectedTagsString,
+                                selectedTags: newSelected,
+                              };
+                            }
+                            return i;
+                          });
+
+                          setFilteredItems(updatedItems);
+                        }}
+                      />
+                    );
+                  } else if (item.type === "dropdown") {
+                    const currentOptions =
+                      dropdownOptions?.find((opt) => opt.id === item.id)
+                        ?.options || [];
+
+                    // Create an Array of Tags from Item Text
+                    const options = item?.text
+                      ?.split(",")
+                      .map((tag) => tag.trim());
+
+                    // Find the selected tags from the dropdown options
+                    const selectedOptions =
+                      currentOptions?.filter((opt) =>
+                        options?.includes(opt.name)
+                      ) || [];
+
+                    return (
+                      <CustomDropdownSelect
+                        key={item.id}
+                        title={item.column.title}
+                        options={currentOptions}
+                        selectedOptions={selectedOptions}
+                        onChange={(newSelected) => {
+                          // Create a string of selected tags
+                          const selectedOptionsString = newSelected
+                            .map((option) => option.name)
+                            .join(", ");
+
+                          handleupdateItemValue({
+                            itemId: item.id,
+                            newValue: selectedOptionsString,
+                          });
+                        }}
+                        onSaveNewColumnValue={(newColumnValue) => {
+                          // Update the Current Options
+                          const updatedItems = dropdownOptions.map((opt) => {
+                            if (opt.id === item.id) {
+                              return {
+                                ...opt,
+                                options: [...opt.options, newColumnValue],
+                              };
+                            }
+                            return opt;
+                          });
+
+                          setDropdownOptions(updatedItems);
+                        }}
+                      />
+                    );
+                  } else if (item.type === "people") {
+                    const currentOptions =
+                      DropDownOptions?.find((opt) => opt.id === item.id)
+                        ?.options || [];
+
+                    // Find the selected people from the dropdown options
+                    const separetedPeopleIds = item.persons_and_teams.map(
+                      (person) => person.id
+                    );
+
+                    const selectedPeople = currentOptions?.filter((opt) =>
+                      separetedPeopleIds.includes(opt.id)
+                    );
+
+                    return (
+                      <CustomAvatarSelect
+                        key={item.id}
+                        title={item.column.title}
+                        options={currentOptions}
+                        selected={selectedPeople}
+                        onChange={(newSelected) => {
+                          const updatedItems = filteredItems.map((i) => {
+                            if (i.id === item.id) {
+                              return {
+                                ...i,
+                                persons_and_teams: newSelected.map((user) => ({
+                                  id: user.id,
+                                  kind: "person",
+                                })),
+                              };
+                            }
+                            return i;
+                          });
+                          setFilteredItems(updatedItems);
+                        }}
+                      />
+                    );
+                  } else if (item.type === "date") {
+                    return (
+                      <DateInput
+                        key={item.id}
+                        value={item.text ? new Date(item.text) : null}
+                        onChange={(value) =>
+                          handleupdateItemValue({
+                            itemId: item.id,
+                            newValue: value,
+                          })
                         }
-                        return i;
-                      });
-
-                      setFilteredItems(updatedItems);
-                    }}
-                  />
-                );
-              } else if (item.type === "dropdown") {
-                const currentOptions =
-                  dropdownOptions?.find((opt) => opt.id === item.id)?.options ||
-                  [];
-
-                // Create an Array of Tags from Item Text
-                const options = item?.text?.split(",").map((tag) => tag.trim());
-
-                // Find the selected tags from the dropdown options
-                const selectedOptions =
-                  currentOptions?.filter((opt) =>
-                    options?.includes(opt.name)
-                  ) || [];
-
-                return (
-                  <CustomDropdownSelect
-                    key={item.id}
-                    title={item.column.title}
-                    options={currentOptions}
-                    selectedOptions={selectedOptions}
-                    onChange={(newSelected) => {
-                      // Create a string of selected tags
-                      const selectedOptionsString = newSelected
-                        .map((option) => option.name)
-                        .join(", ");
-
-                      handleupdateItemValue({
-                        itemId: item.id,
-                        newValue: selectedOptionsString,
-                      });
-                    }}
-                    onSaveNewColumnValue={(newColumnValue) => {
-                      // Update the Current Options
-                      const updatedItems = dropdownOptions.map((opt) => {
-                        if (opt.id === item.id) {
-                          return {
-                            ...opt,
-                            options: [...opt.options, newColumnValue],
-                          };
+                        label={item.column.title}
+                        placeholder="Date input"
+                        valueFormat="YYYY-MM-DD"
+                        classNames={{
+                          label: isBlueTheme
+                            ? " !text-white !font-normal !text-[14px] !mb-2"
+                            : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+                          input: isBlueTheme
+                            ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                            : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
+                        }}
+                      />
+                    );
+                  } else if (item.type === "email") {
+                    return (
+                      <div className="flex flex-col gap-2" key={item.id}>
+                        <label
+                          htmlFor={item.id}
+                          className="text-black dark:text-white blue:text-white text-[14px]"
+                        >
+                          {item.column.title}
+                        </label>
+                        <input
+                          id={item.id}
+                          type="email"
+                          className={`bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white`}
+                          placeholder="Enter email here..."
+                          value={item.text}
+                          onChange={(e) =>
+                            handleupdateItemValue({
+                              itemId: item.id,
+                              newValue: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    );
+                  } else if (item.type === "numbers") {
+                    return (
+                      <NumberInput
+                        key={item.id}
+                        label={item.column.title}
+                        placeholder={"Enter " + item.column.title}
+                        value={item.text}
+                        onChange={(value) =>
+                          handleupdateItemValue({
+                            itemId: item.id,
+                            newValue: value,
+                          })
                         }
-                        return opt;
-                      });
-
-                      setDropdownOptions(updatedItems);
-                    }}
-                  />
-                );
-              } else if (item.type === "people") {
-                const currentOptions =
-                  DropDownOptions?.find((opt) => opt.id === item.id)?.options ||
-                  [];
-
-                // Find the selected people from the dropdown options
-                const separetedPeopleIds = item.persons_and_teams.map(
-                  (person) => person.id
-                );
-
-                const selectedPeople = currentOptions?.filter((opt) =>
-                  separetedPeopleIds.includes(opt.id)
-                );
-
-                return (
-                  <CustomAvatarSelect
-                    key={item.id}
-                    title={item.column.title}
-                    options={currentOptions}
-                    selected={selectedPeople}
-                    onChange={(newSelected) => {
-                      const updatedItems = filteredItems.map((i) => {
-                        if (i.id === item.id) {
-                          return {
-                            ...i,
-                            persons_and_teams: newSelected.map((user) => ({
-                              id: user.id,
-                              kind: "person",
-                            })),
-                          };
-                        }
-                        return i;
-                      });
-                      setFilteredItems(updatedItems);
-                    }}
-                  />
-                );
-              } else if (item.type === "date") {
-                return (
-                  <DateInput
-                    key={item.id}
-                    value={item.text ? new Date(item.text) : null}
-                    onChange={(value) =>
-                      handleupdateItemValue({
-                        itemId: item.id,
-                        newValue: value,
-                      })
-                    }
-                    label={item.column.title}
-                    placeholder="Date input"
-                    valueFormat="YYYY-MM-DD"
-                    classNames={{
-                      label: isBlueTheme
-                        ? " !text-white !font-normal !text-[14px] !mb-2"
-                        : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
-                      input: isBlueTheme
-                        ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
-                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
-                    }}
-                  />
-                );
-              } else if (item.type === "email") {
-                return (
-                  <div className="flex flex-col gap-2" key={item.id}>
-                    <label
-                      htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white text-[14px]"
-                    >
-                      {item.column.title}
-                    </label>
-                    <input
-                      id={item.id}
-                      type="email"
-                      className={`bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white`}
-                      placeholder="Enter email here..."
-                      value={item.text}
-                      onChange={(e) =>
-                        handleupdateItemValue({
-                          itemId: item.id,
-                          newValue: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                );
-              } else if (item.type === "numbers") {
-                return (
-                  <NumberInput
-                    key={item.id}
-                    label={item.column.title}
-                    placeholder={"Enter " + item.column.title}
-                    value={item.text}
-                    onChange={(value) =>
-                      handleupdateItemValue({
-                        itemId: item.id,
-                        newValue: value,
-                      })
-                    }
-                    classNames={{
-                      label: isBlueTheme
-                        ? "!text-white !font-normal !text-[14px] !mb-2"
-                        : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
-                      input: isBlueTheme
-                        ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
-                        : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
-                    }}
-                  />
-                );
-              } else if (item.type === "phone") {
-                return (
-                  <div className="flex flex-col gap-2" key={item.id}>
-                    <label
-                      htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white text-[14px]"
-                    >
-                      {item.column.title}
-                    </label>
-                    <input
-                      id={item.id}
-                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px]"
-                      placeholder="+1 (123) 456 7890"
-                      value={item.text}
-                      onChange={(e) =>
-                        handleupdateItemValue({
-                          itemId: item.id,
-                          newValue: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="flex flex-col gap-2" key={item.id}>
-                    <label
-                      htmlFor={item.id}
-                      className="text-black dark:text-white blue:text-white text-[14px]"
-                    >
-                      {item.column.title}
-                    </label>
-                    <input
-                      id={item.id}
-                      className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px]"
-                      placeholder="Enter value here..."
-                      value={item.text}
-                      onChange={(e) =>
-                        handleupdateItemValue({
-                          itemId: item.id,
-                          newValue: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                );
-              }
-            })}
-            <div className="xl:col-span-3 lg:col-span-2 col-span-1">
-              <button className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit">
-                Save Changes
-              </button>
-            </div>
+                        classNames={{
+                          label: isBlueTheme
+                            ? "!text-white !font-normal !text-[14px] !mb-2"
+                            : "!text-black dark:!text-white !font-normal !text-[14px] !mb-2",
+                          input: isBlueTheme
+                            ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
+                            : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
+                        }}
+                      />
+                    );
+                  } else if (item.type === "phone") {
+                    return (
+                      <div className="flex flex-col gap-2" key={item.id}>
+                        <label
+                          htmlFor={item.id}
+                          className="text-black dark:text-white blue:text-white text-[14px]"
+                        >
+                          {item.column.title}
+                        </label>
+                        <input
+                          id={item.id}
+                          className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px]"
+                          placeholder="+1 (123) 456 7890"
+                          value={item.text}
+                          onChange={(e) =>
+                            handleupdateItemValue({
+                              itemId: item.id,
+                              newValue: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="flex flex-col gap-2" key={item.id}>
+                        <label
+                          htmlFor={item.id}
+                          className="text-black dark:text-white blue:text-white text-[14px]"
+                        >
+                          {item.column.title}
+                        </label>
+                        <input
+                          id={item.id}
+                          className="bg-gray-100 dark:bg-light-black blue:bg-light-blue p-[8px_10px] rounded-lg text-black dark:text-white blue:text-white placeholder:text-[14px]"
+                          placeholder="Enter value here..."
+                          value={item.text}
+                          onChange={(e) =>
+                            handleupdateItemValue({
+                              itemId: item.id,
+                              newValue: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    );
+                  }
+                })}
+                <div className="xl:col-span-3 lg:col-span-2 col-span-1">
+                  <button className="px-4 py-2 bg-[#2A85FF] text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit">
+                    Save Changes
+                  </button>
+                </div>
+              </>
+            )}
           </form>
         </>
       )}

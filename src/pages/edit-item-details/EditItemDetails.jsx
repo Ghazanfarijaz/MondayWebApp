@@ -30,6 +30,10 @@ const EditItemDetails = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [dropdownOptions, setDropdownOptions] = useState([]);
 
+  // State to store ids of required Columns whoes values are not added
+  // Used to show error
+  const [emptyRequiredColumnIds, setEmptyRequiredColumnIds] = useState([]);
+
   const originalFilteredItemsRef = useRef(null);
 
   // Fetch item details and dropdown options using TanStack Query
@@ -140,6 +144,36 @@ const EditItemDetails = () => {
   // Update selected item - Mutation
   const updateColumnsData = useMutation({
     mutationFn: () => {
+      // Find the ids of required columns
+      const requiredColumnIds = filteredItems
+        .filter((col) => col.isEditable && col.isRequired)
+        .map((col) => col.id);
+
+      // Find the ids of empty required columns
+      const emptyRequiredColumnIds = requiredColumnIds.filter((colId) => {
+        const column = filteredItems.find((col) => col.id === colId);
+        if (!column) return false;
+
+        if (column.type === "people") {
+          return (
+            !column.persons_and_teams || column.persons_and_teams.length === 0
+          );
+        }
+
+        if (column.type === "file") {
+          return (
+            !column.newlyUploadedFile || column.newlyUploadedFile.length === 0
+          );
+        }
+
+        return !column.text?.trim().length;
+      });
+
+      if (emptyRequiredColumnIds.length > 0) {
+        setEmptyRequiredColumnIds(emptyRequiredColumnIds);
+        throw new Error("Please fill in all required fields.");
+      }
+
       const chnagedColumns = filteredItems.filter((newCol) => {
         const originalCol = originalFilteredItemsRef.current.find(
           (col) => col.id === newCol.id
@@ -307,7 +341,10 @@ const EditItemDetails = () => {
                     return (
                       <div className="flex flex-col gap-2" key={item.id}>
                         <p className="text-black dark:text-white blue:text-white">
-                          {item.column.title}
+                          {item.column.title}{" "}
+                          {item?.isRequired && (
+                            <span className="text-[#fa5252]">*</span>
+                          )}
                         </p>
                         <label
                           htmlFor={item.id}
@@ -354,6 +391,17 @@ const EditItemDetails = () => {
                             }
                           }}
                         />
+                        {emptyRequiredColumnIds.includes(item.id) &&
+                          !item.newlyUploadedFile && (
+                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )}
                         <span className="text-xs text-gray-500">
                           (Max File size: 5MB)
                         </span>
@@ -408,6 +456,20 @@ const EditItemDetails = () => {
                             ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                             : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                         }}
+                        withAsterisk={item?.isRequired}
+                        error={
+                          emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )
+                        }
                       />
                     );
                   } else if (item.type === "tags") {
@@ -448,6 +510,20 @@ const EditItemDetails = () => {
 
                           setFilteredItems(updatedItems);
                         }}
+                        isRequired={item?.isRequired}
+                        error={
+                          emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )
+                        }
                       />
                     );
                   } else if (item.type === "dropdown") {
@@ -497,6 +573,20 @@ const EditItemDetails = () => {
 
                           setDropdownOptions(updatedItems);
                         }}
+                        isRequired={item?.isRequired}
+                        error={
+                          emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )
+                        }
                       />
                     );
                   } else if (item.type === "people") {
@@ -518,6 +608,7 @@ const EditItemDetails = () => {
                         key={item.id}
                         title={item.column.title}
                         options={currentOptions}
+                        isRequired={item?.isRequired}
                         selected={selectedPeople}
                         onChange={(newSelected) => {
                           const updatedItems = filteredItems.map((i) => {
@@ -534,6 +625,19 @@ const EditItemDetails = () => {
                           });
                           setFilteredItems(updatedItems);
                         }}
+                        error={
+                          emptyRequiredColumnIds.includes(item.id) &&
+                          item.persons_and_teams.length === 0 && (
+                            <span className="text-[#fa5252] text-[12px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )
+                        }
                       />
                     );
                   } else if (item.type === "date") {
@@ -558,6 +662,20 @@ const EditItemDetails = () => {
                             ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                             : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                         }}
+                        withAsterisk={item?.isRequired}
+                        error={
+                          emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )
+                        }
                       />
                     );
                   } else if (item.type === "email") {
@@ -567,7 +685,10 @@ const EditItemDetails = () => {
                           htmlFor={item.id}
                           className="text-black dark:text-white blue:text-white text-[14px]"
                         >
-                          {item.column.title}
+                          {item.column.title}{" "}
+                          {item?.isRequired && (
+                            <span className="text-[#fa5252]">*</span>
+                          )}
                         </label>
                         <input
                           id={item.id}
@@ -582,6 +703,17 @@ const EditItemDetails = () => {
                             })
                           }
                         />
+                        {emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )}
                       </div>
                     );
                   } else if (item.type === "numbers") {
@@ -605,6 +737,20 @@ const EditItemDetails = () => {
                             ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                             : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                         }}
+                        withAsterisk={item?.isRequired}
+                        error={
+                          emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )
+                        }
                       />
                     );
                   } else if (item.type === "phone") {
@@ -614,7 +760,10 @@ const EditItemDetails = () => {
                           htmlFor={item.id}
                           className="text-black dark:text-white blue:text-white text-[14px]"
                         >
-                          {item.column.title}
+                          {item.column.title}{" "}
+                          {item?.isRequired && (
+                            <span className="text-[#fa5252]">*</span>
+                          )}
                         </label>
                         <input
                           id={item.id}
@@ -628,6 +777,17 @@ const EditItemDetails = () => {
                             })
                           }
                         />
+                        {emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )}
                       </div>
                     );
                   } else {
@@ -637,7 +797,10 @@ const EditItemDetails = () => {
                           htmlFor={item.id}
                           className="text-black dark:text-white blue:text-white text-[14px]"
                         >
-                          {item.column.title}
+                          {item.column.title}{" "}
+                          {item?.isRequired && (
+                            <span className="text-[#fa5252]">*</span>
+                          )}
                         </label>
                         <input
                           id={item.id}
@@ -651,6 +814,17 @@ const EditItemDetails = () => {
                             })
                           }
                         />
+                        {emptyRequiredColumnIds.includes(item.id) &&
+                          !item.text && (
+                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
+                              {/* Check the empty required columns ids to
+                            match the id and show error if id exists*/}
+
+                              <span className="text-[#fa5252] text-[12px]">
+                                This field is required
+                              </span>
+                            </span>
+                          )}
                       </div>
                     );
                   }

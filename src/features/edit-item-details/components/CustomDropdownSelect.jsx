@@ -9,9 +9,11 @@ import { useAuth } from "./../../../contexts/AuthContext";
 const CustomDropdownSelect = ({
   title,
   options,
+  isRequired,
   selectedOptions,
   onChange,
   onSaveNewColumnValue,
+  error,
 }) => {
   // Use Auth Hook to check if we want to allow craeting new column values
   const { user } = useAuth();
@@ -61,7 +63,7 @@ const CustomDropdownSelect = ({
       />
       <Group gap="8px" className="!flex-col !w-full !items-start">
         <p className="text-black dark:text-white blue:text-white font-normal text-[14px]">
-          {title}
+          {title} {isRequired && <span className="text-[#fa5252]">*</span>}
         </p>
         <Popover
           opened={isPopoverOpen}
@@ -174,6 +176,9 @@ const CustomDropdownSelect = ({
             </ScrollArea>
           </Popover.Dropdown>
         </Popover>
+        {error && (
+          <p className="text-[#fa5252] text-[12px] -mt-[3px]">{error}</p>
+        )}
       </Group>
     </>
   );

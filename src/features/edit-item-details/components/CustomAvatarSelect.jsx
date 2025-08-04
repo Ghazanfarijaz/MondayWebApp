@@ -9,7 +9,14 @@ import {
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
 
-const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
+const CustomAvatarSelect = ({
+  title,
+  options,
+  isRequired,
+  selected,
+  onChange,
+  error,
+}) => {
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
 
@@ -26,7 +33,7 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
   return (
     <Group gap="8px" className="!flex-col !w-full !items-start">
       <p className="text-black dark:text-white blue:text-white font-normal text-[14px]">
-        {title}
+        {title} {isRequired && <span className="text-[#fa5252]">*</span>}
       </p>
       <Popover
         width="target"
@@ -115,6 +122,7 @@ const CustomAvatarSelect = ({ title, options, selected, onChange }) => {
           </ScrollArea>
         </Popover.Dropdown>
       </Popover>
+      {error && <p className="text-[#fa5252] text-[12px] -mt-[3px]">{error}</p>}
     </Group>
   );
 };

@@ -132,6 +132,7 @@ export const boardsAPI = {
           return {
             ...col,
             isEditable: customization?.isEditable ?? false,
+            isRequired: customization?.isRequired ?? false,
           };
         }
       );

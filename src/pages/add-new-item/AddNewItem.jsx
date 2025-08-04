@@ -27,6 +27,10 @@ const AddNewItem = () => {
   const [editableFields, setEditableFields] = useState([]);
   const [itemName, setItemName] = useState("");
 
+  // State to store ids of required Columns whoes values are not added
+  // Used to show error
+  const [emptyRequiredColumnIds, setEmptyRequiredColumnIds] = useState([]);
+
   // Fetch Details for Editable Columns and Dropdown Options
   const { editableColumns, DropDownOptions, isError, error, isPending } =
     useQueries({
@@ -105,6 +109,37 @@ const AddNewItem = () => {
   // Add New Item - Mutation
   const addNewItem = useMutation({
     mutationFn: () => {
+      // Find the ids of required columns
+      const requiredColumnIds = editableFields
+        .filter((col) => col.isEditable && col.isRequired)
+        .map((col) => col.columnId);
+
+      // Find the ids of empty required columns
+      const emptyRequiredColumnIds = requiredColumnIds.filter((colId) => {
+        const column = editableFields.find((col) => col.columnId === colId);
+
+        if (!column) return false;
+
+        if (column.columnType === "people") {
+          return (
+            !column.persons_and_teams || column.persons_and_teams.length === 0
+          );
+        }
+
+        if (column.columnType === "file") {
+          return (
+            !column.newlyUploadedFile || column.newlyUploadedFile.length === 0
+          );
+        }
+
+        return !column.text?.trim().length;
+      });
+
+      if (emptyRequiredColumnIds.length > 0) {
+        setEmptyRequiredColumnIds(emptyRequiredColumnIds);
+        throw new Error("Please fill in all required fields.");
+      }
+
       const changedColumns = editableFields.filter((col) => {
         return col.text || col.newlyUploadedFile || col.persons_and_teams;
       });
@@ -207,7 +242,7 @@ const AddNewItem = () => {
                   htmlFor="item-name"
                   className="text-black dark:text-white blue:text-white text-[14px]"
                 >
-                  Item Name
+                  Item Name <span className="text-[#fa5252]">*</span>
                 </label>
                 <input
                   id="item-name"
@@ -216,6 +251,11 @@ const AddNewItem = () => {
                   value={itemName}
                   onChange={(e) => setItemName(e.target.value)}
                 />
+                {itemName === "" && (
+                  <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                    Item name is required!
+                  </span>
+                )}
               </div>
             )}
 
@@ -246,6 +286,15 @@ const AddNewItem = () => {
                         ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                         : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                     }}
+                    withAsterisk={item?.isRequired}
+                    error={
+                      emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )
+                    }
                   />
                 );
               } else if (item.columnType === "tags") {
@@ -282,6 +331,15 @@ const AddNewItem = () => {
                       });
                       setEditableFields(updatedItems);
                     }}
+                    isRequired={item?.isRequired}
+                    error={
+                      emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )
+                    }
                   />
                 );
               } else if (item.columnType === "dropdown") {
@@ -325,6 +383,15 @@ const AddNewItem = () => {
                       });
                       setDropdownOptions(updatedItems);
                     }}
+                    isRequired={item?.isRequired}
+                    error={
+                      emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )
+                    }
                   />
                 );
               } else if (item.columnType === "people") {
@@ -337,6 +404,7 @@ const AddNewItem = () => {
                 const selectedPeople = currentOptions?.filter((opt) =>
                   separetedPeopleIds.includes(opt.id)
                 );
+
                 return (
                   <CustomAvatarSelect
                     key={item.columnId}
@@ -358,6 +426,16 @@ const AddNewItem = () => {
                       });
                       setEditableFields(updatedItems);
                     }}
+                    isRequired={item?.isRequired}
+                    error={
+                      emptyRequiredColumnIds.includes(item.columnId) &&
+                      (!item?.persons_and_teams ||
+                        item?.persons_and_teams?.length === 0) && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )
+                    }
                   />
                 );
               } else if (item.columnType === "date") {
@@ -382,6 +460,15 @@ const AddNewItem = () => {
                         ? " !bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                         : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                     }}
+                    withAsterisk={item?.isRequired}
+                    error={
+                      emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )
+                    }
                   />
                 );
               } else if (item.columnType === "email") {
@@ -391,7 +478,10 @@ const AddNewItem = () => {
                       htmlFor={item.columnId}
                       className="text-black dark:text-white blue:text-white text-[14px]"
                     >
-                      {item?.columnName}
+                      {item?.columnName}{" "}
+                      {item?.isRequired && (
+                        <span className="text-[#fa5252]">*</span>
+                      )}
                     </label>
                     <input
                       id={item.columnId}
@@ -406,6 +496,12 @@ const AddNewItem = () => {
                         })
                       }
                     />
+                    {emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )}
                   </div>
                 );
               } else if (item.columnType === "numbers") {
@@ -429,6 +525,15 @@ const AddNewItem = () => {
                         ? "!bg-[#2b2d50] !text-white !p-[8px_10px] !rounded-lg !border-none !h-[40px]"
                         : "!p-[8px_10px] !rounded-lg !text-black dark:!text-white !bg-gray-100 dark:!bg-light-black !border-none !h-[40px]",
                     }}
+                    withAsterisk={item?.isRequired}
+                    error={
+                      emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!!
+                        </span>
+                      )
+                    }
                   />
                 );
               } else if (item.columnType === "name") {
@@ -438,7 +543,7 @@ const AddNewItem = () => {
                       htmlFor={item.columnId}
                       className="text-black dark:text-white blue:text-white text-[14px]"
                     >
-                      Item Name
+                      Item Name <span className="text-[#fa5252]">*</span>
                     </label>
                     <input
                       id={item.columnId}
@@ -453,6 +558,11 @@ const AddNewItem = () => {
                         })
                       }
                     />
+                    {!item.text && (
+                      <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                        {item?.columnName} is required!
+                      </span>
+                    )}
                   </div>
                 );
               } else if (item.columnType === "phone") {
@@ -462,7 +572,10 @@ const AddNewItem = () => {
                       htmlFor={item.columnId}
                       className="text-black dark:text-white blue:text-white text-[14px]"
                     >
-                      {item?.columnName}
+                      {item?.columnName}{" "}
+                      {item?.isRequired && (
+                        <span className="text-[#fa5252]">*</span>
+                      )}
                     </label>
                     <input
                       id={item.columnId}
@@ -476,6 +589,12 @@ const AddNewItem = () => {
                         })
                       }
                     />
+                    {emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!
+                        </span>
+                      )}
                   </div>
                 );
               } else {
@@ -485,7 +604,10 @@ const AddNewItem = () => {
                       htmlFor={item.columnId}
                       className="text-black dark:text-white blue:text-white text-[14px]"
                     >
-                      {item?.columnName}
+                      {item?.columnName}{" "}
+                      {item?.isRequired && (
+                        <span className="text-[#fa5252]">*</span>
+                      )}
                     </label>
                     <input
                       id={item.columnId}
@@ -499,6 +621,12 @@ const AddNewItem = () => {
                         })
                       }
                     />
+                    {emptyRequiredColumnIds.includes(item.columnId) &&
+                      !item.text && (
+                        <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                          {item?.columnName} is required!!
+                        </span>
+                      )}
                   </div>
                 );
               }

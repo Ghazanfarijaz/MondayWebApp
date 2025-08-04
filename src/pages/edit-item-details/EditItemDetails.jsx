@@ -201,6 +201,10 @@ const EditItemDetails = () => {
         return textChanged || fileUploaded || personsChanged;
       });
 
+      if (chnagedColumns.length === 0) {
+        throw new Error("No Column value changed.");
+      }
+
       return boardsAPI.updateColumnValuesofItem({
         itemId,
         columnValues: chnagedColumns,
@@ -393,13 +397,8 @@ const EditItemDetails = () => {
                         />
                         {emptyRequiredColumnIds.includes(item.id) &&
                           !item.newlyUploadedFile && (
-                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )}
                         <span className="text-xs text-gray-500">
@@ -460,13 +459,8 @@ const EditItemDetails = () => {
                         error={
                           emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )
                         }
@@ -514,13 +508,8 @@ const EditItemDetails = () => {
                         error={
                           emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )
                         }
@@ -577,13 +566,8 @@ const EditItemDetails = () => {
                         error={
                           emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )
                         }
@@ -628,13 +612,8 @@ const EditItemDetails = () => {
                         error={
                           emptyRequiredColumnIds.includes(item.id) &&
                           item.persons_and_teams.length === 0 && (
-                            <span className="text-[#fa5252] text-[12px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )
                         }
@@ -666,13 +645,8 @@ const EditItemDetails = () => {
                         error={
                           emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )
                         }
@@ -705,13 +679,8 @@ const EditItemDetails = () => {
                         />
                         {emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )}
                       </div>
@@ -741,13 +710,8 @@ const EditItemDetails = () => {
                         error={
                           emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )
                         }
@@ -779,13 +743,8 @@ const EditItemDetails = () => {
                         />
                         {emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )}
                       </div>
@@ -816,13 +775,8 @@ const EditItemDetails = () => {
                         />
                         {emptyRequiredColumnIds.includes(item.id) &&
                           !item.text && (
-                            <span className="text-[#fa5252] text-[12px] -mt-[3px]">
-                              {/* Check the empty required columns ids to
-                            match the id and show error if id exists*/}
-
-                              <span className="text-[#fa5252] text-[12px]">
-                                This field is required
-                              </span>
+                            <span className="text-[#fa5252] text-[12px] capitalize -mt-[3px]">
+                              {item.column.title} is required!
                             </span>
                           )}
                       </div>

@@ -31,7 +31,7 @@ root.render(
         <RouterProvider router={router} />
       </QueryClientProvider>
 
-      <Toaster duration={3000} richColors={true} />
+      <Toaster duration={5000} richColors={true} />
     </MantineProvider>
   </GoogleOAuthProvider>
 );

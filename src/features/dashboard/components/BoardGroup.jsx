@@ -17,7 +17,6 @@ const BoardGroup = ({
   isFetchingNextPage,
   onClickLoadMore,
   boardId,
-  groupsData,
   totalItemsCount,
 }) => {
   // Hooks

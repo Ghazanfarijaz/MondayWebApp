@@ -27,23 +27,14 @@ const BoardGroup = ({
   const { user } = useAuth();
 
   // Local State to manage View Mode
-  const [openSelectModalData, setOpenSelectModalData] = useState({
-    opened: false,
-    groupsData: [],
-  });
+  const [openSelectModalOpen, setOpenSelectModalOpen] = useState(false);
 
   return (
     <>
       {/* Select Group for New Item Creation */}
       <SelectItemGroupModal
-        opened={openSelectModalData.opened}
-        onClose={() =>
-          setOpenSelectModalData({
-            opened: false,
-            groupsData: [],
-          })
-        }
-        groupsData={openSelectModalData.groupsData}
+        opened={openSelectModalOpen}
+        onClose={() => setOpenSelectModalOpen(false)}
         boardId={boardId}
       />
       {/* Main Content */}
@@ -57,17 +48,7 @@ const BoardGroup = ({
               type="button"
               className="px-4 py-2 bg-[#2A85FF] text-white rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
               onClick={() => {
-                // Remove Duplicate Options from groupsData which have same value
-                const uniqueGroups = Array.from(
-                  new Map(
-                    groupsData.map((group) => [group.value, group])
-                  ).values()
-                );
-
-                setOpenSelectModalData({
-                  opened: true,
-                  groupsData: uniqueGroups,
-                });
+                setOpenSelectModalOpen(true);
               }}
             >
               Add New Item

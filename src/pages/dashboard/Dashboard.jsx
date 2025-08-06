@@ -36,10 +36,6 @@ const Dashboard = () => {
     label: "Default",
   });
 
-  // State to contains groups data
-  // Group Name and Id
-  const [groupsData, setGroupsData] = useState([]);
-
   // Assign To Filter
   const [filterByEmail, setFilterByEmail] = useState(false);
 
@@ -75,9 +71,8 @@ const Dashboard = () => {
 
     // Grouping data by group Title
     const groupedData = itemsData.reduce((acc, item) => {
-      const groupTitle = item.group?.title || "No Group";
+      // const groupTitle = item.group?.title || "No Group";
       const groupId = item.group?.id || null;
-      setGroupsData((prev) => [...prev, { label: groupTitle, value: groupId }]);
 
       if (!acc[groupId]) {
         acc[groupId] = [];
@@ -313,7 +308,6 @@ const Dashboard = () => {
                 }
               }}
               boardId={data?.pages[0]?.data?.customization?.boardId}
-              groupsData={groupsData}
               totalItemsCount={data?.pages[0]?.data?.total_items}
             />
           )}

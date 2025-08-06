@@ -3,8 +3,11 @@ import { ModalContent, ModalRoot } from "../../../components/Modal";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { boardGroupsAPIs } from "../../../api/board-groups";
+import { toast } from "sonner";
 
-const SelectItemGroupModal = ({ opened, onClose, boardId, groupsData }) => {
+const SelectItemGroupModal = ({ opened, onClose, boardId }) => {
   // Theme Hook
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
@@ -12,10 +15,31 @@ const SelectItemGroupModal = ({ opened, onClose, boardId, groupsData }) => {
   // Local States
   const [selectedGroup, setSelectedGroup] = useState(null);
 
+  // Query to fetch the Groups Data
+  const {
+    data: groupsData,
+    isPending,
+    error,
+    isError,
+  } = useQuery({
+    queryKey: ["groups"],
+    queryFn: () => boardGroupsAPIs.getAllGroups({ boardId }),
+    // enabled: !!opened && !!boardId,
+  });
+
+  if (isError) {
+    console.error("Error fetching board groups:", error);
+    toast.error("Could not fetch board groups!", {
+      description:
+        error.message || "Failed to fetch board groups. Please try again.",
+    });
+    onClose();
+  }
+
   return (
     <ModalRoot
       id="select-item-group-modal"
-      loadingOverlay={false}
+      loadingOverlay={isPending}
       openModal={opened}
       onClose={onClose}
     >

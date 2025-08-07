@@ -53,7 +53,9 @@ export const FeedbackModal = ({ opened, onClose }) => {
   return (
     <Modal
       opened={opened}
-      onClose={onClose}
+      onClose={() => {
+        if (!submitFeedback.isPending) onClose();
+      }}
       centered
       overlayProps={{
         className: "dark:bg-[#212121CF] bg-[#0F172A73] blue:bg-[#2B2D50B2]",

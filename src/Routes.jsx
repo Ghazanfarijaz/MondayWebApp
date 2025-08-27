@@ -17,6 +17,7 @@ import { UserPreferencesProvider } from "./contexts/UserPreferencesContext";
 import GoogleCallback from "./pages/auth/google-callback/GoogleCallback";
 import AddNewItem from "./pages/add-new-item/AddNewItem";
 import BoardDetails from "./pages/board/boardDetails/BoardDetails";
+import SidebarLayout from "./layouts/SidebarLayout";
 
 export const router = createBrowserRouter([
   {
@@ -31,11 +32,19 @@ export const router = createBrowserRouter([
     children: [
       {
         index: "/",
-        element: <Dashboard />,
+        element: (
+          <SidebarLayout>
+            <Dashboard />
+          </SidebarLayout>
+        ),
       },
       {
         path: "board/:boardId",
-        element: <BoardDetails />,
+        element: (
+          <SidebarLayout>
+            <BoardDetails />
+          </SidebarLayout>
+        ),
       },
       {
         path: "board/:boardId/create-item/:groupId",

@@ -26,19 +26,24 @@ export const AuthProvider = ({ children }) => {
     queryKey: ["authStatus"],
     queryFn: async () => {
       await checkSubdomain({
-        subdomain: window.location.hostname.split(".")[0],
-        // subdomain: "proto-it-consultants",
+        // subdomain: window.location.hostname.split(".")[0],
+        subdomain: "eurotas-lucie",
       });
 
-      // Verify with the server
-      return authAPI.checkAuth();
+      const checkAuthResponse = await authAPI.checkAuth();
+
+      return checkAuthResponse;
     },
     retry: false,
   });
 
   useEffect(() => {
     setUser(authStatus?.user || null);
-  }, [authStatus]);
+
+    if (authStatus?.user?.boardsData?.length > 0) {
+      navigate(`/board/${authStatus.user.boardsData[0].boardId}`);
+    }
+  }, [authStatus, navigate]);
 
   if (isError) {
     console.error("Error fetching auth status:", error);
@@ -68,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     sortingOptions,
     setSortingOptions,
+    isFetchingBoards: isPending,
   };
 
   return (

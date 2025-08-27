@@ -12,16 +12,17 @@ import convertDateFormate from "../../utils/convertDateFormat";
 
 const ViewItemDetails = () => {
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
-  const { itemId } = useParams();
+  const { itemId, boardId } = useParams();
   const navigate = useNavigate();
   const { preferences } = useUserPreferences();
 
   // Fetch item details - Query
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["itemDetails", itemId],
+    queryKey: ["itemDetails", boardId, itemId],
     queryFn: () =>
       boardsAPI.getItemDetails({
-        itemId: itemId,
+        itemId,
+        boardId,
       }),
   });
 

@@ -112,10 +112,10 @@ export const boardsAPI = {
     }
   },
   // Get Specific Item Details
-  getItemDetails: async ({ itemId }) => {
+  getItemDetails: async ({ itemId, boardId }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/boards/getItemDetails/${itemId}`,
+        `/api/boards/getItemDetails/${itemId}?boardId=${boardId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -123,26 +123,10 @@ export const boardsAPI = {
         }
       );
 
-      const customizationFields = response.data.customization.fields;
-
-      // Add the 'isEditable' Field in the data
-      const updatedColumnValues = response.data.data.column_values.map(
-        (col) => {
-          const customization = customizationFields.find(
-            (field) => field.columnId === col.id
-          );
-          return {
-            ...col,
-            isEditable: customization?.isEditable ?? false,
-            isRequired: customization?.isRequired ?? false,
-          };
-        }
-      );
-
       return {
         id: response.data.data.id,
         name: response.data.data.name,
-        column_values: updatedColumnValues,
+        column_values: response.data.data.column_values,
       };
     } catch (error) {
       console.error("Error fetching item details:", error);

@@ -1,12 +1,13 @@
 import { axiosInstance } from "../utils/axiosInstance";
 
 export const boardsAPI = {
-  getItems: async ({ cursor = null, searchQuery, filterByEmail }) => {
+  getItems: async ({ cursor = null, searchQuery, filterByEmail, boardId }) => {
     try {
       const params = {};
       if (cursor) params.cursor = cursor;
       params.compareValue = searchQuery;
       params.filterByEmail = filterByEmail;
+      params.boardId = boardId;
 
       const response = await axiosInstance.get(`/api/boards/getAllItems`, {
         params,
@@ -18,6 +19,7 @@ export const boardsAPI = {
       return {
         success: response.data.success,
         data: {
+          boardName: response.data.data.boardName,
           cursor: response.data.data.result.cursor,
           items: response.data.data.result.items,
           total_items: response.data.data.result.items_count,

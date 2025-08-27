@@ -1,7 +1,7 @@
 import CardItem from "./CardItem";
 import ListItem from "./ListItem";
 import TableView from "./TableView";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Avatar, Loader, Skeleton, Tooltip } from "@mantine/core";
 import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
@@ -16,11 +16,9 @@ const BoardGroup = ({
   noMoreItemsLeft,
   isFetchingNextPage,
   onClickLoadMore,
-  boardId,
   totalItemsCount,
 }) => {
   // Hooks
-  const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
   const { preferences } = useUserPreferences();
   const { user } = useAuth();
@@ -34,7 +32,6 @@ const BoardGroup = ({
       <SelectItemGroupModal
         opened={openSelectModalOpen}
         onClose={() => setOpenSelectModalOpen(false)}
-        boardId={boardId}
       />
       {/* Main Content */}
       <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm w-full h-full max-h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto">
@@ -75,7 +72,7 @@ const BoardGroup = ({
                   </div>
                   <div className="w-full flex flex-col gap-2">
                     {items?.map((item) => (
-                      <ListItem key={item.id} item={item} boardId={boardId} />
+                      <ListItem key={item.id} item={item} />
                     ))}
                   </div>
                 </div>
@@ -122,12 +119,10 @@ const BoardGroup = ({
 
                         {/* Data Rows */}
                         {items.map((item) => (
-                          <div
+                          <Link
                             key={item.id}
+                            to={`item-details/${item.id}`}
                             className="grid grid-cols-6 border-b border-gray-200 dark:border-[#4E4E4E] blue:border-blue cursor-pointer"
-                            onClick={() => {
-                              navigate(`/item-details/${boardId}/${item.id}`);
-                            }}
                           >
                             <div className="py-3 px-4 text-gray-700 dark:text-white blue:text-white font-medium">
                               {item.name || "Untitled Item"}
@@ -242,7 +237,7 @@ const BoardGroup = ({
                                   )}
                                 </div>
                               ))}
-                          </div>
+                          </Link>
                         ))}
 
                         {/* Loading Skeletons */}
@@ -261,7 +256,7 @@ const BoardGroup = ({
                     </div>
 
                     {items?.map((item) => (
-                      <TableView key={item.id} item={item} boardId={boardId} />
+                      <TableView key={item.id} item={item} />
                     ))}
                     <div className="w-full flex flex-col gap-3">
                       {isFetchingNextPage &&
@@ -289,11 +284,7 @@ const BoardGroup = ({
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {items?.map((item) => (
-                          <CardItem
-                            key={item.id}
-                            item={item}
-                            boardId={boardId}
-                          />
+                          <CardItem key={item.id} item={item} />
                         ))}
 
                         {isFetchingNextPage &&

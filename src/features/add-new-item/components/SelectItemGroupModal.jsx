@@ -2,15 +2,16 @@ import { Select } from "@mantine/core";
 import { ModalContent, ModalRoot } from "../../../components/Modal";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { boardGroupsAPIs } from "../../../api/board-groups";
 import { toast } from "sonner";
 
-const SelectItemGroupModal = ({ opened, onClose, boardId }) => {
+const SelectItemGroupModal = ({ opened, onClose }) => {
   // Theme Hook
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
+  const { boardId } = useParams();
 
   // Local States
   const [selectedGroup, setSelectedGroup] = useState(null);

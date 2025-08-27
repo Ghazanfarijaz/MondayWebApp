@@ -16,6 +16,7 @@ import { SignUpProvider } from "./contexts/SignUpContext";
 import { UserPreferencesProvider } from "./contexts/UserPreferencesContext";
 import GoogleCallback from "./pages/auth/google-callback/GoogleCallback";
 import AddNewItem from "./pages/add-new-item/AddNewItem";
+import BoardDetails from "./pages/board/boardDetails/BoardDetails";
 
 export const router = createBrowserRouter([
   {
@@ -33,15 +34,19 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "create-item/:boardId/:groupId",
+        path: "board/:boardId",
+        element: <BoardDetails />,
+      },
+      {
+        path: "board/:boardId/create-item/:groupId",
         element: <AddNewItem />,
       },
       {
-        path: "item-details/:boardId/:itemId",
+        path: "board/:boardId/item-details/:itemId",
         element: <ViewItemDetails />,
       },
       {
-        path: "item-details/:boardId/:itemId/edit-details",
+        path: "board/:boardId/item-details/:itemId/edit-details",
         element: <EditItemDetails />,
       },
       {

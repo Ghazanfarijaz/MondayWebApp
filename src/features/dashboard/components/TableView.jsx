@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import { Avatar, Loader, Tooltip } from "@mantine/core";
 import convertDateFormate from "../../../utils/convertDateFormat";
 import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
 
-const TableView = ({ item, boardId }) => {
+const TableView = ({ item }) => {
   // Hooks
-  const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
   const { preferences } = useUserPreferences();
 
@@ -19,9 +18,9 @@ const TableView = ({ item, boardId }) => {
     : [];
 
   return (
-    <div
+    <Link
       className="lg:hidden bg-white rounded-lg shadow-sm p-4 mb-3 border border-gray-100 hover:bg-gray-50 cursor-pointer"
-      onClick={() => navigate(`/item-details/${boardId}/${item.id}`)}
+      to={`item-details/${item.id}`}
     >
       <h3 className="text-gray-700 dark:text-white blue:text-white font-medium truncate mb-2">
         {item.name || "Untitled Item"}
@@ -116,7 +115,7 @@ const TableView = ({ item, boardId }) => {
           )}
         </div>
       ))}
-    </div>
+    </Link>
   );
 };
 

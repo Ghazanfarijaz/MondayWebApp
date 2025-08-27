@@ -1,18 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Avatar, Loader, Tooltip } from "@mantine/core";
 import useUsersPhotoThumbs from "../../../hooks/useUsersPhotoThumbs";
 import convertDateFormate from "../../../utils/convertDateFormat";
 import { useUserPreferences } from "../../../contexts/UserPreferencesContext";
 
-const CardItem = ({ item, boardId }) => {
+const CardItem = ({ item }) => {
   // Hooks
-  const navigate = useNavigate();
   const USER_PHOTO_THUMBS = useUsersPhotoThumbs();
   const { preferences } = useUserPreferences();
 
   return (
-    <div
-      onClick={() => navigate(`/item-details/${boardId}/${item.id}`)}
+    <Link
+      to={`item-details/${item.id}`}
       className="bg-white dark:bg-black blue:bg-dark-blue p-6 rounded-lg shadow border border-[#EAEAEA] dark:border-[#4E4E4E] blue:border-blue hover:shadow-lg transition-shadow duration-300 cursor-pointer"
     >
       <h3 className="font-medium mb-2 text-black dark:text-white blue:text-white">
@@ -154,7 +153,7 @@ const CardItem = ({ item, boardId }) => {
           );
         })}
       </div>
-    </div>
+    </Link>
   );
 };
 

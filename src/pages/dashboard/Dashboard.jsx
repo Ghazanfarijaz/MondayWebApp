@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkeleton";
 import { Skeleton } from "@mantine/core";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  // Hooks
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   // Local States
   // View Mode
   const [viewMode, setViewMode] = useState("card");
@@ -12,7 +18,11 @@ const Dashboard = () => {
     const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
     const initialViewMode = userPreferences?.itemView || "card";
     setViewMode(initialViewMode);
-  }, []);
+
+    if (user?.boardsData?.length > 0) {
+      navigate(`/board/${user.boardsData[0].boardId}`);
+    }
+  }, [user, navigate]);
 
   return (
     <div className="md:ps-8 md:py-8 py-4 ps-4 bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">

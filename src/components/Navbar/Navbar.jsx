@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Cog, KeyRound, LogOut, Palette, UserCog } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo-icon.jpeg";
 import FeedbackIcon from "../../assets/icons/FeedbackIcon";
 import { Menu } from "@mantine/core";
@@ -51,28 +51,25 @@ const Navbar = () => {
         onCloseModal={() => setOpenPreferencesModal(false)}
       />
 
-      <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue border-l border-l-[#eaeaea] dark:border-l-light-black blue:border-l-light-blue px-6 sm:px-6 lg:px-8 relative z-50">
-        <Link to="/">
-          <div className="flex items-center gap-2">
-            <img
-              src={Logo}
-              alt="Logo"
-              className="object-contain w-[48px] h-[48px] rounded-lg"
-            />
-            <div>
-              <h3 className="font-bold text-xl text-[#f04967] font-serif">
-                Lucie{" "}
-                <span className="inline-block scale-y-110 origin-bottom">
-                  UP
-                </span>
-              </h3>
-              <p className="text-[#2c5da0] text-[10px] font-serif">
-                External <span className="text-[#f04967]">U</span>sers{" "}
-                <span className="text-[#f04967]">P</span>ortal
-              </p>
-            </div>
+      <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue px-6 sm:px-6 lg:px-8 relative z-50">
+        {/* Logo */}
+        <div className="flex items-center gap-2">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="object-contain w-[48px] h-[48px] rounded-lg"
+          />
+          <div>
+            <h3 className="font-bold text-xl text-[#f04967] font-serif">
+              Lucie{" "}
+              <span className="inline-block scale-y-110 origin-bottom">UP</span>
+            </h3>
+            <p className="text-[#2c5da0] text-[10px] font-serif">
+              External <span className="text-[#f04967]">U</span>sers{" "}
+              <span className="text-[#f04967]">P</span>ortal
+            </p>
           </div>
-        </Link>
+        </div>
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">
           <FeedbackIcon

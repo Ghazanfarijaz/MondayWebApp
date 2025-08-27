@@ -40,9 +40,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setUser(authStatus?.user || null);
 
-    if (authStatus?.user?.boardsData?.length > 0) {
-      navigate(`/board/${authStatus.user.boardsData[0].boardId}`);
-    }
+    // if (authStatus?.user?.boardsData?.length > 0) {
+    //   navigate(`/board/${authStatus.user.boardsData[0].boardId}`);
+    // }
   }, [authStatus, navigate]);
 
   if (isError) {

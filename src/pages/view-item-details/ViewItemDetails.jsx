@@ -38,7 +38,7 @@ const ViewItemDetails = () => {
       {/* Breadcrumb navigation */}
       <div className="flex flex-col gap-4">
         <Link
-          to={"/"}
+          to={`/board/${boardId}`}
           className="text-gray-600 dark:text-gray-400 blue:text-gray-100 font-medium flex items-center gap-1"
         >
           <ChevronLeft size={20} />
@@ -47,7 +47,7 @@ const ViewItemDetails = () => {
 
         <div className="text-sm mb-4 text-gray-500 dark:text-white blue:text-white">
           <Link
-            to="/"
+            to={`/board/${boardId}`}
             className="hover:underline text-gray-500 dark:text-white blue:text-white"
           >
             Dashboard

@@ -218,13 +218,16 @@ export const boardsAPI = {
   },
 
   // Get the editable Columns Data
-  getEditableColumns: async () => {
+  getEditableColumns: async ({ boardId }) => {
     try {
-      const response = await axiosInstance.get(`/api/boards/editableColumns`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
+      const response = await axiosInstance.get(
+        `/api/boards/editableColumns?boardId=${boardId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching editable columns:", error);

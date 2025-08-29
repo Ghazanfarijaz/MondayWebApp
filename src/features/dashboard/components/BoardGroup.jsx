@@ -56,7 +56,9 @@ const BoardGroup = ({
         >
           {Object.entries(filteredData).length < 1 ? (
             <p className="text-gray-500 dark:text-gray-400 blue:text-gray-400">
-              Couldn't find any items in this Board.
+              {user?.filterItemsByEmail === "true"
+                ? "Couldn't find any item assigned to you."
+                : "Couldn't find any items in this Board."}
             </p>
           ) : viewMode === "list" ? (
             <div className="w-full flex flex-col gap-6">

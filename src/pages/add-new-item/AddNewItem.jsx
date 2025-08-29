@@ -37,7 +37,7 @@ const AddNewItem = () => {
       queries: [
         {
           queryKey: ["editableColumns"],
-          queryFn: () => boardsAPI.getEditableColumns(),
+          queryFn: () => boardsAPI.getEditableColumns({ boardId }),
         },
         {
           queryKey: ["dropDownOptions"],
@@ -174,7 +174,7 @@ const AddNewItem = () => {
 
       toast.success("Success!", { description: "Item added successfully." });
 
-      navigate(`/`, { replace: true });
+      navigate(`/board/${boardId}`, { replace: true });
     },
     onError: (error) => {
       toast.error("Couldn't create item!", {
@@ -188,7 +188,7 @@ const AddNewItem = () => {
     toast.error("Error!", {
       description: "Interal Server Error! Please try again later.",
     });
-    return navigate(-1);
+    return navigate(`/board/${boardId}`, { replace: true });
   }
 
   const handleupdateItemValue = ({ itemId, newValue }) => {
@@ -209,7 +209,7 @@ const AddNewItem = () => {
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       <div className="flex flex-col gap-4">
         <Link
-          to={`/`}
+          to={`/board/${boardId}`}
           className="text-gray-600 dark:text-gray-400 blue:text-gray-100 font-medium flex items-center gap-1"
         >
           <ChevronLeft size={20} />

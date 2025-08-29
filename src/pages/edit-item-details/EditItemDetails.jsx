@@ -41,10 +41,11 @@ const EditItemDetails = () => {
     useQueries({
       queries: [
         {
-          queryKey: ["itemDetails", itemId],
+          queryKey: ["itemDetails", itemId, boardId],
           queryFn: () =>
             boardsAPI.getItemDetails({
-              itemId: itemId,
+              itemId,
+              boardId,
             }),
         },
         {
@@ -79,7 +80,7 @@ const EditItemDetails = () => {
             });
 
             return boardsAPI.getDropDownOptions({
-              boardId: boardId,
+              boardId,
               columnIds,
             });
           },
@@ -206,6 +207,7 @@ const EditItemDetails = () => {
       }
 
       return boardsAPI.updateColumnValuesofItem({
+        boardId,
         itemId,
         columnValues: chnagedColumns,
       });
@@ -221,7 +223,7 @@ const EditItemDetails = () => {
       queryClient.invalidateQueries({
         queryKey: ["boardData"],
       });
-      navigate(`/item-details/${boardId}/${itemId}`);
+      navigate(`/board/${boardId}/item-details/${itemId}`);
     },
     onError: (error) => {
       toast.error("Error!", {
@@ -282,7 +284,7 @@ const EditItemDetails = () => {
     <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       <div className="flex flex-col gap-4">
         <Link
-          to={`/item-details/${boardId}/${itemId}`}
+          to={`/board/${boardId}/item-details/${itemId}`}
           className="text-gray-600 dark:text-gray-400 blue:text-gray-100 font-medium flex items-center gap-1"
         >
           <ChevronLeft size={20} />

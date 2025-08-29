@@ -1,12 +1,13 @@
 import { axiosInstance } from "../utils/axiosInstance";
 
 export const boardsAPI = {
-  getItems: async ({ cursor = null, searchQuery, filterByEmail }) => {
+  getItems: async ({ cursor = null, searchQuery, filterByEmail, boardId }) => {
     try {
       const params = {};
       if (cursor) params.cursor = cursor;
       params.compareValue = searchQuery;
       params.filterByEmail = filterByEmail;
+      params.boardId = boardId;
 
       const response = await axiosInstance.get(`/api/boards/getAllItems`, {
         params,
@@ -18,6 +19,7 @@ export const boardsAPI = {
       return {
         success: response.data.success,
         data: {
+          boardName: response.data.data.boardName,
           cursor: response.data.data.result.cursor,
           items: response.data.data.result.items,
           total_items: response.data.data.result.items_count,
@@ -56,7 +58,7 @@ export const boardsAPI = {
     }
   },
   // Update the Column Values of an Item
-  updateColumnValuesofItem: async ({ itemId, columnValues }) => {
+  updateColumnValuesofItem: async ({ itemId, boardId, columnValues }) => {
     const formData = new FormData();
 
     columnValues.forEach((col) => {
@@ -91,7 +93,7 @@ export const boardsAPI = {
 
     try {
       const response = await axiosInstance.post(
-        `/api/boards/updateItem/${itemId}`,
+        `/api/boards/updateItem/${itemId}?boardId=${boardId}`,
         formData,
         {
           headers: {
@@ -110,10 +112,10 @@ export const boardsAPI = {
     }
   },
   // Get Specific Item Details
-  getItemDetails: async ({ itemId }) => {
+  getItemDetails: async ({ itemId, boardId }) => {
     try {
       const response = await axiosInstance.get(
-        `/api/boards/getItemDetails/${itemId}`,
+        `/api/boards/getItemDetails/${itemId}?boardId=${boardId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -121,26 +123,10 @@ export const boardsAPI = {
         }
       );
 
-      const customizationFields = response.data.customization.fields;
-
-      // Add the 'isEditable' Field in the data
-      const updatedColumnValues = response.data.data.column_values.map(
-        (col) => {
-          const customization = customizationFields.find(
-            (field) => field.columnId === col.id
-          );
-          return {
-            ...col,
-            isEditable: customization?.isEditable ?? false,
-            isRequired: customization?.isRequired ?? false,
-          };
-        }
-      );
-
       return {
         id: response.data.data.id,
         name: response.data.data.name,
-        column_values: updatedColumnValues,
+        column_values: response.data.data.column_values,
       };
     } catch (error) {
       console.error("Error fetching item details:", error);
@@ -232,13 +218,16 @@ export const boardsAPI = {
   },
 
   // Get the editable Columns Data
-  getEditableColumns: async () => {
+  getEditableColumns: async ({ boardId }) => {
     try {
-      const response = await axiosInstance.get(`/api/boards/editableColumns`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
+      const response = await axiosInstance.get(
+        `/api/boards/editableColumns?boardId=${boardId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching editable columns:", error);

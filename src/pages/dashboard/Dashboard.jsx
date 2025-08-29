@@ -1,261 +1,46 @@
 import { useEffect, useState } from "react";
-import { LayoutGrid, List, Table } from "lucide-react";
-import BoardGroup from "../../features/dashboard/components/BoardGroup";
-import { boardsAPI } from "../../api/board";
 import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkeleton";
-import { toast } from "sonner";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useAuth } from "../../contexts/AuthContext";
-import SearchInput from "../../components/ui/SearchInput";
-import SortFilter from "../../components/ui/SortFilter";
-import AssignToFilter from "../../features/dashboard/components/AssignToFilter";
 import { Skeleton } from "@mantine/core";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   // Hooks
-  const { user, setSortingOptions } = useAuth();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Local States
   // View Mode
   const [viewMode, setViewMode] = useState("card");
-
-  // Search Query
-  const [searchQuery, setSearchQuery] = useState(null);
-  // State to contains Items Data
-  // In grouped format
-  const [groupedData, setGroupedData] = useState({});
-  // Filtered grouped data
-  const [filteredData, setFilteredData] = useState({});
-
-  // Sort Options Created based on the columns fetched
-  const [sortOptions, setSortOptions] = useState([]);
-
-  // Selected Sort
-  const [selectedSort, setSelectedSort] = useState({
-    value: "default",
-    label: "Default",
-  });
-
-  // Assign To Filter
-  const [filterByEmail, setFilterByEmail] = useState(false);
-
-  // Fetch Board Data - Query
-  const {
-    data,
-    isPending,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-    isError,
-    error,
-  } = useInfiniteQuery({
-    queryKey: ["boardData", searchQuery, filterByEmail],
-    queryFn: ({ pageParam }) => {
-      const { cursor = null } = pageParam || {};
-      return boardsAPI.getItems({
-        cursor,
-        searchQuery,
-        filterByEmail: filterByEmail,
-      });
-    },
-    getNextPageParam: (lastPage) => {
-      const nextCursor = lastPage?.data?.cursor;
-      return nextCursor ? { cursor: nextCursor } : undefined;
-    },
-    initialPageParam: { cursor: null },
-  });
-
-  // UseEffect to set filteredData based on data and Sorting Options
-  useEffect(() => {
-    const itemsData = data?.pages.flatMap((page) => page.data.items) || [];
-
-    // Grouping data by group Title
-    const groupedData = itemsData.reduce((acc, item) => {
-      // const groupTitle = item.group?.title || "No Group";
-      const groupId = item.group?.id || null;
-
-      if (!acc[groupId]) {
-        acc[groupId] = [];
-      }
-      acc[groupId].push(item);
-      return acc;
-    }, {});
-
-    setGroupedData(groupedData);
-
-    let sortingOptions = [
-      {
-        value: "default",
-        label: "Default",
-      },
-    ];
-
-    if (itemsData.length > 0) {
-      const firstItem = itemsData[0];
-      const columnValues = firstItem.column_values;
-
-      columnValues.slice(0, 5).forEach((column) => {
-        if (column.type === "text") {
-          sortingOptions.push({
-            value: `text-${column.id}-asc`,
-            label: `${column.column.title} (A-Z)`,
-          });
-          sortingOptions.push({
-            value: `text-${column.id}-desc`,
-            label: `${column.column.title} (Z-A)`,
-          });
-        } else if (column.type === "date") {
-          sortingOptions.push({
-            value: `date-${column.id}-asc`,
-            label: `${column.column.title} (Oldest First)`,
-          });
-          sortingOptions.push({
-            value: `date-${column.id}-desc`,
-            label: `${column.column.title} (Newest First)`,
-          });
-        } else if (column.type === "status") {
-          sortingOptions.push({
-            value: `status-${column.id}-asc`,
-            label: `${column.column.title} (Status Asc)`,
-          });
-          sortingOptions.push({
-            value: `status-${column.id}-desc`,
-            label: `${column.column.title} (Status Desc)`,
-          });
-        } else if (column.type === "priority") {
-          sortingOptions.push({
-            value: `priority-${column.id}-asc`,
-            label: `${column.column.title} (Priority Asc)`,
-          });
-          sortingOptions.push({
-            value: `priority-${column.id}-desc`,
-            label: `${column.column.title} (Priority Desc)`,
-          });
-        }
-      });
-    }
-
-    setSortOptions(sortingOptions);
-    // Sorting Options in Context
-    // To be used in Preferences modal
-    setSortingOptions(sortingOptions);
-
-    // Get User Preferences
-    const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
-
-    const savedSort = sortingOptions?.find(
-      (option) => option.value === userPreferences?.sortPreference
-    );
-
-    if (savedSort) {
-      setSelectedSort(savedSort);
-      return handleSortChange({ value: savedSort.value, groupedData });
-    }
-
-    // If saved sort option is not found, default to "Default"
-    handleSortChange({
-      value: "default",
-      groupedData,
-    });
-    setSelectedSort({
-      value: "default",
-      label: "Default",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, setSortOptions, setFilteredData]);
 
   // Set the initial view mode from user preferences or default to 'card'
   useEffect(() => {
     const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
     const initialViewMode = userPreferences?.itemView || "card";
     setViewMode(initialViewMode);
-  }, []);
 
-  // Handle Sorting Filter Change
-  const handleSortChange = ({ value, groupedData }) => {
-    if (value === "default") {
-      return setFilteredData(groupedData);
+    if (user?.boardsData?.length > 0) {
+      navigate(`/board/${user.boardsData[0].boardId}`);
     }
-
-    const [sortType, columnId, order] = value.split("-");
-
-    const sortedData = Object.entries(groupedData).reduce(
-      (acc, [groupTitle, items]) => {
-        const sortedItems = [...items].sort((a, b) => {
-          const columnA = a.column_values.find((col) => col.id === columnId);
-          const columnB = b.column_values.find((col) => col.id === columnId);
-
-          if (!columnA || !columnB) return 0;
-
-          let aText = columnA.text ?? "";
-          let bText = columnB.text ?? "";
-
-          let comparison = 0;
-          if (sortType === "text" || sortType === "status") {
-            comparison = aText.localeCompare(bText);
-          } else if (sortType === "date") {
-            const aDate = new Date(aText);
-            const bDate = new Date(bText);
-            comparison = aDate - bDate;
-          } else if (sortType === "priority") {
-            const aPriority = columnA.priority ?? 0;
-            const bPriority = columnB.priority ?? 0;
-            comparison = aPriority - bPriority;
-          }
-
-          return order === "asc" ? comparison : -comparison;
-        });
-
-        acc[groupTitle] = sortedItems;
-        return acc;
-      },
-      {}
-    );
-
-    setFilteredData(sortedData);
-  };
-
-  if (isError) {
-    toast.error("Error!", {
-      description:
-        error.message || "Could not load data. Please try again later.",
-    });
-  }
+  }, [user, navigate]);
 
   return (
     <div className="md:ps-8 md:py-8 py-4 ps-4 bg-gray-200 dark:bg-light-black blue:bg-light-blue flex flex-col h-full">
       {/* Header */}
       <div className="flex justify-between items-center mb-6 md:pr-8 pr-4">
         {/* Board Name */}
-        <h1 className="text-sm md:text-2xl font-bold text-black dark:text-white blue:text-white">
-          {isPending ? (
-            <Skeleton w={120} height={32} radius={4} />
-          ) : (
-            data?.pages[0]?.data?.customization?.boardName || ""
-          )}
-        </h1>
+        <Skeleton w={120} height={32} radius={4} />
         {/* View Mode */}
         <div className="flex space-x-3 md:space-x-3 bg-white dark:bg-[#2C2C2C] blue:bg-dark-blue p-2 rounded-full px-4 py-2">
-          {["card", "list", "table"].map((mode) => {
-            const Icon =
-              mode === "card" ? LayoutGrid : mode === "list" ? List : Table;
-            return (
-              <button
-                key={mode}
-                className={`p-2 md:px-3 md:py-2 rounded flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-                  viewMode === mode
-                    ? "bg-[#F4F4F4] text-black dark:bg-black dark:text-white blue:bg-light-blue text-bold rounded-full px-4 py-2"
-                    : "bg-white dark:bg-transparent blue:bg-transparent text-black dark:text-white blue:text-white rounded-full px-4 py-2"
-                }`}
-                onClick={() => setViewMode(mode)}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="hidden md:inline">
-                  {mode.charAt(0).toUpperCase() + mode.slice(1)} View
-                </span>
-              </button>
-            );
-          })}
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              height={32}
+              width="100%"
+              className="md:!w-[100px] !w-[32px]"
+              radius={32}
+            />
+          ))}
         </div>
       </div>
 
@@ -266,51 +51,10 @@ const Dashboard = () => {
         <div className="w-full flex flex-col gap-4">
           {/* Filters */}
           <div className="flex flex-col md:flex-row gap-10 justify-between">
-            <div className="flex items-center gap-2">
-              {/* Search Input */}
-              <SearchInput
-                searchQuery={searchQuery}
-                onChange={(value) => setSearchQuery(value)}
-              />
-              {/* Assign To Filter */}
-              {user?.filterItemsByEmail === "false" && (
-                <AssignToFilter
-                  value={filterByEmail}
-                  onChange={(value) => setFilterByEmail(value)}
-                />
-              )}
-            </div>
-            {/* Sort Filter Dropdown */}
-            <SortFilter
-              selectedOption={selectedSort}
-              setSelectedOption={setSelectedSort}
-              sortOptions={sortOptions}
-              onFilterChange={(value) => {
-                setSelectedSort(value);
-                handleSortChange({
-                  value: value.value,
-                  groupedData,
-                });
-              }}
-            />
+            <Skeleton height={40} width="100%" maw={250} radius={4} />
+            <Skeleton height={40} width="100%" maw={100} radius={4} />
           </div>
-          {isPending ? (
-            <BoardDataSkeleton type={viewMode} />
-          ) : (
-            <BoardGroup
-              filteredData={filteredData || {}}
-              viewMode={viewMode}
-              noMoreItemsLeft={!hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              onClickLoadMore={() => {
-                if (hasNextPage && !isFetchingNextPage) {
-                  fetchNextPage();
-                }
-              }}
-              boardId={data?.pages[0]?.data?.customization?.boardId}
-              totalItemsCount={data?.pages[0]?.data?.total_items}
-            />
-          )}
+          <BoardDataSkeleton type={viewMode} />
         </div>
       </div>
     </div>

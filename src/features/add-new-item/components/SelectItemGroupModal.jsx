@@ -2,15 +2,16 @@ import { Select } from "@mantine/core";
 import { ModalContent, ModalRoot } from "../../../components/Modal";
 import useHtmlThemeClass from "../../../hooks/useHtmlThemeClass";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { boardGroupsAPIs } from "../../../api/board-groups";
 import { toast } from "sonner";
 
-const SelectItemGroupModal = ({ opened, onClose, boardId }) => {
+const SelectItemGroupModal = ({ opened, onClose }) => {
   // Theme Hook
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
+  const { boardId } = useParams();
 
   // Local States
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -68,7 +69,7 @@ const SelectItemGroupModal = ({ opened, onClose, boardId }) => {
       />
       {selectedGroup ? (
         <Link
-          to={`/create-item/${boardId}/${selectedGroup}`}
+          to={`/board/${boardId}/create-item/${selectedGroup}`}
           className={`px-4 py-2 bg-[#2A85FF] text-white transform hover:scale-105 transition-all duration-300 ease-in-out hover:shadow-lg rounded-md w-fit mt-3`}
           onClick={() => onClose()}
         >

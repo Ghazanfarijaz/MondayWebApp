@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { LayoutGrid, List, Table } from "lucide-react";
-import BoardGroup from "../../../features/dashboard/components/BoardGroup";
-import { boardsAPI } from "../../../api/board";
-import BoardDataSkeleton from "../../../features/dashboard/components/BoardDataSkeleton";
+import BoardGroup from "../../features/dashboard/components/BoardGroup";
+import { boardsAPI } from "../../api/board";
+import BoardDataSkeleton from "../../features/dashboard/components/BoardDataSkeleton";
 import { toast } from "sonner";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useAuth } from "../../../contexts/AuthContext";
-import SearchInput from "../../../components/ui/SearchInput";
-import SortFilter from "../../../components/ui/SortFilter";
-import AssignToFilter from "../../../features/dashboard/components/AssignToFilter";
+import { useAuth } from "../../contexts/AuthContext";
+import SearchInput from "../../components/ui/SearchInput";
+import SortFilter from "../../components/ui/SortFilter";
+import AssignToFilter from "../../features/dashboard/components/AssignToFilter";
 import { Skeleton } from "@mantine/core";
 import { useParams } from "react-router-dom";
 
@@ -234,7 +234,8 @@ const BoardDetails = () => {
           {isPending ? (
             <Skeleton w={120} height={32} radius={4} />
           ) : (
-            data?.pages[0]?.data?.boardName || ""
+            user?.boardsData?.find((board) => board.boardId === boardId)
+              ?.boardName
           )}
         </h1>
         {/* View Mode */}

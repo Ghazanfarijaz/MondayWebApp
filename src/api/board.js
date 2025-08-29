@@ -58,7 +58,7 @@ export const boardsAPI = {
     }
   },
   // Update the Column Values of an Item
-  updateColumnValuesofItem: async ({ itemId, columnValues }) => {
+  updateColumnValuesofItem: async ({ itemId, boardId, columnValues }) => {
     const formData = new FormData();
 
     columnValues.forEach((col) => {
@@ -93,7 +93,7 @@ export const boardsAPI = {
 
     try {
       const response = await axiosInstance.post(
-        `/api/boards/updateItem/${itemId}`,
+        `/api/boards/updateItem/${itemId}?boardId=${boardId}`,
         formData,
         {
           headers: {

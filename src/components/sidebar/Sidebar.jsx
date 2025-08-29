@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
-import { Skeleton } from "@mantine/core";
+import { Skeleton, Tooltip } from "@mantine/core";
 
 const Sidebar = () => {
   const { user, isFetchingBoards } = useAuth();
@@ -32,7 +32,9 @@ const Sidebar = () => {
                   isBlueTheme ? "hover:bg-light-blue" : "hover:bg-gray-100"
                 } rounded-md p-[8px_12px]`}
               >
-                {board.boardName}
+                <Tooltip label={board.boardName}>
+                  <p className="line-clamp-1">{board.boardName}</p>
+                </Tooltip>
               </Link>
             );
           })}

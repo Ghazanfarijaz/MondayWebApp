@@ -69,7 +69,7 @@ const SelectItemGroupModal = ({ opened, onClose }) => {
       />
       {selectedGroup ? (
         <Link
-          to={`/create-item/${boardId}/${selectedGroup}`}
+          to={`/board/${boardId}/create-item/${selectedGroup}`}
           className={`px-4 py-2 bg-[#2A85FF] text-white transform hover:scale-105 transition-all duration-300 ease-in-out hover:shadow-lg rounded-md w-fit mt-3`}
           onClick={() => onClose()}
         >

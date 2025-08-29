@@ -16,7 +16,7 @@ import { SignUpProvider } from "./contexts/SignUpContext";
 import { UserPreferencesProvider } from "./contexts/UserPreferencesContext";
 import GoogleCallback from "./pages/auth/google-callback/GoogleCallback";
 import AddNewItem from "./pages/add-new-item/AddNewItem";
-import BoardDetails from "./pages/board/boardDetails/BoardDetails";
+import BoardDetails from "./pages/boardDetails/BoardDetails";
 import SidebarLayout from "./layouts/SidebarLayout";
 
 export const router = createBrowserRouter([

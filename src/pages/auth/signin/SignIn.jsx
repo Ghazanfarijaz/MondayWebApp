@@ -39,7 +39,7 @@ const SignIn = () => {
       navigate("/", { replace: true });
     },
     onError: (error) => {
-      toast.error("Login failed", {
+      toast.error("Login failed!", {
         description: error.message || "Please try again.",
       });
       console.error("Login error:", error);

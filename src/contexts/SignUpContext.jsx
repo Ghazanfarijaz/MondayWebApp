@@ -13,8 +13,8 @@ export const SignUpProvider = ({ children }) => {
     queryKey: ["signupPermission"],
     queryFn: async () =>
       authAPI.fetchUserSignUpPermission({
-        // slug: window.location.hostname.split(".")[0],
-        slug: "eurotas-lucie",
+        slug: window.location.hostname.split(".")[0],
+        // slug: "eurotas-lucie",
       }),
   });
 

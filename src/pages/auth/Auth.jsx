@@ -20,7 +20,7 @@ const Auth = () => {
       {/* Image Section - With right padding */}
       <div className="hidden lg:flex items-center justify-center p-24 h-full max-h-screen relative">
         {/* <SigninImage /> */}
-        <div className="h-[609.53px] flex flex-col gap-16 bg-gray-200/50 border border-gray-200 rounded-3xl p-4 overflow-hidden">
+        <div className="h-[609.53px] flex flex-col gap-16 bg-gray-200/50 border border-gray-200 rounded-3xl p-4 overflow-hidden w-full">
           <img
             src={userLogo}
             alt="user-logo"

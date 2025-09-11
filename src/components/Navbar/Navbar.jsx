@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Cog, KeyRound, LogOut, Palette, UserCog } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Logo from "../../assets/logo-icon.jpeg";
 import FeedbackIcon from "../../assets/icons/FeedbackIcon";
 import { Menu } from "@mantine/core";
@@ -12,6 +12,7 @@ import { FeedbackModal } from "./../ui/FeedbackModal/FeedbackModal";
 
 const Navbar = () => {
   const [opened, { open, close }] = useDisclosure(false);
+  const { boardId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -53,7 +54,10 @@ const Navbar = () => {
 
       <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue px-6 sm:px-6 lg:px-8 relative z-50">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link
+          to={boardId ? `/board/${boardId}` : "/"}
+          className="flex items-center gap-2"
+        >
           <img
             src={Logo}
             alt="Logo"
@@ -69,7 +73,7 @@ const Navbar = () => {
               <span className="text-[#f04967]">P</span>ortal
             </p>
           </div>
-        </div>
+        </Link>
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">
           <FeedbackIcon

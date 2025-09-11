@@ -599,7 +599,7 @@ const AddNewItem = () => {
                 );
               } else if (
                 item.columnType === "text" ||
-                item.columnType === "long-text"
+                item.columnType === "long_text"
               ) {
                 return (
                   <div className="flex flex-col gap-2" key={item.columnId}>

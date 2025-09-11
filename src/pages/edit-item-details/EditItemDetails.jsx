@@ -753,7 +753,7 @@ const EditItemDetails = () => {
                     );
                   } else if (
                     item.type === "text" ||
-                    item.type === "long-text" ||
+                    item.type === "long_text" ||
                     item.type === "name"
                   ) {
                     return (

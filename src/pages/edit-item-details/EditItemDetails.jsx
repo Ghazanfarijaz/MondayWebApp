@@ -751,7 +751,11 @@ const EditItemDetails = () => {
                           )}
                       </div>
                     );
-                  } else if (item.type === "text") {
+                  } else if (
+                    item.type === "text" ||
+                    item.type === "long-text" ||
+                    item.type === "name"
+                  ) {
                     return (
                       <div className="flex flex-col gap-2" key={item.id}>
                         <label

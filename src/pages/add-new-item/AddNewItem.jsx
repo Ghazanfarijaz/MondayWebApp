@@ -597,7 +597,7 @@ const AddNewItem = () => {
                       )}
                   </div>
                 );
-              } else {
+              } else if (item.columnType === "text") {
                 return (
                   <div className="flex flex-col gap-2" key={item.columnId}>
                     <label
@@ -629,6 +629,8 @@ const AddNewItem = () => {
                       )}
                   </div>
                 );
+              } else {
+                return null;
               }
             })}
             <div className="xl:col-span-3 lg:col-span-2 col-span-1">

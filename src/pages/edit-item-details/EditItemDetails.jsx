@@ -751,7 +751,7 @@ const EditItemDetails = () => {
                           )}
                       </div>
                     );
-                  } else {
+                  } else if (item.type === "text") {
                     return (
                       <div className="flex flex-col gap-2" key={item.id}>
                         <label
@@ -783,6 +783,8 @@ const EditItemDetails = () => {
                           )}
                       </div>
                     );
+                  } else {
+                    return null;
                   }
                 })}
                 <div className="xl:col-span-3 lg:col-span-2 col-span-1">

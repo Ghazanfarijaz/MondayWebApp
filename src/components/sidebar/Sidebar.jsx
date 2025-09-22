@@ -43,7 +43,7 @@ export const SidebarContent = () => {
 
 const Sidebar = () => {
   return (
-    <div className="hidden lg:flex flex-col gap-2 py-4 px-6 sm:px-6 lg:px-8 w-[250px] bg-white dark:bg-black blue:bg-dark-blue">
+    <div className="hidden lg:flex flex-col gap-2 py-4 px-6 sm:px-6 lg:px-8 bg-white dark:bg-black blue:bg-dark-blue">
       <SidebarContent />
     </div>
   );

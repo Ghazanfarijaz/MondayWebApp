@@ -78,12 +78,15 @@ const AddNewItem = () => {
       ],
 
       combine: (results) => {
+        const enabledResults = results.filter(
+          (result) => result.fetchStatus !== "idle"
+        );
         return {
           editableColumns: results[0].data,
           DropDownOptions: results[1].data,
-          isPending: results.some((result) => result.isPending),
-          isError: results.some((result) => result.isError),
-          error: results.find((result) => result.isError)?.error,
+          isPending: enabledResults.some((result) => result.isPending),
+          isError: enabledResults.some((result) => result.isError),
+          error: enabledResults.find((result) => result.isError)?.error,
         };
       },
     });

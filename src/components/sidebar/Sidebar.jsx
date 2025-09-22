@@ -3,14 +3,13 @@ import { useAuth } from "../../contexts/AuthContext";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
 import { Skeleton, Tooltip } from "@mantine/core";
 
-const Sidebar = () => {
+export const SidebarContent = () => {
   const { user, isFetchingBoards } = useAuth();
   const theme = useHtmlThemeClass();
   const isBlueTheme = theme === "blue";
   const pathName = useLocation().pathname;
-
   return (
-    <div className="flex flex-col gap-2 p-4 bg-white dark:bg-black blue:bg-dark-blue px-6 sm:px-6 lg:px-8 w-[250px]">
+    <>
       <h1 className="text-2xl font-semibold text-black dark:text-white blue:text-white mb-1">
         My Boards
       </h1>
@@ -38,6 +37,14 @@ const Sidebar = () => {
               </Link>
             );
           })}
+    </>
+  );
+};
+
+const Sidebar = () => {
+  return (
+    <div className="hidden lg:flex flex-col gap-2 py-4 px-6 sm:px-6 lg:px-8 w-[250px] bg-white dark:bg-black blue:bg-dark-blue">
+      <SidebarContent />
     </div>
   );
 };

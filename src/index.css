@@ -67,3 +67,13 @@ html.blue .blue\:bg-dark-blue {
   background-color: #191b34;
   color: white;
 }
+
+.mantine-Drawer-content {
+  @apply bg-white dark:bg-light-black blue:bg-dark-blue;
+}
+.mantine-Drawer-header {
+  @apply bg-white dark:bg-light-black blue:bg-dark-blue;
+}
+.mantine-Drawer-close {
+  @apply !text-gray-400;
+}

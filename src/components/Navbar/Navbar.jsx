@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Cog, KeyRound, LogOut, Palette, UserCog } from "lucide-react";
+import {
+  Cog,
+  KeyRound,
+  LogOut,
+  MenuIcon,
+  Palette,
+  UserCog,
+} from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Logo from "../../assets/logo-icon.jpeg";
 import FeedbackIcon from "../../assets/icons/FeedbackIcon";
@@ -9,9 +16,12 @@ import { useAuth } from "./../../contexts/AuthContext";
 import PreferencesModal from "../../features/settings/components/PreferencesModal";
 import { useDisclosure } from "@mantine/hooks";
 import { FeedbackModal } from "./../ui/FeedbackModal/FeedbackModal";
+import SidebarDrawer from "../sidebar/SidebarDrawer";
 
 const Navbar = () => {
   const [opened, { open, close }] = useDisclosure(false);
+  const [isDrawerOpen, { open: openDrawer, close: closeDrawer }] =
+    useDisclosure(false);
   const { boardId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -51,29 +61,41 @@ const Navbar = () => {
         isModalOpen={openPreferencesModal}
         onCloseModal={() => setOpenPreferencesModal(false)}
       />
+      <SidebarDrawer opened={isDrawerOpen} onClose={closeDrawer} />
 
       <div className="flex items-center justify-between p-4 bg-white dark:bg-black blue:bg-dark-blue px-6 sm:px-6 lg:px-8 relative z-50">
-        {/* Logo */}
-        <Link
-          to={boardId ? `/board/${boardId}` : "/"}
-          className="flex items-center gap-2"
-        >
-          <img
-            src={Logo}
-            alt="Logo"
-            className="object-contain w-[48px] h-[48px] rounded-lg"
-          />
-          <div>
-            <h3 className="font-bold text-xl text-[#f04967] font-serif">
-              Lucie{" "}
-              <span className="inline-block scale-y-110 origin-bottom">UP</span>
-            </h3>
-            <p className="text-[#2c5da0] text-[10px] font-serif">
-              External <span className="text-[#f04967]">U</span>sers{" "}
-              <span className="text-[#f04967]">P</span>ortal
-            </p>
-          </div>
-        </Link>
+        <div className="flex items-center gap-2">
+          {/* Sidebar Toggle - Btn */}
+          <button className="lg:hidden block" onClick={openDrawer}>
+            <MenuIcon
+              size={24}
+              className="text-gray-500 dark:text-gray-400 blue:text-gray-400"
+            />
+          </button>
+          {/* Logo */}
+          <Link
+            to={boardId ? `/board/${boardId}` : "/"}
+            className="flex items-center gap-2"
+          >
+            <img
+              src={Logo}
+              alt="Logo"
+              className="object-contain w-[48px] h-[48px] rounded-lg"
+            />
+            <div>
+              <h3 className="font-bold text-xl text-[#f04967] font-serif">
+                Lucie{" "}
+                <span className="inline-block scale-y-110 origin-bottom">
+                  UP
+                </span>
+              </h3>
+              <p className="text-[#2c5da0] text-[10px] font-serif">
+                External <span className="text-[#f04967]">U</span>sers{" "}
+                <span className="text-[#f04967]">P</span>ortal
+              </p>
+            </div>
+          </Link>
+        </div>
         {/* Icons and Avatar - adjusted spacing */}
         <div className="flex items-center space-x-3 sm:space-x-4">
           <FeedbackIcon

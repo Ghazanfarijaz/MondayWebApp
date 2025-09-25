@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { authAPI } from "../api/auth";
 import LoadingBackdrop from "./../components/ui/LoadingBackdrop";
+import InvalidSubscriptionModal from "../components/InvalidSubscriptionModal";
 
 // Create context
 const SignUpContext = createContext(null);
@@ -34,6 +35,9 @@ export const SignUpProvider = ({ children }) => {
   }
 
   return (
-    <SignUpContext.Provider value={value}>{children}</SignUpContext.Provider>
+    <SignUpContext.Provider value={value}>
+      {data?.subscriptionStatus !== "valid" && <InvalidSubscriptionModal />}
+      {children}
+    </SignUpContext.Provider>
   );
 };

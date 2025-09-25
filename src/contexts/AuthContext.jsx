@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import LoadingBackdrop from "../components/ui/LoadingBackdrop";
 import { checkSubdomain } from "../api/subdomain";
+import InvalidSubscriptionModal from "../components/InvalidSubscriptionModal";
 
 // Create context
 const AuthContext = createContext(null);
@@ -26,8 +27,8 @@ export const AuthProvider = ({ children }) => {
     queryKey: ["authStatus"],
     queryFn: async () => {
       await checkSubdomain({
-        subdomain: window.location.hostname.split(".")[0],
-        // subdomain: "eurotas-lucie",
+        // subdomain: window.location.hostname.split(".")[0],
+        subdomain: "eurotas-lucie",
       });
 
       const checkAuthResponse = await authAPI.checkAuth();
@@ -79,6 +80,9 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={value}>
       {isPending && <LoadingBackdrop />}
+      {authStatus?.user?.subscriptionStatus !== "valid" && (
+        <InvalidSubscriptionModal />
+      )}
       {children}
     </AuthContext.Provider>
   );

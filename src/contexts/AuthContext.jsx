@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={value}>
       {isPending && <LoadingBackdrop />}
-      {authStatus?.user?.subscriptionStatus !== "valid" && (
+      {!isPending && authStatus?.user?.subscriptionStatus !== "valid" && (
         <InvalidSubscriptionModal />
       )}
       {children}

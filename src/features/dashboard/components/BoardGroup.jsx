@@ -39,17 +39,18 @@ const BoardGroup = ({
           <p className="font-medium text-gray-400 dark:text-gray-400 blue:text-gray-400 h-[40.8px]">
             Items Count (Total): {totalItemsCount}
           </p>
-          {user?.allowUsersToCreateNewItems === "true" && (
-            <button
-              type="button"
-              className="px-4 py-2 bg-[#2A85FF] text-white rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
-              onClick={() => {
-                setOpenSelectModalOpen(true);
-              }}
-            >
-              Add New Item
-            </button>
-          )}
+          {user?.allowUsersToCreateNewItems === "true" &&
+            ["Pro", "Enterprise"].includes(user?.subscriptionPlan) && (
+              <button
+                type="button"
+                className="px-4 py-2 bg-[#2A85FF] text-white rounded-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out w-fit"
+                onClick={() => {
+                  setOpenSelectModalOpen(true);
+                }}
+              >
+                Add New Item
+              </button>
+            )}
         </div>
         <div
           className={`h-full max-h-[calc(100dvh-340.8px)] md:max-h-[calc(100dvh-379.8px)] overflow-auto`}

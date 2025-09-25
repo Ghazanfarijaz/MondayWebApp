@@ -157,21 +157,24 @@ const CustomDropdownSelect = ({
                   );
                 })}
                 {/* Add New Label - Button */}
-                {user?.allowNewValueCreation === "true" && (
-                  <button
-                    type="button"
-                    className="p-[6px_10px] flex gap-1 items-center text-[#2a85ff]"
-                    onClick={() => {
-                      // Open Modal for creating a new label
-                      open();
-                      // Close Current Popover
-                      closePopover();
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                    <p className="text-[14px]">Add New Label</p>
-                  </button>
-                )}
+                {user?.allowNewValueCreation === "true" &&
+                  ["Standard", "Pro", "Enterprise"].includes(
+                    user?.subscriptionPlan
+                  ) && (
+                    <button
+                      type="button"
+                      className="p-[6px_10px] flex gap-1 items-center text-[#2a85ff]"
+                      onClick={() => {
+                        // Open Modal for creating a new label
+                        open();
+                        // Close Current Popover
+                        closePopover();
+                      }}
+                    >
+                      <Plus className="w-4 h-4" />
+                      <p className="text-[14px]">Add New Label</p>
+                    </button>
+                  )}
               </div>
             </ScrollArea>
           </Popover.Dropdown>

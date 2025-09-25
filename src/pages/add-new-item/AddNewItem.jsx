@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import useHtmlThemeClass from "../../hooks/useHtmlThemeClass";
 import EditItemDetailsSkeleton from "../../features/edit-item-details/components/EditItemDetailsSkeleton";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { boardsAPI } from "../../api/board";
 import { NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";

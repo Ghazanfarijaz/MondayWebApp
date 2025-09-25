@@ -27,8 +27,8 @@ export const AuthProvider = ({ children }) => {
     queryKey: ["authStatus"],
     queryFn: async () => {
       await checkSubdomain({
-        // subdomain: window.location.hostname.split(".")[0],
-        subdomain: "eurotas-lucie",
+        subdomain: window.location.hostname.split(".")[0],
+        // subdomain: "eurotas-lucie",
       });
 
       const checkAuthResponse = await authAPI.checkAuth();

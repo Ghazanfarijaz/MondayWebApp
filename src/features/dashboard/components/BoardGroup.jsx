@@ -26,6 +26,12 @@ const BoardGroup = ({
   // Local State to manage View Mode
   const [openSelectModalOpen, setOpenSelectModalOpen] = useState(false);
 
+  // Calculate the total number of items in groups in filteredData
+  const totalItemsInGroups = Object.values(filteredData).reduce(
+    (total, group) => total + group.length,
+    0
+  );
+
   return (
     <>
       {/* Select Group for New Item Creation */}
@@ -37,7 +43,10 @@ const BoardGroup = ({
       <div className="bg-white dark:bg-black blue:bg-dark-blue px-[24px] py-[24px] rounded-lg shadow-sm w-full h-full max-h-[calc(100dvh-236px)] md:max-h-[calc(100dvh-275px)] overflow-auto">
         <div className="w-full flex justify-between pb-4">
           <p className="font-medium text-gray-400 dark:text-gray-400 blue:text-gray-400 h-[40.8px]">
-            Items Count (Total): {totalItemsCount}
+            Items Count (Total):{" "}
+            {user?.filterItemsByEmail === "false"
+              ? totalItemsCount
+              : totalItemsInGroups}
           </p>
           {user?.allowUsersToCreateNewItems === "true" &&
             ["Pro", "Enterprise"].includes(user?.subscriptionPlan) && (

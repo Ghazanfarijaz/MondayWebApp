@@ -85,7 +85,9 @@ const BoardGroup = ({
                       </h2>
                     </div>
                     <div className="grid grid-cols-6 gap-4 p-4 bg-gray-100 dark:bg-light-black blue:bg-light-blue rounded-lg">
-                      <div className="py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"></div>
+                      <div className="font-medium text-gray-500 dark:text-white blue:text-white text-sm">
+                        Name
+                      </div>
                       {items[0].column_values.slice(0, 5).map((item) => (
                         <div
                           key={item.id}

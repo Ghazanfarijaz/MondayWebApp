@@ -19,7 +19,7 @@ const BoardDetails = () => {
 
   // Local States
   // View Mode
-  const [viewMode, setViewMode] = useState("card");
+  const [viewMode, setViewMode] = useState("table");
 
   // Search Query
   const [searchQuery, setSearchQuery] = useState(null);

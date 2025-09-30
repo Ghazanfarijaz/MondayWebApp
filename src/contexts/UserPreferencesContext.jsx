@@ -5,7 +5,7 @@ const UserPreferencesContext = createContext();
 
 export const UserPreferencesProvider = ({ children }) => {
   const [preferences, setPreferences] = useState({
-    itemView: "card", // Default view
+    itemView: "table", // Default view
     sortPreference: "default", // Default sort preference
     dateFormat: "YYYY-MM-DD", // Default date format
   });

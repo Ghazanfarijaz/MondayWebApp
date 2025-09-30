@@ -74,13 +74,28 @@ const BoardGroup = ({
             <div className="w-full flex flex-col gap-6">
               {Object.entries(filteredData).map(([groupId, items]) => (
                 <div key={groupId} className="flex flex-col gap-4">
-                  <div className="flex items-center">
-                    <div
-                      className={`w-4 h-8 rounded-[4px] bg-purple-300`}
-                    ></div>
-                    <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
-                      {items[0]?.group?.title || "Group"}
-                    </h2>
+                  <div className="sticky top-0 z-[1000] space-y-2 bg-white dark:bg-black blue:bg-dark-blue">
+                    {/* Group Title */}
+                    <div className="flex items-center">
+                      <div
+                        className={`w-4 h-8 rounded-[4px] bg-purple-300`}
+                      ></div>
+                      <h2 className="ml-2 font-semibold text-lg text-black dark:text-white blue:text-white">
+                        {items[0]?.group?.title || "Group"}
+                      </h2>
+                    </div>
+                    <div className="grid grid-cols-6 gap-4 p-4 bg-gray-100 dark:bg-light-black blue:bg-light-blue rounded-lg">
+                      <div className="py-3 px-4 font-medium text-gray-500 dark:text-white blue:text-white text-sm"></div>
+                      {items[0].column_values.slice(0, 5).map((item) => (
+                        <div
+                          key={item.id}
+                          className="font-medium text-gray-500 dark:text-white blue:text-white text-sm line-clamp-1"
+                        >
+                          {item.column?.title || "Field"}
+                        </div>
+                      ))}
+                    </div>
+                    {/* Item Headings */}
                   </div>
                   <div className="w-full flex flex-col gap-2">
                     {items?.map((item) => (
@@ -89,7 +104,6 @@ const BoardGroup = ({
                   </div>
                 </div>
               ))}
-
               <div className="w-full flex flex-col gap-2 -mt-4">
                 {isFetchingNextPage &&
                   Array.from({ length: 2 }).map((_, index) => (
@@ -99,6 +113,10 @@ const BoardGroup = ({
             </div>
           ) : viewMode === "table" ? (
             <div className="w-full flex flex-col gap-6">
+              {/* {
+                Object.entries(filteredData)[0]
+              } */}
+
               {Object.entries(filteredData).map(([groupId, items]) => (
                 <div key={groupId} className="flex flex-col gap-4">
                   <div className="flex items-center">

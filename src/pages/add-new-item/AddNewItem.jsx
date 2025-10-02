@@ -209,7 +209,7 @@ const AddNewItem = () => {
   };
 
   return (
-    <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
+    <div className="h-full max-h-[calc(100dvh-68px)] sm:p-10 p-6 overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       <div className="flex flex-col gap-4">
         <Link
           to={`/board/${boardId}`}

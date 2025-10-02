@@ -134,7 +134,7 @@ const Navbar = () => {
               </Menu.Item>
               <Menu.Item
                 leftSection={<Cog className="mr-2 h-4 w-4" />}
-                onClick={() => setOpenPreferencesModal(true)}
+                onClick={() => navigate("/settings/preferences")}
               >
                 Preferences
               </Menu.Item>

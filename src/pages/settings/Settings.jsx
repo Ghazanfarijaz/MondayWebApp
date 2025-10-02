@@ -3,7 +3,7 @@ import { ChevronLeft } from "lucide-react";
 
 const Settings = () => {
   return (
-    <div className="h-full max-h-[calc(100dvh-68px)] p-[40px] overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
+    <div className="h-full max-h-[calc(100dvh-68px)] lg:p-10 p-6 overflow-auto bg-gray-100 dark:bg-light-black blue:bg-light-blue">
       <div className="flex flex-col gap-4">
         <Link
           to={-1}

@@ -18,6 +18,7 @@ import GoogleCallback from "./pages/auth/google-callback/GoogleCallback";
 import AddNewItem from "./pages/add-new-item/AddNewItem";
 import BoardDetails from "./pages/boardDetails/BoardDetails";
 import SidebarLayout from "./layouts/SidebarLayout";
+import UserPreferences from "./pages/user-preferences/UserPreferences";
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
           {
             path: "change-password",
             element: <ChangePassword />,
+          },
+          {
+            path: "preferences",
+            element: <UserPreferences />,
           },
         ],
       },

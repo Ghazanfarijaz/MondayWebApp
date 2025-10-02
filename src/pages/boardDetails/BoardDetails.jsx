@@ -269,7 +269,7 @@ const BoardDetails = () => {
       >
         <div className="w-full flex flex-col gap-4">
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-10 justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 sm:justify-between">
             <div className="flex items-center gap-2">
               {/* Search Input */}
               <SearchInput

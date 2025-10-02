@@ -20,7 +20,7 @@ const SearchInput = ({ searchQuery, onChange }) => {
   }, 1000);
 
   return (
-    <div className="relative max-w-[310px] h-[40px]">
+    <div className="relative w-full sm:max-w-[310px] h-[40px]">
       {/* Left Icon + Blue Bar Layer */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 pl-3 flex items-center gap-[12px] pointer-events-none">
         <SearchIcon className="w-6 h-6 text-[#6F767E]" />

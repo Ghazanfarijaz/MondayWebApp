@@ -112,8 +112,6 @@ const AddNewItemPopover = () => {
               }}
               allowDeselect={false}
               disabled={isPending}
-              searchable
-              nothingFoundMessage="No groups found..."
             />
             {selectedGroup ? (
               <Link
